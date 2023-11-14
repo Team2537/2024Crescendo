@@ -2,8 +2,10 @@ package frc.robot
 
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.wpilibj.Filesystem
 import swervelib.math.Matter
 import swervelib.parser.PIDFConfig
+import java.io.File
 
 
 /*
@@ -44,6 +46,10 @@ object Constants
     {
         const val DRIVER_CONTROLLER_PORT = 0
         const val OPERATOR_CONTROLLER_PORT = 1
+    }
+
+    object FileConstants {
+        val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
     }
 
 
