@@ -5,11 +5,14 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import frc.robot.Constants
-import frc.robot.subsystems.SwerveSubsystem
+import SwerveSubsystem
 
-class FollowTrajectory(drivebase: SwerveSubsystem, trajectory: PathPlannerTrajectory, resetOdometry: Boolean) :
+class FollowTrajectory( trajectory: PathPlannerTrajectory, resetOdometry: Boolean) :
     SequentialCommandGroup() {
+
+    val drivebase = SwerveSubsystem
     init {
+
         addRequirements(drivebase)
         if (resetOdometry) {
             drivebase.resetOdometry(trajectory.initialHolonomicPose)

@@ -26,6 +26,8 @@ object SwerveSubsystem : SubsystemBase() {
     private val controller = SingletonXboxController
     private var swerveTab: ShuffleboardTab
 
+    private lateinit var moduleSpeeds: DoubleArray
+
     init {
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
         try {
@@ -35,6 +37,10 @@ object SwerveSubsystem : SubsystemBase() {
         }
 
         swerveTab = Shuffleboard.getTab("Swerve")
+
+
+        swerveTab.addDoubleArray("Module Speeds") { moduleSpeeds }
+        swerveTab.addDouble("Heading") { getHeading().degrees }
 
         setMotorBrake(true)
     }
@@ -115,6 +121,18 @@ object SwerveSubsystem : SubsystemBase() {
                 )
         }
         return autoBuilder!!.fullAuto(pathGroup)
+    }
+
+    override fun periodic() {
+        moduleSpeeds = doubleArrayOf(
+            getSwerveDriveConfiguration()?.modules?.get(0)?.absolutePosition ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(0)?.driveMotor?.velocity ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(1)?.absolutePosition ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(1)?.driveMotor?.velocity ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(2)?.absolutePosition ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(2)?.driveMotor?.velocity ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(3)?.absolutePosition ?: 0.0,
+            getSwerveDriveConfiguration()?.modules?.get(3)?.driveMotor?.velocity ?: 0.0)
     }
 
 
