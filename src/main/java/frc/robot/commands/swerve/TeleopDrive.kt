@@ -1,78 +1,67 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 package frc.robot.commands.swerve
 
-import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
-import frc.robot.subsystems.SwerveSubsystem
+import SwerveSubsystem
+import edu.wpi.first.math.geometry.Translation2d
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
-import kotlin.math.pow
+import kotlin.contracts.contract
 
-class TeleopDrive(
-    private val swerve: SwerveSubsystem,
-    private val vX: DoubleSupplier,
-    private val vY: DoubleSupplier,
-    private val omega: DoubleSupplier,
-    private val driveMode: BooleanSupplier,
-    private val isOpenLoop: Boolean,
-    private val headingCorrection: Boolean
-) : CommandBase() {
-    private val controller: SwerveController
-    private val timer = Timer()
-    private var angle = 0.0
-    private var lastTime = 0.0
+class TeleopDrive(vForward: DoubleSupplier, vSide: DoubleSupplier, omega: DoubleSupplier,
+                  driveMode: BooleanSupplier, isOpenLoop: Boolean, slowMode: BooleanSupplier) : CommandBase() {
+    private val swerveSubsystem = SwerveSubsystem
+
+    private val vForward: DoubleSupplier
+    private val vSide: DoubleSupplier
+    private val omega: DoubleSupplier
+    private val driveMode: BooleanSupplier
+    private val isOpenLoop: Boolean
+    private val slowMode: BooleanSupplier
+
+    private val swerveController: SwerveController
 
 
     init {
-        controller = swerve.getSwerveController()
-        if (headingCorrection) {
-            timer.start()
-        }
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(swerve)
+        // each subsystem used by the command must be passed into the addRequirements() method
+        addRequirements(swerveSubsystem)
+
+        this.vForward = vForward
+        this.vSide = vSide
+        this.omega = omega
+        this.driveMode = driveMode
+        this.isOpenLoop = isOpenLoop
+        this.slowMode = slowMode
+        this.swerveController = swerveSubsystem.getSwerveController()
+
+
+
     }
 
-    override fun initialize() {
-        if (headingCorrection) {
-            lastTime = timer.get()
-        }
-    }
+    override fun initialize() {}
 
     override fun execute() {
-        val xVelocity: Double = vX.asDouble.pow(3.0)
-        val yVelocity: Double = vY.asDouble.pow(3.0)
-        val angVelocity: Double = omega.asDouble.pow(3.0)
-        SmartDashboard.putNumber("vX", xVelocity)
-        SmartDashboard.putNumber("vY", yVelocity)
-        SmartDashboard.putNumber("omega", angVelocity)
-        if (headingCorrection) {
-            // Estimate the desired angle in radians.
-            angle += angVelocity * (timer.get() - lastTime) * controller.config.maxAngularVelocity
-            // Get the desired ChassisSpeeds given the desired angle and current angle.
-            val correctedChassisSpeeds = controller.getTargetSpeeds(
-                xVelocity, yVelocity, angle,
-                swerve.getHeading().radians
-            )
-            // Drive using given data points.
-            swerve.drive(
-                SwerveController.getTranslation2d(correctedChassisSpeeds),
-                correctedChassisSpeeds.omegaRadiansPerSecond,
-                driveMode.asBoolean,
-                isOpenLoop
-            )
-            lastTime = timer.get()
-        } else {
-            // Drive using raw values.
-            swerve.drive(
-                Translation2d(xVelocity * controller.config.maxSpeed, yVelocity * controller.config.maxSpeed),
-                angVelocity * controller.config.maxAngularVelocity,
-                driveMode.asBoolean, isOpenLoop
-            )
+        var xVelocity = vForward.getAsDouble()
+        var yVelocity = vSide.getAsDouble()
+        var angleVelocity = omega.getAsDouble()
+
+        if(slowMode.asBoolean){
+            xVelocity *= 0.6
+            yVelocity *= 0.6
+            angleVelocity *= 0.6
         }
+
+        var speed: Translation2d = Translation2d(xVelocity * swerveController.config.maxSpeed , yVelocity * swerveController.config.maxSpeed)
+
+        swerveSubsystem.drive(speed, angleVelocity * swerveController.config.maxAngularVelocity, driveMode.asBoolean)
+
+
     }
+
+    override fun isFinished(): Boolean {
+        // TODO: Make this return true when this Command no longer needs to run execute()
+        return false
+    }
+
+    override fun end(interrupted: Boolean) {}
 }

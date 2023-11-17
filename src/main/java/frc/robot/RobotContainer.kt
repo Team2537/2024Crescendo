@@ -1,10 +1,13 @@
 package frc.robot
 
+import SwerveSubsystem
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
 import frc.robot.commands.ExampleCommand
+import frc.robot.commands.swerve.TeleopDrive
 import frc.robot.subsystems.ExampleSubsystem
 import frc.robot.util.SingletonXboxController
 
@@ -19,17 +22,30 @@ import frc.robot.util.SingletonXboxController
  * to the various subsystems in this container to pass into to commands. The commands can just
  * directly reference the (single instance of the) object.
  */
-object RobotContainer
-{
-    init
-    {
+object RobotContainer {
+
+    val controller = SingletonXboxController
+
+    // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
+    //     No, uninverting both doesn't fix it :(
+    val teleopDrive: TeleopDrive = TeleopDrive(
+        { -controller.leftY },
+        { -controller.leftX },
+        { -controller.rightX },
+        { controller.hid.leftBumper },
+        false,
+        { controller.hid.rightBumper }
+    )
+
+    init {
         configureBindings()
+
+        SwerveSubsystem.defaultCommand = teleopDrive
         // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
         Autos
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
-    val driverController = SingletonXboxController
     /**
      * Use this method to define your `trigger->command` mappings. Triggers can be created via the
      * [Trigger] constructor that takes a [BooleanSupplier][java.util.function.BooleanSupplier]
@@ -37,13 +53,7 @@ object RobotContainer
      * subclasses such for [Xbox][CommandXboxController]/[PS4][edu.wpi.first.wpilibj2.command.button.CommandPS4Controller]
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
-    private fun configureBindings()
-    {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        Trigger { ExampleSubsystem.exampleCondition() }.onTrue(ExampleCommand())
-
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-        // cancelling on release.
-        driverController.b().whileTrue(ExampleSubsystem.exampleMethodCommand())
+    private fun configureBindings() {
+        controller.b().onTrue(SwerveSubsystem.runOnce { SwerveSubsystem.zeroGyro() })
     }
 }
