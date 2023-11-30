@@ -17,11 +17,13 @@ object LimelightSubsystem : SubsystemBase() {
 
     private var table: NetworkTable
 
-    private var xOffset: Double = 0.0
-    private var yOffset: Double = 0.0
-    private var area: Double = 0.0
-    private var skew: Double = 0.0
-    private var targetVisible: Boolean = false
+    var xOffset: Double = 0.0
+    var yOffset: Double = 0.0
+    var area: Double = 0.0
+    var skew: Double = 0.0
+    var targetVisible: Boolean = false
+
+    private var visionTab: ShuffleboardTab
 
     init {
         table = NetworkTableInstance.getDefault().getTable("limelight")
@@ -32,7 +34,14 @@ object LimelightSubsystem : SubsystemBase() {
         tv = table.getEntry("tv")
         ts = table.getEntry("ts")
 
-        val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
+        visionTab = Shuffleboard.getTab("Vision")
+
+        visionTab.addDouble("X Offset") { xOffset }
+        visionTab.addDouble("Y Offset") { yOffset }
+        visionTab.addDouble("Area") { area }
+        visionTab.addDouble("Skew") { skew }
+        visionTab.addBoolean("Target Visible") { targetVisible }
+
 
 
     }
@@ -42,6 +51,6 @@ object LimelightSubsystem : SubsystemBase() {
         yOffset = ty.getDouble(0.0)
         area = ta.getDouble(0.0)
         skew = ts.getDouble(0.0)
-        targetVisible = tv.getBoolean(false)
+        targetVisible = tv.getDouble(0.0) > 0
     }
 }
