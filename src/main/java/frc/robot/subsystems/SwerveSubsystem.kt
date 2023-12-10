@@ -19,7 +19,6 @@ import swervelib.parser.SwerveDriveConfiguration
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 
-
 object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
     private var autoBuilder: SwerveAutoBuilder? = null
@@ -134,7 +133,5 @@ object SwerveSubsystem : SubsystemBase() {
             getSwerveDriveConfiguration()?.modules?.get(3)?.absolutePosition ?: 0.0,
             getSwerveDriveConfiguration()?.modules?.get(3)?.driveMotor?.velocity ?: 0.0)
     }
-
-
 
 }

@@ -8,7 +8,9 @@ import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
 import frc.robot.commands.ExampleCommand
 import frc.robot.commands.swerve.TeleopDrive
+import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.ExampleSubsystem
+import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.util.SingletonXboxController
 
 /**
@@ -26,6 +28,11 @@ object RobotContainer {
 
     val controller = SingletonXboxController
 
+    val limelight = LimelightSubsystem
+    val drivebase = SwerveSubsystem
+
+    val trackTarget = TrackTargetCommand()
+
     // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
     //     No, uninverting both doesn't fix it :(
     val teleopDrive: TeleopDrive = TeleopDrive(
@@ -40,7 +47,7 @@ object RobotContainer {
     init {
         configureBindings()
 
-        SwerveSubsystem.defaultCommand = teleopDrive
+        drivebase.defaultCommand = teleopDrive
         // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
         Autos
     }
@@ -54,6 +61,8 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.b().onTrue(SwerveSubsystem.runOnce { SwerveSubsystem.zeroGyro() })
+        controller.b().onTrue(drivebase.runOnce { drivebase.zeroGyro() })
+
+        controller.a().toggleOnTrue(trackTarget)
     }
 }
