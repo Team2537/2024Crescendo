@@ -1,67 +1,82 @@
-package frc.robot.commands.swerve
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+package frc.robot.commands.swervedrive.drivebase
 
-import edu.wpi.first.wpilibj2.command.CommandBase
 import SwerveSubsystem
+import SwerveSubsystem.drive
+import SwerveSubsystem.getSwerveController
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj2.command.CommandBase
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
-import kotlin.contracts.contract
 
-class TeleopDrive(vForward: DoubleSupplier, vSide: DoubleSupplier, omega: DoubleSupplier,
-                  driveMode: BooleanSupplier, isOpenLoop: Boolean, slowMode: BooleanSupplier) : CommandBase() {
-    private val swerveSubsystem = SwerveSubsystem
-
-    private val vForward: DoubleSupplier
-    private val vSide: DoubleSupplier
+/**
+ * An example command that uses an example subsystem.
+ */
+class TeleopDrive(
+    vX: DoubleSupplier, vY: DoubleSupplier, omega: DoubleSupplier,
+    driveMode: BooleanSupplier, slowMode: BooleanSupplier
+) : CommandBase() {
+    private val vX: DoubleSupplier
+    private val vY: DoubleSupplier
     private val omega: DoubleSupplier
     private val driveMode: BooleanSupplier
-    private val isOpenLoop: Boolean
     private val slowMode: BooleanSupplier
+    private val controller: SwerveController
+    private val swerve: SwerveSubsystem
 
-    private val swerveController: SwerveController
-
-
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param swerve The subsystem used by this command.
+     */
     init {
-        // each subsystem used by the command must be passed into the addRequirements() method
-        addRequirements(swerveSubsystem)
-
-        this.vForward = vForward
-        this.vSide = vSide
+        this.swerve = SwerveSubsystem
+        this.vX = vX
+        this.vY = vY
         this.omega = omega
         this.driveMode = driveMode
-        this.isOpenLoop = isOpenLoop
         this.slowMode = slowMode
-        this.swerveController = swerveSubsystem.getSwerveController()
-
-
-
+        controller = swerve.getSwerveController()
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(swerve)
     }
 
+    // Called when the command is initially scheduled.
     override fun initialize() {}
 
+    // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
-        var xVelocity = vForward.getAsDouble()
-        var yVelocity = vSide.getAsDouble()
-        var angleVelocity = omega.getAsDouble()
+        var xVelocity = vX.asDouble
+        var yVelocity = vY.asDouble
+        var angVelocity = omega.asDouble
+        val slowMode = slowMode.asBoolean
+        SmartDashboard.putNumber("vX", xVelocity)
+        SmartDashboard.putNumber("vY", yVelocity)
+        SmartDashboard.putNumber("omega", angVelocity)
 
-        if(slowMode.asBoolean){
+        if(slowMode){
             xVelocity *= 0.6
             yVelocity *= 0.6
-            angleVelocity *= 0.6
+            angVelocity *= 0.6
         }
 
-        var speed: Translation2d = Translation2d(xVelocity * SwerveSubsystem.maximumSpeed , yVelocity * SwerveSubsystem.maximumSpeed)
-
-        swerveSubsystem.drive(speed, angleVelocity * swerveController.config.maxAngularVelocity, driveMode.asBoolean)
-
-
+        // Drive using raw values.
+        swerve.drive(
+            Translation2d(xVelocity * swerve.maximumSpeed, yVelocity * swerve.maximumSpeed),
+            angVelocity * controller.config.maxAngularVelocity,
+            driveMode.asBoolean
+        )
     }
 
+    // Called once the command ends or is interrupted.
+    override fun end(interrupted: Boolean) {}
+
+    // Returns true when the command should end.
     override fun isFinished(): Boolean {
-        // TODO: Make this return true when this Command no longer needs to run execute()
         return false
     }
-
-    override fun end(interrupted: Boolean) {}
 }
