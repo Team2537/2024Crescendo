@@ -51,7 +51,7 @@ class TeleopDrive(vForward: DoubleSupplier, vSide: DoubleSupplier, omega: Double
             angleVelocity *= 0.6
         }
 
-        var speed: Translation2d = Translation2d(xVelocity * swerveController.config.maxSpeed , yVelocity * swerveController.config.maxSpeed)
+        var speed: Translation2d = Translation2d(xVelocity * SwerveSubsystem.maximumSpeed , yVelocity * SwerveSubsystem.maximumSpeed)
 
         swerveSubsystem.drive(speed, angleVelocity * swerveController.config.maxAngularVelocity, driveMode.asBoolean)
 
