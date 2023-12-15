@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
 import frc.robot.commands.ExampleCommand
+import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive
 import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.ExampleSubsystem
@@ -43,6 +44,12 @@ object RobotContainer {
         { controller.hid.rightBumper }
     )
 
+    val cornerSpin: CornerSpinCommand = CornerSpinCommand(
+        { -controller.rightX },
+        { controller.hid.leftBumper },
+        { controller.hid.rightBumper }
+    )
+
     init {
         configureBindings()
 
@@ -63,5 +70,7 @@ object RobotContainer {
         controller.b().onTrue(drivebase.runOnce { drivebase.zeroGyro() })
 
         controller.a().toggleOnTrue(trackTarget)
+
+        controller.x().toggleOnTrue(cornerSpin)
     }
 }

@@ -35,9 +35,9 @@ object SwerveSubsystem : SubsystemBase(){
         swerveDrive.drive(translation, rotation, fieldOriented, false)
     }
 
-//    fun drive(translation: Translation2d, rotation: Double, fieldOriented: Boolean, centerOfRotation: Translation2d) {
-//        swerveDrive.drive(translation, rotation, fieldOriented, false, centerOfRotation)
-//    }
+    fun drive(translation: Translation2d, rotation: Double, fieldOriented: Boolean, centerOfRotation: Translation2d) {
+        swerveDrive.drive(translation, rotation, fieldOriented, false, centerOfRotation)
+    }
 
     fun driveFieldOriented(velocity: ChassisSpeeds){
         swerveDrive.driveFieldOriented(velocity)
