@@ -18,10 +18,6 @@
     "angle": true,
     "drive": false
   },
-  "conversionFactor": {
-    "angle": 8.14,
-    "drive": 21.42
-  },
   "encoder": {
     "type": "cancoder",
     "id": 3,
