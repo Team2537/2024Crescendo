@@ -1,4 +1,3 @@
-import com.ctre.phoenix.sensors.WPI_Pigeon2
 import com.pathplanner.lib.PathConstraints
 import com.pathplanner.lib.PathPlanner
 import com.pathplanner.lib.auto.PIDConstants
@@ -8,58 +7,56 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.Trajectory
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
-import frc.robot.util.SingletonXboxController
 import swervelib.SwerveDrive
-import swervelib.parser.SwerveDriveConfiguration
 import swervelib.parser.SwerveParser
-import swervelib.telemetry.SwerveDriveTelemetry
+import java.io.File
 
-object SwerveSubsystem : SubsystemBase() {
+object SwerveSubsystem : SubsystemBase(){
     private val swerveDrive: SwerveDrive
-    private var autoBuilder: SwerveAutoBuilder? = null
-    private val controller = SingletonXboxController
-    private var swerveTab: ShuffleboardTab
+    var maximumSpeed: Double = Units.feetToMeters(12.0)
 
-    private lateinit var moduleSpeeds: DoubleArray
+    private var autoBuilder: SwerveAutoBuilder? = null
 
     init {
-        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
         try {
-            swerveDrive = SwerveParser(Constants.FileConstants.SWERVE_CONFIG).createSwerveDrive()
+            swerveDrive = SwerveParser(Constants.FileConstants.SWERVE_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
-            throw RuntimeException("Failed to create swerve drive", e)
+            throw RuntimeException("Error creating swerve drive", e)
         }
 
-        swerveTab = Shuffleboard.getTab("Swerve")
-
-
-        swerveTab.addDoubleArray("Module Speeds") { moduleSpeeds }
-        swerveTab.addDouble("Heading") { getHeading().degrees }
-
-        setMotorBrake(true)
+        swerveDrive.setHeadingCorrection(false)
     }
 
-    fun drive(translation2d: Translation2d, rotation: Double, fieldOriented: Boolean) {
-        swerveDrive.drive(translation2d, rotation, fieldOriented, false)
+    fun drive(translation: Translation2d, rotation: Double, fieldOriented: Boolean) {
+        swerveDrive.drive(translation, rotation, fieldOriented, false)
+    }
+
+    fun drive(translation: Translation2d, rotation: Double, fieldOriented: Boolean, centerOfRotation: Translation2d) {
+        swerveDrive.drive(translation, rotation, fieldOriented, false, centerOfRotation)
+    }
+
+    fun driveFieldOriented(velocity: ChassisSpeeds){
+        swerveDrive.driveFieldOriented(velocity)
+    }
+
+    fun drive(velocity: ChassisSpeeds){
+        swerveDrive.drive(velocity)
     }
 
     fun getKinematics() = swerveDrive.kinematics
 
-    fun resetOdometry(initalHolonomicPose: Pose2d){
-        swerveDrive.resetOdometry(initalHolonomicPose)
+    fun resetOdometry(initialHolonomicPose: Pose2d) {
+        swerveDrive.resetOdometry(initialHolonomicPose)
     }
 
-    fun getPose(): Pose2d {
-        return swerveDrive.getPose()
-    }
+    fun getPose() = swerveDrive.pose
 
-    fun setChassisSpeeds(chassisSpeeds: ChassisSpeeds){
-        swerveDrive.setChassisSpeeds(chassisSpeeds)
+    fun setChassisSpeeds(velocity: ChassisSpeeds) {
+        swerveDrive.setChassisSpeeds(velocity)
     }
 
     fun postTrajectory(trajectory: Trajectory){
@@ -74,35 +71,30 @@ object SwerveSubsystem : SubsystemBase() {
         swerveDrive.setMotorIdleMode(brake)
     }
 
-    fun getHeading(): Rotation2d {
-        return swerveDrive.yaw
-    }
+    fun getHeading() = swerveDrive.yaw
 
     fun getTargetSpeeds(vForward: Double, vSide: Double, angle: Rotation2d): ChassisSpeeds {
-        return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, angle.radians, getHeading().radians)
+        return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, angle.radians, getHeading().radians, maximumSpeed)
     }
 
-    fun getFieldVelocity(): ChassisSpeeds {
+    fun getFieldVelocity(): ChassisSpeeds? {
         return swerveDrive.fieldVelocity
     }
 
-    fun getRobotVelocity(): ChassisSpeeds {
+    fun getRobotVelocity(): ChassisSpeeds? {
         return swerveDrive.robotVelocity
     }
 
     fun getSwerveController() = swerveDrive.swerveController
 
-    fun getSwerveDriveConfiguration(): SwerveDriveConfiguration? {
-        return swerveDrive.swerveDriveConfiguration
-    }
+    fun getSwerveDriveConfiguration() = swerveDrive.swerveDriveConfiguration
 
     fun lock() {
         swerveDrive.lockPose()
     }
 
-    fun getPitch(): Rotation2d? {
-        return swerveDrive.pitch
-    }
+    fun getPitch() = swerveDrive.pitch
+
 
     fun createPathPlannerCommand(
         path: String?, constraints: PathConstraints?, eventMap: Map<String?, Command?>?,
@@ -120,18 +112,6 @@ object SwerveSubsystem : SubsystemBase() {
                 )
         }
         return autoBuilder!!.fullAuto(pathGroup)
-    }
-
-    override fun periodic() {
-        moduleSpeeds = doubleArrayOf(
-            getSwerveDriveConfiguration()?.modules?.get(0)?.absolutePosition ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(0)?.driveMotor?.velocity ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(1)?.absolutePosition ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(1)?.driveMotor?.velocity ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(2)?.absolutePosition ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(2)?.driveMotor?.velocity ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(3)?.absolutePosition ?: 0.0,
-            getSwerveDriveConfiguration()?.modules?.get(3)?.driveMotor?.velocity ?: 0.0)
     }
 
 }
