@@ -132,7 +132,3 @@ task copyPreCommitHook(type: Copy) {
     from "$rootDir/scripts/pre-commit"
     into "$rootDir/.git/hooks"
 }
-
-tasks.named('ktlintMainSourceSetCheck') {
-    enabled = false
-}
