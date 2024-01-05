@@ -17,8 +17,11 @@ import java.util.function.DoubleSupplier
  * An example command that uses an example subsystem.
  */
 class TeleopDrive(
-    vX: DoubleSupplier, vY: DoubleSupplier, omega: DoubleSupplier,
-    driveMode: BooleanSupplier, slowMode: BooleanSupplier
+    vX: DoubleSupplier,
+    vY: DoubleSupplier,
+    omega: DoubleSupplier,
+    driveMode: BooleanSupplier,
+    slowMode: BooleanSupplier,
 ) : CommandBase() {
     private val vX: DoubleSupplier
     private val vY: DoubleSupplier
@@ -58,7 +61,7 @@ class TeleopDrive(
         SmartDashboard.putNumber("vY", yVelocity)
         SmartDashboard.putNumber("omega", angVelocity)
 
-        if(slowMode){
+        if (slowMode) {
             xVelocity *= 0.6
             yVelocity *= 0.6
             angVelocity *= 0.6
@@ -68,7 +71,7 @@ class TeleopDrive(
         swerve.drive(
             Translation2d(xVelocity * swerve.maximumSpeed, yVelocity * swerve.maximumSpeed),
             angVelocity * controller.config.maxAngularVelocity,
-            driveMode.asBoolean
+            driveMode.asBoolean,
         )
     }
 

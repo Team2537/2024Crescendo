@@ -1,16 +1,12 @@
 package frc.robot
 
 import SwerveSubsystem
-import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
-import frc.robot.commands.ExampleCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive
 import frc.robot.commands.vision.TrackTargetCommand
-import frc.robot.subsystems.ExampleSubsystem
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.util.SingletonXboxController
 
@@ -26,7 +22,6 @@ import frc.robot.util.SingletonXboxController
  * directly reference the (single instance of the) object.
  */
 object RobotContainer {
-
     val controller = SingletonXboxController
 
     val limelight = LimelightSubsystem
@@ -36,19 +31,21 @@ object RobotContainer {
 
     // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
     //     No, uninverting both doesn't fix it :(
-    val teleopDrive: TeleopDrive = TeleopDrive(
-        { -controller.leftY },
-        { -controller.leftX },
-        { -controller.rightX },
-        { controller.hid.leftBumper },
-        { controller.hid.rightBumper }
-    )
+    val teleopDrive: TeleopDrive =
+        TeleopDrive(
+            { -controller.leftY },
+            { -controller.leftX },
+            { -controller.rightX },
+            { controller.hid.leftBumper },
+            { controller.hid.rightBumper },
+        )
 
-    val cornerSpin: CornerSpinCommand = CornerSpinCommand(
-        { -controller.rightX },
-        { controller.hid.leftBumper },
-        { controller.hid.rightBumper }
-    )
+    val cornerSpin: CornerSpinCommand =
+        CornerSpinCommand(
+            { -controller.rightX },
+            { controller.hid.leftBumper },
+            { controller.hid.rightBumper },
+        )
 
     init {
         configureBindings()
@@ -59,6 +56,7 @@ object RobotContainer {
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
+
     /**
      * Use this method to define your `trigger->command` mappings. Triggers can be created via the
      * [Trigger] constructor that takes a [BooleanSupplier][java.util.function.BooleanSupplier]
