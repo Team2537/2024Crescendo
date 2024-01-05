@@ -8,6 +8,7 @@ ktlintCheckStatus=$?
 
 if [[ $ktlintCheckStatus -ne 0 ]]; then
   exit 1
+  ./gradlew ktlintFormat
 else
   exit 0
 fi
