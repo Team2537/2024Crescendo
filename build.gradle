@@ -5,6 +5,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.8.0"
     id "edu.wpi.first.GradleRIO" version "2023.4.3"
     id "idea"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
 }
 
 def javaVersion = JavaVersion.VERSION_11
