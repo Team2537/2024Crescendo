@@ -122,3 +122,13 @@ idea {
         excludeDirs+=file(".vscode" )
     }
 }
+
+task copyPreCommitHook(type: Copy) {
+    description = "Copy pre-commit hook from the scripts to the .git/hooks directory"
+    group = "git hooks"
+
+    outputs.upToDateWhen { false }
+
+    from "$rootDir/scripts/pre-commit"
+    into "$rootDir/.git/hooks"
+}
