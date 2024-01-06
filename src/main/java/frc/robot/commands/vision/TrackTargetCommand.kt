@@ -3,7 +3,6 @@ package frc.robot.commands.vision
 import SwerveSubsystem
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.util.SingletonXboxController
@@ -29,11 +28,11 @@ class TrackTargetCommand : CommandBase() {
     override fun initialize() {}
 
     override fun execute() {
-        rotation = pidController.calculate(limelightSubsystem.getXOffset(), 0.0)
+        rotation = pidController.calculate(limelightSubsystem.xOffset, 0.0)
 
 
 
-        if((abs(limelightSubsystem.getXOffset()) < 2 && limelightSubsystem.getArea() < 3.5) && limelightSubsystem.isTargetVisible()){
+        if((abs(limelightSubsystem.xOffset) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
             translation = Translation2d(0.3, -SingletonXboxController.leftX)
         } else {
             translation = Translation2d(0.0, -SingletonXboxController.leftX)
