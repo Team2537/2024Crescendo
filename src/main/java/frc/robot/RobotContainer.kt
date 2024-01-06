@@ -8,6 +8,7 @@ import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive
 import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
+import frc.robot.util.DefaultDriverProfile
 import frc.robot.util.SingletonXboxController
 
 /**
@@ -67,10 +68,6 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.b().onTrue(drivebase.runOnce { drivebase.zeroGyro() })
-
-        controller.a().toggleOnTrue(trackTarget)
-
-        controller.x().toggleOnTrue(cornerSpin)
+        DefaultDriverProfile.applyPreference(controller)
     }
 }
