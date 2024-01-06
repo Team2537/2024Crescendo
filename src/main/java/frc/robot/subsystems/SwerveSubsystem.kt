@@ -13,9 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
-import java.io.File
 
-object SwerveSubsystem : SubsystemBase(){
+object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
     var maximumSpeed: Double = Units.feetToMeters(12.0)
 
@@ -31,19 +30,28 @@ object SwerveSubsystem : SubsystemBase(){
         swerveDrive.setHeadingCorrection(false)
     }
 
-    fun drive(translation: Translation2d, rotation: Double, fieldOriented: Boolean) {
+    fun drive(
+        translation: Translation2d,
+        rotation: Double,
+        fieldOriented: Boolean,
+    ) {
         swerveDrive.drive(translation, rotation, fieldOriented, false)
     }
 
-    fun drive(translation: Translation2d, rotation: Double, fieldOriented: Boolean, centerOfRotation: Translation2d) {
+    fun drive(
+        translation: Translation2d,
+        rotation: Double,
+        fieldOriented: Boolean,
+        centerOfRotation: Translation2d,
+    ) {
         swerveDrive.drive(translation, rotation, fieldOriented, false, centerOfRotation)
     }
 
-    fun driveFieldOriented(velocity: ChassisSpeeds){
+    fun driveFieldOriented(velocity: ChassisSpeeds) {
         swerveDrive.driveFieldOriented(velocity)
     }
 
-    fun drive(velocity: ChassisSpeeds){
+    fun drive(velocity: ChassisSpeeds) {
         swerveDrive.drive(velocity)
     }
 
@@ -59,21 +67,25 @@ object SwerveSubsystem : SubsystemBase(){
         swerveDrive.setChassisSpeeds(velocity)
     }
 
-    fun postTrajectory(trajectory: Trajectory){
+    fun postTrajectory(trajectory: Trajectory) {
         swerveDrive.postTrajectory(trajectory)
     }
 
-    fun zeroGyro(){
+    fun zeroGyro() {
         swerveDrive.zeroGyro()
     }
 
-    fun setMotorBrake(brake: Boolean){
+    fun setMotorBrake(brake: Boolean) {
         swerveDrive.setMotorIdleMode(brake)
     }
 
     fun getHeading() = swerveDrive.yaw
 
-    fun getTargetSpeeds(vForward: Double, vSide: Double, angle: Rotation2d): ChassisSpeeds {
+    fun getTargetSpeeds(
+        vForward: Double,
+        vSide: Double,
+        angle: Rotation2d,
+    ): ChassisSpeeds {
         return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, angle.radians, getHeading().radians, maximumSpeed)
     }
 
@@ -95,23 +107,26 @@ object SwerveSubsystem : SubsystemBase(){
 
     fun getPitch() = swerveDrive.pitch
 
-
     fun createPathPlannerCommand(
-        path: String?, constraints: PathConstraints?, eventMap: Map<String?, Command?>?,
-        translation: PIDConstants?, rotation: PIDConstants?, useAllianceColor: Boolean
+        path: String?,
+        constraints: PathConstraints?,
+        eventMap: Map<String?, Command?>?,
+        translation: PIDConstants?,
+        rotation: PIDConstants?,
+        useAllianceColor: Boolean,
     ): Command {
         val pathGroup = PathPlanner.loadPathGroup(path, constraints)
         if (autoBuilder == null) {
             autoBuilder =
-                SwerveAutoBuilder({ swerveDrive.getPose() }, { pose: Pose2d? -> swerveDrive.resetOdometry(pose) },
+                SwerveAutoBuilder(
+                    { swerveDrive.getPose() }, { pose: Pose2d? -> swerveDrive.resetOdometry(pose) },
                     translation,
                     rotation, { chassisSpeeds: ChassisSpeeds? -> swerveDrive.setChassisSpeeds(chassisSpeeds) },
                     eventMap,
                     useAllianceColor,
-                    this
+                    this,
                 )
         }
         return autoBuilder!!.fullAuto(pathGroup)
     }
-
 }

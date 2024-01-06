@@ -5,6 +5,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.8.0"
     id "edu.wpi.first.GradleRIO" version "2023.4.3"
     id "idea"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
 }
 
 def javaVersion = JavaVersion.VERSION_11
@@ -120,4 +121,14 @@ idea {
         // Exclude the .vscode directory from indexing and search
         excludeDirs+=file(".vscode" )
     }
+}
+
+task copyPreCommitHook(type: Copy) {
+    description = "Copy pre-commit hook from the scripts to the .git/hooks directory"
+    group = "git hooks"
+
+    outputs.upToDateWhen { false }
+
+    from "$rootDir/scripts/pre-commit"
+    into "$rootDir/.git/hooks"
 }
