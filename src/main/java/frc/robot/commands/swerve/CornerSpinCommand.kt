@@ -1,16 +1,18 @@
 package frc.robot.commands.swerve
 
-import edu.wpi.first.wpilibj2.command.CommandBase
 import SwerveSubsystem
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.math.util.Units
+import edu.wpi.first.wpilibj2.command.CommandBase
 import frc.robot.util.SingletonXboxController
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
-class CornerSpinCommand(rotation: DoubleSupplier, driveMode: BooleanSupplier,
-                        slowMode: BooleanSupplier) : CommandBase() {
+class CornerSpinCommand(
+    rotation: DoubleSupplier,
+    driveMode: BooleanSupplier,
+    slowMode: BooleanSupplier,
+) : CommandBase() {
     private val swerveSubsystem = SwerveSubsystem
 
     private val rotation: DoubleSupplier
@@ -19,8 +21,6 @@ class CornerSpinCommand(rotation: DoubleSupplier, driveMode: BooleanSupplier,
     private val slowMode: BooleanSupplier
 
     private val controller: SwerveController
-
-
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
@@ -40,7 +40,7 @@ class CornerSpinCommand(rotation: DoubleSupplier, driveMode: BooleanSupplier,
 
         val center: Translation2d = SingletonXboxController.getPOVasCorner()
 
-        if(slowMode.asBoolean){
+        if (slowMode.asBoolean) {
             rot *= 0.6
         }
 

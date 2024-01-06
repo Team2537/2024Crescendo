@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object LimelightSubsystem : SubsystemBase() {
     private val limelight : Limelight = Limelight(NetworkTableInstance.getDefault().getTable("limelight"))
@@ -15,7 +15,6 @@ object LimelightSubsystem : SubsystemBase() {
 
     val yOffset: Double
         get() = limelight.yOffset
-
     val area: Double
         get() = limelight.area
 
