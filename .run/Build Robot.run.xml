@@ -18,7 +18,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <RunAsTest>false</RunAsTest>
+    <ForceTestExec>false</ForceTestExec>
     <method v="2" />
   </configuration>
   <configuration default="false" name="Build Robot" type="GradleRunConfiguration" factoryName="Gradle">
@@ -40,7 +40,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <RunAsTest>false</RunAsTest>
+    <ForceTestExec>false</ForceTestExec>
     <method v="2" />
   </configuration>
   <configuration default="false" name="Build Robot" type="GradleRunConfiguration" factoryName="Gradle">
@@ -54,7 +54,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="copyPreCommitHook" />
+          <option value="ktlintFormat" />
           <option value="build" />
         </list>
       </option>
@@ -63,7 +63,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <RunAsTest>false</RunAsTest>
+    <ForceTestExec>false</ForceTestExec>
     <method v="2" />
   </configuration>
 </component>
