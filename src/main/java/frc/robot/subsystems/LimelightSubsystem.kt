@@ -5,10 +5,9 @@ import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object LimelightSubsystem : SubsystemBase() {
-
     // NetworkTableEntry objects for getting data from the Limelight
     private var tx: NetworkTableEntry
     private var ty: NetworkTableEntry
@@ -19,6 +18,7 @@ object LimelightSubsystem : SubsystemBase() {
     // NetworkTable object for getting data from the Limelight
     private var table: NetworkTable
     private var visionTab: ShuffleboardTab
+
     // Variables for storing data from the Limelight
     private var xOffset: Double = 0.0
     private var yOffset: Double = 0.0
@@ -47,8 +47,6 @@ object LimelightSubsystem : SubsystemBase() {
 
         // Create a Shuffleboard tab for the Limelight
         val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
-
-
     }
 
     override fun periodic() {
