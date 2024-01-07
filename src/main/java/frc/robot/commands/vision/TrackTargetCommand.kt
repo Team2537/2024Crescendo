@@ -16,13 +16,10 @@ class TrackTargetCommand : CommandBase() {
     private var rotation: Double = 0.0
     private var translation: Translation2d = Translation2d(0.0, 0.0)
 
-
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(limelightSubsystem, drivebase)
         pidController = PIDController(0.1, 0.0, 0.0)
-
-
     }
 
     override fun initialize() {}
@@ -30,9 +27,7 @@ class TrackTargetCommand : CommandBase() {
     override fun execute() {
         rotation = pidController.calculate(limelightSubsystem.xOffset, 0.0)
 
-
-
-        if((abs(limelightSubsystem.xOffset) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
+        if ((abs(limelightSubsystem.xOffset) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
             translation = Translation2d(0.3, -SingletonXboxController.leftX)
         } else {
             translation = Translation2d(0.0, -SingletonXboxController.leftX)
