@@ -1,13 +1,19 @@
 package frc.robot.subsystems
 
+import edu.wpi.first.networktables.NetworkTable
+import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.networktables.NetworkTableInstance
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import lib.Limelight
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object LimelightSubsystem : SubsystemBase() {
-
-
+    // NetworkTableEntry objects for getting data from the Limelight
+    private var tx: NetworkTableEntry
+    private var ty: NetworkTableEntry
+    private var ta: NetworkTableEntry
+    private var tv: NetworkTableEntry
+    private var ts: NetworkTableEntry
 
     // NetworkTable object for getting data from the Limelight
     private var table: NetworkTable
