@@ -1,4 +1,4 @@
-package lib
+package lib.vision
 
 import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableEntry
