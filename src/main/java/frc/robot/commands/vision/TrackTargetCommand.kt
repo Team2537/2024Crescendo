@@ -25,9 +25,9 @@ class TrackTargetCommand : CommandBase() {
     override fun initialize() {}
 
     override fun execute() {
-        rotation = pidController.calculate(limelightSubsystem.getXOffset(), 0.0)
-
-        if ((abs(limelightSubsystem.getXOffset()) < 2 && limelightSubsystem.getArea() < 3.5) && limelightSubsystem.isTargetVisible()) {
+        rotation = pidController.calculate(limelightSubsystem.xOffset, 0.0)
+        
+        if((abs(limelightSubsystem.xOffset) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
             translation = Translation2d(0.3, -SingletonXboxController.leftX)
         } else {
             translation = Translation2d(0.0, -SingletonXboxController.leftX)
