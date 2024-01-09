@@ -2,7 +2,7 @@ package frc.robot.commands.swerve
 
 import frc.robot.subsystems.SwerveSubsystem
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.wpilibj2.command.CommandBase
+import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.util.SingletonXboxController
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
@@ -12,7 +12,7 @@ class CornerSpinCommand(
     rotation: DoubleSupplier,
     driveMode: BooleanSupplier,
     slowMode: BooleanSupplier,
-) : CommandBase() {
+) : Command() {
     private val swerveSubsystem = SwerveSubsystem
 
     private val rotation: DoubleSupplier

@@ -3,12 +3,12 @@ package frc.robot.commands.vision
 import frc.robot.subsystems.SwerveSubsystem
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.wpilibj2.command.CommandBase
+import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.util.SingletonXboxController
 import kotlin.math.abs
 
-class TrackTargetCommand : CommandBase() {
+class TrackTargetCommand : Command() {
     private val limelightSubsystem = LimelightSubsystem
     private val drivebase = SwerveSubsystem
     private val pidController: PIDController

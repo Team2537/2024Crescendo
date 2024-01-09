@@ -6,7 +6,7 @@ package frc.robot.commands.swerve
 import frc.robot.subsystems.SwerveSubsystem
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.CommandBase
+import edu.wpi.first.wpilibj2.command.Command
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
@@ -20,7 +20,7 @@ class TeleopDriveCommand(
     omega: DoubleSupplier,
     driveMode: BooleanSupplier,
     slowMode: BooleanSupplier,
-) : CommandBase() {
+) : Command() {
     private val vX: DoubleSupplier
     private val vY: DoubleSupplier
     private val omega: DoubleSupplier
