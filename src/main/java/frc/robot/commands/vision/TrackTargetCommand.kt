@@ -29,6 +29,7 @@ class TrackTargetCommand : CommandBase() {
 
         if ((abs(limelightSubsystem.xOffset) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
 
+
             translation = Translation2d(0.3, -SingletonXboxController.leftX)
         } else {
             translation = Translation2d(0.0, -SingletonXboxController.leftX)
