@@ -2,7 +2,7 @@ package lib.controllers
 
 import edu.wpi.first.wpilibj.Joystick
 
-class XboxGamepad(port: Int) : Joystick(port), Gamepad {
+open class XboxGamepad(port: Int) : Joystick(port), Gamepad {
     override val leftXAxis: Double
         get() = this.getRawAxis(0)
 

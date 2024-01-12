@@ -8,7 +8,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController
  *
  * @author Matthew Clark
  * @see DefaultDriverProfile
+ *
+ * @Deprecated [DriverProfile] has been replaced by [lib.controllers.DriverProfile]
  */
+@Deprecated("New DriverProfile in lib")
 interface DriverProfile {
-    fun applyPreference(controller : CommandXboxController) // TODO: change with abstract controller
+    fun applyPreference(controller: CommandXboxController) // TODO: change with abstract controller
 }
