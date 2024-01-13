@@ -1,5 +1,7 @@
 package lib.controllers
 
+import lib.profiles.DriverProfile
+
 /**
  * A Gamepad that supports having a [DriverProfile] that affects its input mapping.
  *

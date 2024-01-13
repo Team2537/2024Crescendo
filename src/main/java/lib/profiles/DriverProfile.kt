@@ -1,4 +1,4 @@
-package lib.controllers
+package lib.profiles
 
 data class DriverProfile(
     val invertLeftX: Boolean,
