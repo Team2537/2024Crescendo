@@ -17,7 +17,7 @@ import frc.robot.RobotContainer
 @Deprecated("New DriverProfile in lib")
 object DefaultDriverProfile : DriverProfile {
     override fun applyPreference(controller: CommandXboxController) {
-        controller.b().onTrue(RobotContainer.drivebase.runOnce { RobotContainer.drivebase.zeroGyro() })
+        controller.b().onTrue(RobotContainer.driveBase.runOnce { RobotContainer.driveBase.zeroGyro() })
         controller.a().toggleOnTrue(RobotContainer.trackTarget)
         controller.x().toggleOnTrue(RobotContainer.cornerSpin)
     }

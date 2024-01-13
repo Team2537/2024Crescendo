@@ -1,11 +1,9 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-package frc.robot.commands.swervedrive.drivebase
+package frc.robot.commands.swerve
 
-import SwerveSubsystem
-import SwerveSubsystem.drive
-import SwerveSubsystem.getSwerveController
+import frc.robot.subsystems.SwerveSubsystem
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -16,7 +14,7 @@ import java.util.function.DoubleSupplier
 /**
  * An example command that uses an example subsystem.
  */
-class TeleopDrive(
+class TeleopDriveCommand(
     vX: DoubleSupplier,
     vY: DoubleSupplier,
     omega: DoubleSupplier,
