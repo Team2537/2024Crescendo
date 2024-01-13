@@ -15,10 +15,9 @@ object DriverProfile {
 
     /**
      * Gets the current selected profile from the [profile chooser][driverProfileChooser].
-     *
-     * Elvis operator creates null-safety.
      */
     val currentProfile: Profile
+        // Elvis operator for null-safety
         get() = driverProfileChooser.selected ?: Profile.default
 
     init {

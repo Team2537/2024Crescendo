@@ -1,7 +1,7 @@
 package lib.controllers
 
+import lib.powScale
 import lib.profiles.DriverProfile
-import kotlin.math.pow
 
 /**
  * An xbox gamepad that supports being given a specific [DriverProfile]
@@ -16,6 +16,9 @@ import kotlin.math.pow
  * @see DriverProfile
  * @see XboxGamepad
  */
+
+@Deprecated("Use ProfileController in combination with XboxGamepad",
+    level = DeprecationLevel.HIDDEN)
 class ProfileXboxGamepad(port: Int) : XboxGamepad(port), ProfileGamepad {
     private val leftXInverse: Double
         get() = if (profile.invertLeftX) -1.0 else 1.0
@@ -29,17 +32,14 @@ class ProfileXboxGamepad(port: Int) : XboxGamepad(port), ProfileGamepad {
     private val rightYInverse: Double
         get() = if (profile.invertRightY) -1.0 else 1.0
 
-    override val profile: DriverProfile.Profile
-        get() = DriverProfile.currentProfile
-
     override val leftXAxis: Double
-        get() = leftXInverse * leftXAxis.powScale(profile.leftPowerScale)
+        get() = leftXInverse * super.leftXAxis.powScale(profile.leftPowerScale)
 
     override val leftXAxisRaw: Double
         get() = super.leftXAxis
 
     override val leftYAxis: Double
-        get() = leftYInverse * leftYAxis.powScale(profile.leftPowerScale)
+        get() = leftYInverse * super.leftYAxis.powScale(profile.leftPowerScale)
 
     override val leftYAxisRaw: Double
         get() = super.leftYAxis
