@@ -26,7 +26,7 @@ import lib.profiles.DriverProfile
 object RobotContainer {
     // Testing pre-commit
 
-    private val controller = SingletonXboxController
+    private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
     val trackTarget = TrackTargetCommand()
 
