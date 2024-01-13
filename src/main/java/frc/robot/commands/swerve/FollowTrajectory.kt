@@ -21,9 +21,9 @@ class FollowTrajectory(trajectory: PathPlannerTrajectory, resetOdometry: Boolean
             PPSwerveControllerCommand(
                 trajectory,
                 { drivebase.getPose() },
-                Constants.Auton.xAutoPID.createPIDController(),
-                Constants.Auton.yAutoPID.createPIDController(),
-                Constants.Auton.angleAutoPID.createPIDController(),
+                Constants.Auto.xAutoPID.createPIDController(),
+                Constants.Auto.yAutoPID.createPIDController(),
+                Constants.Auto.angleAutoPID.createPIDController(),
                 { chassisSpeeds: ChassisSpeeds? -> drivebase.setChassisSpeeds(chassisSpeeds!!) },
                 drivebase,
             ),
