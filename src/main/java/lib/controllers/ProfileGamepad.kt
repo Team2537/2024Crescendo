@@ -1,6 +1,8 @@
 package lib.controllers
 
 import lib.profiles.DriverProfile
+import kotlin.math.pow
+import kotlin.math.absoluteValue
 
 /**
  * A Gamepad that supports having a [DriverProfile] that affects its input mapping.
@@ -14,12 +16,14 @@ import lib.profiles.DriverProfile
  * @see DriverProfile
  */
 interface ProfileGamepad : Gamepad {
+    
+    // Could get removed honostly
     /**
      * The specific profile that is affecting this controller's input mapping
      *
-     * @see DriverProfile
+     * @see DriverProfile.currentProfile
      */
-    var profile: DriverProfile
+    val profile: DriverProfile.Profile
 
     /**
      * The raw value of the left joystick axis in the X direction (un-scaled and un-multiplied)
@@ -48,4 +52,18 @@ interface ProfileGamepad : Gamepad {
      * @see rightYAxis
      */
     val rightYAxisRaw: Double
+}
+
+/**
+ * Raises a base to an exponent *specifically to scale its value.*
+ * 
+ * It will retain its sign, and will give proper (but negative) values
+ * for all negative bases for all fractional exponents
+ */
+fun Double.powScale(exp: Double): Double {
+    // (-1.0) ** 2.0 > 0                        <- bad
+    // (-1.0) * |-1.0| ** (2.0 - 1) < 0         <- good
+    // (-1.0) ** (3.0 / 2.0) => NaN             <- bad
+    // (-1.0) * |-1.0| ** (2.0 / 3.0 - 1) == 1  <- good
+    return this * this.absoluteValue.pow(exp - 1.0)
 }

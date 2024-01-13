@@ -1,6 +1,6 @@
 package frc.robot.commands.swerve
 
-import SwerveSubsystem
+import frc.robot.subsystems.SwerveSubsystem
 import com.pathplanner.lib.PathPlannerTrajectory
 import com.pathplanner.lib.commands.PPSwerveControllerCommand
 import edu.wpi.first.math.kinematics.ChassisSpeeds
