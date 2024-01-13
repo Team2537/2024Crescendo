@@ -15,6 +15,7 @@ object DriverProfile {
 
     /**
      * Gets the current selected profile from the [profile chooser][driverProfileChooser].
+     *
      * Elvis operator creates null-safety.
      */
     val currentProfile: Profile
@@ -25,7 +26,7 @@ object DriverProfile {
         tab.add(driverProfileChooser)
     }
 
-    enum class Profile(
+    enum class Profile( // TODO: perhaps add a string parameter for a more descriptive name
         val invertLeftX: Boolean,
         val invertLeftY: Boolean,
         val invertRightX: Boolean,
@@ -46,6 +47,7 @@ object DriverProfile {
         ;
 
         companion object {
+            // Only ever change this variable to set the default profile
             val default: Profile = DEFAULT_PROFILE
         }
     }
