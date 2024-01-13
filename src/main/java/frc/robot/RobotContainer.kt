@@ -1,14 +1,16 @@
 package frc.robot
 
-import SwerveSubsystem
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
 import frc.robot.commands.swerve.CornerSpinCommand
-import frc.robot.commands.swervedrive.drivebase.TeleopDrive
+import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
+import frc.robot.subsystems.SwerveSubsystem
+import frc.robot.util.DefaultDriverProfile
 import frc.robot.util.SingletonXboxController
+import lib.profiles.DriverProfile
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,17 +26,14 @@ import frc.robot.util.SingletonXboxController
 object RobotContainer {
     // Testing pre-commit
 
-    val controller = SingletonXboxController
-
-    val limelight = LimelightSubsystem
-    val drivebase = SwerveSubsystem
+    private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
     val trackTarget = TrackTargetCommand()
 
     // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
     //     No, uninverting both doesn't fix it :(
-    val teleopDrive: TeleopDrive =
-        TeleopDrive(
+    val teleopDrive: TeleopDriveCommand =
+        TeleopDriveCommand(
             { -controller.leftY },
             { -controller.leftX },
             { -controller.rightX },
@@ -50,11 +49,22 @@ object RobotContainer {
         )
 
     init {
+        // TODO: comment stuff in this function cause I'm lazy (:
+        initializeObjects()
+
         configureBindings()
 
-        drivebase.defaultCommand = teleopDrive
-        // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
+        SwerveSubsystem.defaultCommand = teleopDrive
+    }
+
+    /**
+     * Use to eager initialize objects
+     */
+    private fun initializeObjects() {
         Autos
+        SwerveSubsystem
+        LimelightSubsystem
+        DriverProfile
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -67,10 +77,6 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.b().onTrue(drivebase.runOnce { drivebase.zeroGyro() })
-
-        controller.a().toggleOnTrue(trackTarget)
-
-        controller.x().toggleOnTrue(cornerSpin)
+        DefaultDriverProfile.applyPreference(controller)
     }
 }
