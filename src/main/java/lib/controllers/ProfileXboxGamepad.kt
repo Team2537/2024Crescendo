@@ -1,7 +1,6 @@
 package lib.controllers
 
 import lib.profiles.DriverProfile
-import lib.profiles.defaultDriverProfile
 import kotlin.math.pow
 
 /**
@@ -30,38 +29,29 @@ class ProfileXboxGamepad(port: Int) : XboxGamepad(port), ProfileGamepad {
     private val rightYInverse: Double
         get() = if (profile.invertRightY) -1.0 else 1.0
 
-    private var _profile: DriverProfile
-
-    override var profile: DriverProfile
-        get() = _profile
-        set(value) {
-            _profile = value
-        }
-
-    init {
-        _profile = defaultDriverProfile()
-    }
+    override val profile: DriverProfile.Profile
+        get() = DriverProfile.currentProfile
 
     override val leftXAxis: Double
-        get() = leftXInverse * leftXAxis.pow(profile.leftPowerScale)
+        get() = leftXInverse * leftXAxis.powScale(profile.leftPowerScale)
 
     override val leftXAxisRaw: Double
         get() = super.leftXAxis
 
     override val leftYAxis: Double
-        get() = leftYInverse * leftYAxis.pow(profile.leftPowerScale)
+        get() = leftYInverse * leftYAxis.powScale(profile.leftPowerScale)
 
     override val leftYAxisRaw: Double
         get() = super.leftYAxis
 
     override val rightXAxis: Double
-        get() = rightXInverse * super.rightXAxis.pow(profile.rightPowerScale)
+        get() = rightXInverse * super.rightXAxis.powScale(profile.rightPowerScale)
 
     override val rightXAxisRaw: Double
         get() = super.rightXAxis
 
     override val rightYAxis: Double
-        get() = rightYInverse * super.rightYAxis.pow(profile.rightPowerScale)
+        get() = rightYInverse * super.rightYAxis.powScale(profile.rightPowerScale)
 
     override val rightYAxisRaw: Double
         get() = super.rightYAxis

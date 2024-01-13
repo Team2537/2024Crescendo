@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
  */
 object DriverProfile {
     private val driverProfileChooser = SendableChooser<Profile>().apply {
-        Profile.values().forEach { addOption(it.name, it) }
-        setDefaultOption(Profile.default.name, Profile.default)
+        Profile.values().forEach { addOption(it.friendlyName, it) }
+        setDefaultOption(Profile.default.friendlyName, Profile.default)
     }
 
     /**
@@ -26,7 +26,8 @@ object DriverProfile {
         tab.add(driverProfileChooser)
     }
 
-    enum class Profile( // TODO: perhaps add a string parameter for a more descriptive name
+    enum class Profile(
+        val friendlyName: String,
         val invertLeftX: Boolean,
         val invertLeftY: Boolean,
         val invertRightX: Boolean,
@@ -36,13 +37,14 @@ object DriverProfile {
         val rightPowerScale: Double,
     ) {
         DEFAULT_PROFILE(
-            false,
-            false,
-            false,
-            false,
-            false,
-            1.0,
-            1.0,
+            friendlyName = "Default",
+            invertLeftX = false,
+            invertLeftY = false,
+            invertRightX = false,
+            invertRightY = false,
+            southpaw = false,
+            leftPowerScale = 1.0,
+            rightPowerScale = 1.0,
         ), // TODO: add more driver profiles
         ;
 
