@@ -1,5 +1,6 @@
 package frc.robot.commands
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -24,6 +25,11 @@ object Autos {
     private fun exampleAuto(): CommandBase = Commands.sequence(ExampleSubsystem.exampleMethodCommand(), ExampleCommand())
 
     private fun exampleAuto2() = PrintCommand("An example Auto Mode that just prints a value")
+
+    init {
+        val tab = Shuffleboard.getTab("Autonomous")
+        tab.add(autoModeChooser)
+    }
 
     /**
      * An enumeration of the available autonomous modes. It provides an easy

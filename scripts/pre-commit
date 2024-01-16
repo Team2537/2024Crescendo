@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# DO NOT EDIT
-
 echo "Running git pre-commit hook"
 
 ./gradlew ktlintCheck

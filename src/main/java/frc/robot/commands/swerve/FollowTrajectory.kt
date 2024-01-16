@@ -1,6 +1,6 @@
 package frc.robot.commands.swerve
 
-import SwerveSubsystem
+import frc.robot.subsystems.SwerveSubsystem
 import com.pathplanner.lib.PathPlannerTrajectory
 import com.pathplanner.lib.commands.PPSwerveControllerCommand
 import edu.wpi.first.math.kinematics.ChassisSpeeds
@@ -21,9 +21,9 @@ class FollowTrajectory(trajectory: PathPlannerTrajectory, resetOdometry: Boolean
             PPSwerveControllerCommand(
                 trajectory,
                 { drivebase.getPose() },
-                Constants.Auton.xAutoPID.createPIDController(),
-                Constants.Auton.yAutoPID.createPIDController(),
-                Constants.Auton.angleAutoPID.createPIDController(),
+                Constants.Auto.xAutoPID.createPIDController(),
+                Constants.Auto.yAutoPID.createPIDController(),
+                Constants.Auto.angleAutoPID.createPIDController(),
                 { chassisSpeeds: ChassisSpeeds? -> drivebase.setChassisSpeeds(chassisSpeeds!!) },
                 drivebase,
             ),
