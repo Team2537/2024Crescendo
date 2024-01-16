@@ -1,9 +1,3 @@
-package frc.robot.subsystems
-
-import com.pathplanner.lib.PathConstraints
-import com.pathplanner.lib.PathPlanner
-import com.pathplanner.lib.auto.PIDConstants
-import com.pathplanner.lib.auto.SwerveAutoBuilder
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
@@ -20,7 +14,6 @@ object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
     var maximumSpeed: Double = Units.feetToMeters(12.0)
 
-    private var autoBuilder: SwerveAutoBuilder? = null
 
     init {
         try {
@@ -109,26 +102,4 @@ object SwerveSubsystem : SubsystemBase() {
 
     fun getPitch() = swerveDrive.pitch
 
-    fun createPathPlannerCommand(
-        path: String?,
-        constraints: PathConstraints?,
-        eventMap: Map<String?, Command?>?,
-        translation: PIDConstants?,
-        rotation: PIDConstants?,
-        useAllianceColor: Boolean,
-    ): Command {
-        val pathGroup = PathPlanner.loadPathGroup(path, constraints)
-        if (autoBuilder == null) {
-            autoBuilder =
-                SwerveAutoBuilder(
-                    { swerveDrive.getPose() }, { pose: Pose2d? -> swerveDrive.resetOdometry(pose) },
-                    translation,
-                    rotation, { chassisSpeeds: ChassisSpeeds? -> swerveDrive.setChassisSpeeds(chassisSpeeds) },
-                    eventMap,
-                    useAllianceColor,
-                    this,
-                )
-        }
-        return autoBuilder!!.fullAuto(pathGroup)
-    }
 }
