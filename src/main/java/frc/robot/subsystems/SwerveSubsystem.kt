@@ -1,3 +1,5 @@
+import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.path.PathPlannerPath
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
@@ -23,6 +25,21 @@ object SwerveSubsystem : SubsystemBase() {
         }
 
         swerveDrive.setHeadingCorrection(false)
+    }
+
+    fun configurePathPlanner(){
+        //TODO: Configure path planner's AutoBuilder
+    }
+
+    fun getAutonomousCommand(pathName: String, setOdomAtStart: Boolean): Command {
+        val path: PathPlannerPath = PathPlannerPath.fromPathFile(pathName)
+
+        if(setOdomAtStart){
+            resetOdometry(Pose2d(path.getPoint(0).position, getHeading()))
+        }
+
+        //TODO: Configure path planner's AutoBuilder
+        return AutoBuilder.followPath(path)
     }
 
     fun drive(
