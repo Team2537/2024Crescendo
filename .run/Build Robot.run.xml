@@ -54,7 +54,6 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="copyPreCommitHook" />
           <option value="build" />
         </list>
       </option>
