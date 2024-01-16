@@ -8,6 +8,12 @@ import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.util.SingletonXboxController
 import kotlin.math.abs
 
+/**
+ * A command that will make the robot track a vision target from the limelight.
+ *
+ * @see SwerveSubsystem
+ * @see LimelightSubsystem
+ */
 class TrackTargetCommand : Command() {
     private val limelightSubsystem = LimelightSubsystem
     private val drivebase = SwerveSubsystem
@@ -22,8 +28,10 @@ class TrackTargetCommand : Command() {
         pidController = PIDController(0.1, 0.0, 0.0)
     }
 
+    /** @suppress */
     override fun initialize() {}
 
+    /** @suppress */
     override fun execute() {
         rotation = pidController.calculate(limelightSubsystem.xOffset, 0.0)
 
@@ -37,10 +45,12 @@ class TrackTargetCommand : Command() {
         drivebase.drive(translation, rotation, false)
     }
 
+    /** @suppress */
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
         return false
     }
 
+    /** @suppress */
     override fun end(interrupted: Boolean) {}
 }

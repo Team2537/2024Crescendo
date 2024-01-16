@@ -12,7 +12,13 @@ import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
 /**
- * An example command that uses an example subsystem.
+ * A command that controls the swerve drive using joystick inputs.
+ * @param vX The x velocity of the robot.
+ * @param vY The y velocity of the robot.
+ * @param omega The angular velocity of the robot.
+ * @param driveMode Boolean supplier that returns true if the robot should drive in field-oriented mode.
+ * @param slowMode Boolean supplier that returns true if the robot should drive in slow mode.
+ * @see SwerveSubsystem
  */
 class TeleopDriveCommand(
     vX: DoubleSupplier,
@@ -29,11 +35,7 @@ class TeleopDriveCommand(
     private val controller: SwerveController
     private val swerve: SwerveSubsystem
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param swerve The subsystem used by this command.
-     */
+
     init {
         this.swerve = SwerveSubsystem
         this.vX = vX
@@ -46,10 +48,10 @@ class TeleopDriveCommand(
         addRequirements(swerve)
     }
 
-    // Called when the command is initially scheduled.
+    /** @suppress */
     override fun initialize() {}
 
-    // Called every time the scheduler runs while the command is scheduled.
+    /** @suppress */
     override fun execute() {
         var xVelocity = vX.asDouble
         var yVelocity = vY.asDouble
@@ -73,10 +75,10 @@ class TeleopDriveCommand(
         )
     }
 
-    // Called once the command ends or is interrupted.
+    /** @suppress */
     override fun end(interrupted: Boolean) {}
 
-    // Returns true when the command should end.
+    /** @suppress */
     override fun isFinished(): Boolean {
         return false
     }
