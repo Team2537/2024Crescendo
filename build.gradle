@@ -1,8 +1,12 @@
+
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.1.1"
     id 'org.jetbrains.kotlin.jvm'
-    id 'org.jetbrains.dokka' version '1.9.10'}
+    id 'org.jetbrains.dokka' version '1.9.10'
+}
+
+
 
 java {
 }
@@ -10,6 +14,19 @@ java {
 dokkaHtml {
     suppressInheritedMembers = true
 }
+
+tasks.named("dokkaHtml").configure {
+    pluginsMapConfiguration.set(
+            [
+                    "org.jetbrains.dokka.base.DokkaBase": """
+            {
+                "customAssets": ["${file("assets/logo-icon.svg").toString().replace('\\', '/')}"]
+            }
+            """
+            ]
+    )
+}
+
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
