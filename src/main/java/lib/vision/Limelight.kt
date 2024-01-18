@@ -23,6 +23,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
     private val tx: DoubleSubscriber
     private val ty: DoubleSubscriber
     private val ta: DoubleSubscriber
+    private val ts: DoubleSubscriber
     private val tv: DoubleSubscriber
 
     private val visionTab: ShuffleboardTab
@@ -32,6 +33,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         tx = table.getDoubleTopic("tx").subscribe(0.0)
         ty = table.getDoubleTopic("ty").subscribe(0.0)
         ta = table.getDoubleTopic("ta").subscribe(0.0)
+        ts = table.getDoubleTopic("ts").subscribe(0.0)
         tv = table.getDoubleTopic("tv").subscribe(0.0)
 
         visionTab = Shuffleboard.getTab("Vision")
@@ -39,7 +41,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         visionTab.addDouble("X Offset") { xOffset }
         visionTab.addDouble("Y Offset") { yOffset }
         visionTab.addDouble("Area") { area }
-        // visionTab.addDouble("Skew") { skew }
+        visionTab.addDouble("Skew") { skew }
         visionTab.addBoolean("Target Visible") { targetVisible }
 
         // FIXME - remove if possible
@@ -74,15 +76,12 @@ class Limelight(table: NetworkTable) : AutoCloseable {
     val area: Double
         get() = ta.get()
 
-    // FIXME: Potentially deprecated; what did it even do?
     /**
-     * Returns 0.0
-     *
-     * @Deprecated("Lack of documentation")
+     * Returns the skew of the bounding box from 0 to 90 degrees, essentially how 'crooked'
+     * it is.
      */
-    @Deprecated("Lack of documentation")
     val skew: Double
-        get() = 0.0
+        get() = ts.get()
 
     /**
      * Checks whether the target object is visible to the limelight camera
