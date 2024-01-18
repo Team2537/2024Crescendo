@@ -2,6 +2,7 @@ package frc.robot.util
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.RobotContainer
+import frc.robot.subsystems.SwerveSubsystem
 
 /**
  * The default driver profile.
@@ -17,7 +18,7 @@ import frc.robot.RobotContainer
 @Deprecated("New DriverProfile in lib")
 object DefaultDriverProfile : DriverProfile {
     override fun applyPreference(controller: CommandXboxController) {
-        controller.b().onTrue(RobotContainer.driveBase.runOnce { RobotContainer.driveBase.zeroGyro() })
+        controller.b().onTrue(SwerveSubsystem.runOnce { SwerveSubsystem.zeroGyro() })
         controller.a().toggleOnTrue(RobotContainer.trackTarget)
         controller.x().toggleOnTrue(RobotContainer.cornerSpin)
     }
