@@ -8,7 +8,6 @@ import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
-import frc.robot.util.DefaultDriverProfile
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
 
@@ -77,6 +76,5 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        DefaultDriverProfile.applyPreference(controller)
     }
 }
