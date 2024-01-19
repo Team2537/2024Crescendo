@@ -79,6 +79,8 @@ class Limelight(table: NetworkTable) : AutoCloseable {
     /**
      * Returns the skew of the bounding box from 0 to 90 degrees, essentially how 'crooked'
      * it is.
+     *
+     * @return the skew/roll of the bounding box from 0 to 90 degrees
      */
     val skew: Double
         get() = ts.get()
