@@ -3,6 +3,7 @@ package frc.robot.commands
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.PrintCommand
 import frc.robot.subsystems.SwerveSubsystem
 
 object Autos {
@@ -26,7 +27,8 @@ object Autos {
     }
 
     private fun examplePath(): Command {
-        return SwerveSubsystem.getAutonomousCommand("examplePath", true)
+        //return SwerveSubsystem.getAutonomousCommand("examplePath", true)
+        return PrintCommand("Example Path")
     }
 
     /**
