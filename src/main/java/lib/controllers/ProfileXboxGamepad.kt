@@ -17,8 +17,10 @@ import lib.profiles.DriverProfile
  * @see XboxGamepad
  */
 
-@Deprecated("Use ProfileController in combination with XboxGamepad",
-    level = DeprecationLevel.HIDDEN)
+@Deprecated(
+    "Use ProfileController in combination with XboxGamepad",
+    level = DeprecationLevel.HIDDEN,
+)
 class ProfileXboxGamepad(port: Int) : XboxGamepad(port), ProfileGamepad {
     private val leftXInverse: Double
         get() = if (profile.invertLeftX) -1.0 else 1.0

@@ -27,8 +27,6 @@ object SwerveSubsystem : SubsystemBase() {
     /** @suppress */
     var maximumSpeed: Double = Units.feetToMeters(12.0)
 
-
-
     init {
         try {
             swerveDrive = SwerveParser(Constants.FileConstants.SWERVE_CONFIG).createSwerveDrive(maximumSpeed)
@@ -43,8 +41,8 @@ object SwerveSubsystem : SubsystemBase() {
      * Configures PathPlanner's AutoBuilder.
      * @see AutoBuilder
      */
-    fun configurePathPlanner(){
-        //TODO: Configure path planner's AutoBuilder
+    fun configurePathPlanner()  {
+        // TODO: Configure path planner's AutoBuilder
     }
 
     /**
@@ -53,14 +51,18 @@ object SwerveSubsystem : SubsystemBase() {
      * @param setOdomAtStart Whether to update the robot's odometry to the start pose of the path.
      * @return A command that follows the path.
      */
-    fun getAutonomousCommand(pathName: String, setOdomAtStart: Boolean): Command {
+    fun getAutonomousCommand(
+        pathName: String,
+        setOdomAtStart: Boolean,
+    ): Command {
         val path: PathPlannerPath = PathPlannerPath.fromPathFile(pathName)
 
-        if(setOdomAtStart){
-            resetOdometry(Pose2d(path.getPoint(0).position, getHeading()))
-        }
+        if (setOdomAtStart)
+            {
+                resetOdometry(Pose2d(path.getPoint(0).position, getHeading()))
+            }
 
-        //TODO: Configure path planner's AutoBuilder
+        // TODO: Configure path planner's AutoBuilder
         return AutoBuilder.followPath(path)
     }
 
@@ -203,5 +205,4 @@ object SwerveSubsystem : SubsystemBase() {
      * Method to get the current pitch of the robot.
      */
     fun getPitch() = swerveDrive.pitch
-
 }

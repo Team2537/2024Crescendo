@@ -64,13 +64,12 @@ class ProfileController(private val gamepad: Gamepad) {
 
     val leftYAxis: Double
         get() = leftYInverse * gamepad.leftYAxis.powScale(profile.leftPowerScale)
-    
+
     val rightXAxis: Double
         get() = rightXInverse * gamepad.rightXAxis.powScale(profile.rightPowerScale)
 
     val rightYAxis: Double
         get() = rightYInverse * gamepad.rightYAxis.powScale(profile.rightPowerScale)
-
 
     val leftTriggerAxis: Double
         get() = gamepad.leftTriggerAxis

@@ -8,10 +8,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
  * @see frc.robot.RobotContainer
  */
 object DriverProfile {
-    private val driverProfileChooser = SendableChooser<Profile>().apply {
-        Profile.values().forEach { addOption(it.friendlyName, it) }
-        setDefaultOption(Profile.default.friendlyName, Profile.default)
-    }
+    private val driverProfileChooser =
+        SendableChooser<Profile>().apply {
+            Profile.values().forEach { addOption(it.friendlyName, it) }
+            setDefaultOption(Profile.default.friendlyName, Profile.default)
+        }
 
     /**
      * Gets the current selected profile from the [profile chooser][driverProfileChooser].

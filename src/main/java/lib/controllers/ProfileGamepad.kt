@@ -1,8 +1,6 @@
 package lib.controllers
 
 import lib.profiles.DriverProfile
-import kotlin.math.pow
-import kotlin.math.absoluteValue
 
 /**
  * A Gamepad that supports having a [DriverProfile.Profile] that affects its input mapping.

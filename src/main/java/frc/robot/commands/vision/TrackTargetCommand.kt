@@ -1,10 +1,10 @@
 package frc.robot.commands.vision
 
-import frc.robot.subsystems.SwerveSubsystem
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LimelightSubsystem
+import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import kotlin.math.abs
 
@@ -36,8 +36,6 @@ class TrackTargetCommand : Command() {
         rotation = pidController.calculate(limelightSubsystem.xOffset, 0.0)
 
         if ((abs(limelightSubsystem.xOffset) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
-
-
             translation = Translation2d(0.3, -SingletonXboxController.leftX)
         } else {
             translation = Translation2d(0.0, -SingletonXboxController.leftX)
