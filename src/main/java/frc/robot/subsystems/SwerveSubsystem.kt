@@ -37,7 +37,7 @@ object SwerveSubsystem : SubsystemBase() {
 
         swerveDrive.setHeadingCorrection(false)
 
-        Logger.recordOutput("Swerve States", swerveDrive.states)
+        Logger.recordOutput("Swerve States", *swerveDrive.states)
     }
 
     /**
