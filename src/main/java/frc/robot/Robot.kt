@@ -37,16 +37,9 @@ object Robot : LoggedRobot() {
      */
     override fun robotInit() {
         Logger.recordMetadata("ProjectName", "2024Crescendo")
-        if(isReal()){
-            Logger.addDataReceiver(WPILOGWriter())
-            Logger.addDataReceiver(NT4Publisher())
-            PowerDistribution(1, PowerDistribution.ModuleType.kRev)
-        } else {
-            setUseTiming(false)
-            val logPath: String = LogFileUtil.findReplayLog()
-            Logger.setReplaySource(WPILOGReader(logPath))
-            Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")))
-        }
+
+        Logger.addDataReceiver(WPILOGWriter())
+        Logger.addDataReceiver(NT4Publisher())
 
         Logger.start()
         // Access the RobotContainer object so that it is initialized. This will perform all our
