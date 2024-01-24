@@ -1,5 +1,7 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
@@ -47,6 +49,13 @@ object RobotContainer {
             { controller.hid.rightBumper },
         )
 
+    val driveFieldOrientedAngularVelocity: Command =
+        SwerveSubsystem.driveCommand(
+            { controller.leftX },
+            { -controller.leftY },
+            { -controller.rightX }
+        )
+
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
         initializeObjects()
@@ -76,5 +85,6 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
+        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
     }
 }

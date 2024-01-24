@@ -9,10 +9,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
+import java.util.function.DoubleSupplier
 
 /**
  * The subsystem that controls the swerve drive.
@@ -102,6 +104,20 @@ object SwerveSubsystem : SubsystemBase() {
      */
     fun drive(velocity: ChassisSpeeds) {
         swerveDrive.drive(velocity)
+    }
+
+    fun driveCommand(translationX: DoubleSupplier, translationY: DoubleSupplier, angularRotationX: DoubleSupplier): Command {
+        return run {
+            swerveDrive.drive(
+                Translation2d(
+                    translationX.asDouble * maximumSpeed,
+                    translationY.asDouble * maximumSpeed
+                ),
+                angularRotationX.asDouble * maximumSpeed,
+                true,
+                false
+            );
+        }
     }
 
     /**
