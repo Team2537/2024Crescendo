@@ -49,12 +49,6 @@ object RobotContainer {
             { controller.hid.rightBumper },
         )
 
-    val driveFieldOrientedAngularVelocity: Command =
-        SwerveSubsystem.driveCommand(
-            { controller.leftX },
-            { -controller.leftY },
-            { -controller.rightX }
-        )
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:

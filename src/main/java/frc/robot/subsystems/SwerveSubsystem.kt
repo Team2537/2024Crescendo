@@ -106,20 +106,6 @@ object SwerveSubsystem : SubsystemBase() {
         swerveDrive.drive(velocity)
     }
 
-    fun driveCommand(translationX: DoubleSupplier, translationY: DoubleSupplier, angularRotationX: DoubleSupplier): Command {
-        return run {
-            swerveDrive.drive(
-                Translation2d(
-                    translationX.asDouble * maximumSpeed,
-                    translationY.asDouble * maximumSpeed
-                ),
-                angularRotationX.asDouble * maximumSpeed,
-                true,
-                false
-            );
-        }
-    }
-
     /**
      * Method to get the Kinematics object of the swerve drive.
      */
