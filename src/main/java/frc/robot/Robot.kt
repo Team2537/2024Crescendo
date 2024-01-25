@@ -38,7 +38,7 @@ object Robot : LoggedRobot() {
     override fun robotInit() {
         Logger.recordMetadata("ProjectName", "2024Crescendo")
 
-        Logger.addDataReceiver(WPILOGWriter())
+        //Logger.addDataReceiver(WPILOGWriter())
         Logger.addDataReceiver(NT4Publisher())
 
         Logger.start()
