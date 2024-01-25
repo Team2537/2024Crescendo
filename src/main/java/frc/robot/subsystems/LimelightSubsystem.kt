@@ -1,6 +1,8 @@
 package frc.robot.subsystems
 
 import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Measure
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import lib.vision.Limelight
 
@@ -13,14 +15,14 @@ object LimelightSubsystem : SubsystemBase() {
     /**
      * Gets the horizontal offset of the target from the crosshair.
      */
-    val xOffset: Double
-        get() = limelight.xOffset
+    val xOffset: Measure<Angle>
+        get() = limelight.yawOffset
 
     /**
      * Gets the vertical offset of the target from the crosshair.
      */
-    val yOffset: Double
-        get() = limelight.yOffset
+    val yOffset: Measure<Angle>
+        get() = limelight.pitchOffset
 
     /**
      * Gets the area of the camera's view that the target takes up.
@@ -29,8 +31,8 @@ object LimelightSubsystem : SubsystemBase() {
         get() = limelight.area
 
     /** @suppress */
-    val skew: Double
-        get() = limelight.skew
+    val skew: Measure<Angle>
+        get() = limelight.roll
 
     /**
      * Gets whether the limelight has a target in its view.
