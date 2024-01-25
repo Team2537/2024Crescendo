@@ -13,22 +13,22 @@ import java.util.function.DoubleSupplier
 
 /**
  * A command that controls the swerve drive using joystick inputs.
- * @param vX The x velocity of the robot.
- * @param vY The y velocity of the robot.
+ * @param vForward The x velocity of the robot.
+ * @param vStrafe The y velocity of the robot.
  * @param omega The angular velocity of the robot.
  * @param driveMode Boolean supplier that returns true if the robot should drive in field-oriented mode.
  * @param slowMode Boolean supplier that returns true if the robot should drive in slow mode.
  * @see SwerveSubsystem
  */
 class TeleopDriveCommand(
-    vX: DoubleSupplier,
-    vY: DoubleSupplier,
+    vForward: DoubleSupplier,
+    vStrafe: DoubleSupplier,
     omega: DoubleSupplier,
     driveMode: BooleanSupplier,
     slowMode: BooleanSupplier,
 ) : Command() {
-    private val vX: DoubleSupplier
-    private val vY: DoubleSupplier
+    private val vForward: DoubleSupplier
+    private val vStrafe: DoubleSupplier
     private val omega: DoubleSupplier
     private val driveMode: BooleanSupplier
     private val slowMode: BooleanSupplier
@@ -37,8 +37,8 @@ class TeleopDriveCommand(
 
     init {
         this.swerve = SwerveSubsystem
-        this.vX = vX
-        this.vY = vY
+        this.vForward = vForward
+        this.vStrafe = vStrafe
         this.omega = omega
         this.driveMode = driveMode
         this.slowMode = slowMode
@@ -52,23 +52,23 @@ class TeleopDriveCommand(
 
     /** @suppress */
     override fun execute() {
-        var xVelocity = vX.asDouble
-        var yVelocity = vY.asDouble
+        var forwardVelocity = vForward.asDouble
+        var strafeVelocity = vStrafe.asDouble
         var angVelocity = omega.asDouble
         val slowMode = slowMode.asBoolean
-        SmartDashboard.putNumber("vX", xVelocity)
-        SmartDashboard.putNumber("vY", yVelocity)
+        SmartDashboard.putNumber("vX", forwardVelocity)
+        SmartDashboard.putNumber("vY", strafeVelocity)
         SmartDashboard.putNumber("omega", angVelocity)
 
         if (slowMode) {
-            xVelocity *= 0.6
-            yVelocity *= 0.6
+            forwardVelocity *= 0.6
+            strafeVelocity *= 0.6
             angVelocity *= 0.6
         }
 
         // Drive using raw values.
         swerve.drive(
-            Translation2d(xVelocity * swerve.maximumSpeed, yVelocity * swerve.maximumSpeed),
+            Translation2d(forwardVelocity * swerve.maximumSpeed, strafeVelocity * swerve.maximumSpeed),
             angVelocity * controller.config.maxAngularVelocity,
             driveMode.asBoolean,
         )
