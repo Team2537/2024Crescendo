@@ -42,9 +42,10 @@ object SwerveSubsystem : SubsystemBase() {
 
         swerveDrive.setHeadingCorrection(false)
 
-        Logger.recordOutput("Swerve States", *swerveDrive.states)
 
         setMotorBrake(true)
+        
+
     }
 
     /**
@@ -224,4 +225,9 @@ object SwerveSubsystem : SubsystemBase() {
      * Method to get the current pitch of the robot.
      */
     fun getPitch() = swerveDrive.pitch
+
+    override fun periodic() {
+        Logger.recordOutput("swerve/Swerve States", swerveDrive.states[0], swerveDrive.states[1],
+            swerveDrive.states[2], swerveDrive.states[3])
+    }
 }
