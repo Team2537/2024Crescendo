@@ -1,17 +1,9 @@
 package frc.robot
 
-import edu.wpi.first.units.Power
-import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.Autos
-import org.littletonrobotics.junction.LogFileUtil
-import org.littletonrobotics.junction.LoggedRobot
-import org.littletonrobotics.junction.Logger
-import org.littletonrobotics.junction.networktables.NT4Publisher
-import org.littletonrobotics.junction.wpilog.WPILOGReader
-import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -23,7 +15,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  * the `Main.kt` file in the project. (If you use the IDE's Rename or Move refactorings when renaming the
  * object or package, it will get changed everywhere.)
  */
-object Robot : LoggedRobot() {
+object Robot : TimedRobot() {
     /**
      * The autonomous command to run. While a default value is set here,
      * the [autonomousInit] method will set it to the value selected in
@@ -36,12 +28,6 @@ object Robot : LoggedRobot() {
      * initialization code.
      */
     override fun robotInit() {
-        Logger.recordMetadata("ProjectName", "2024Crescendo")
-
-        Logger.addDataReceiver(WPILOGWriter())
-        Logger.addDataReceiver(NT4Publisher())
-
-        Logger.start()
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
         RobotContainer
