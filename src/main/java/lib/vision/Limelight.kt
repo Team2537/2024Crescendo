@@ -1,5 +1,6 @@
 package lib.vision
 
+import edu.wpi.first.networktables.DoubleSubscriber
 import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableEntry
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
@@ -17,23 +18,23 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
  *
  * @author Matthew Clark
  */
-class Limelight(table: NetworkTable) {
+class Limelight(table: NetworkTable) : AutoCloseable {
     // NetworkTableEntry objects for getting data from the Limelight
-    private var tx: NetworkTableEntry
-    private var ty: NetworkTableEntry
-    private var ta: NetworkTableEntry
-    private var tv: NetworkTableEntry
-    private var ts: NetworkTableEntry
+    private val tx: DoubleSubscriber
+    private val ty: DoubleSubscriber
+    private val ta: DoubleSubscriber
+    private val ts: DoubleSubscriber
+    private val tv: DoubleSubscriber
 
-    private var visionTab: ShuffleboardTab
+    private val visionTab: ShuffleboardTab
 
     init {
         // Get the NetworkTableEntry objects for the Limelight
-        tx = table.getEntry("tx")
-        ty = table.getEntry("ty")
-        ta = table.getEntry("ta")
-        tv = table.getEntry("tv")
-        ts = table.getEntry("ts")
+        tx = table.getDoubleTopic("tx").subscribe(0.0)
+        ty = table.getDoubleTopic("ty").subscribe(0.0)
+        ta = table.getDoubleTopic("ta").subscribe(0.0)
+        ts = table.getDoubleTopic("ts").subscribe(0.0)
+        tv = table.getDoubleTopic("tv").subscribe(0.0)
 
         visionTab = Shuffleboard.getTab("Vision")
 
@@ -55,7 +56,7 @@ class Limelight(table: NetworkTable) {
      * @return the x offset
      */
     val xOffset: Double
-        get() = tx.getDouble(0.0)
+        get() = tx.get()
 
     /**
      * Gets the offset of the cross-hair to the target on the y-axis.
@@ -64,7 +65,7 @@ class Limelight(table: NetworkTable) {
      * @return the y offset
      */
     val yOffset: Double
-        get() = ty.getDouble(0.0)
+        get() = ty.get()
 
     // TODO 0.0-1.0 or 0.0-100.0 ??
     /**
@@ -73,12 +74,16 @@ class Limelight(table: NetworkTable) {
      * @return how much of the screen can see the target
      */
     val area: Double
-        get() = ta.getDouble(0.0)
+        get() = ta.get()
 
-    // FIXME: Potentially deprecated; what did it even do?
-    @Deprecated("Lack of documentation")
+    /**
+     * Returns the skew of the bounding box from 0 to 90 degrees, essentially how 'crooked'
+     * it is.
+     *
+     * @return the skew/roll of the bounding box from 0 to 90 degrees
+     */
     val skew: Double
-        get() = ts.getDouble(0.0)
+        get() = ts.get()
 
     /**
      * Checks whether the target object is visible to the limelight camera
@@ -87,5 +92,14 @@ class Limelight(table: NetworkTable) {
      * `false` otherwise.
      */
     val targetVisible: Boolean
-        get() = tv.getDouble(0.0) == 1.0
+        get() = tv.get() == 1.0
+
+    override fun close() {
+        // Not entirely necessary, as most limelights will have the same lifespan as the robot, but still
+        // worth considering before someone forgets that this is even a thing you have to do.
+        tx.close()
+        ty.close()
+        ta.close()
+        tv.close()
+    }
 }
