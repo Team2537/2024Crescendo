@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
+import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.commands.vision.TrackTargetCommand
@@ -12,6 +13,7 @@ import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
+import kotlin.math.abs
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,6 +51,13 @@ object RobotContainer {
             { controller.hid.rightBumper },
         )
 
+    val absoluteDrive: AbsoluteDriveCommand = AbsoluteDriveCommand(
+        { -controller.leftY },
+        { -controller.leftX },
+        { -controller.rightX },
+        { -controller.rightY }
+    )
+
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
@@ -80,5 +89,6 @@ object RobotContainer {
      */
     private fun configureBindings() {
         controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        controller.y().toggleOnTrue(absoluteDrive)
     }
 }

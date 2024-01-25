@@ -56,6 +56,8 @@ object SwerveSubsystem : SubsystemBase() {
         tab.addDouble("BR Drive") { swerveDrive.modules[3].driveMotor.position }
 
         tab.addDouble("Heading") { getHeading().degrees }
+
+        setMotorBrake(true)
     }
 
     /**
@@ -185,6 +187,15 @@ object SwerveSubsystem : SubsystemBase() {
         angle: Rotation2d,
     ): ChassisSpeeds {
         return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, angle.radians, getHeading().radians, maximumSpeed)
+    }
+
+    fun getTargetSpeeds(
+        vForward: Double,
+        vSide: Double,
+        headingX: Double,
+        headingY: Double
+    ): ChassisSpeeds {
+        return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, headingX, headingY, getHeading().radians, maximumSpeed)
     }
 
     /**
