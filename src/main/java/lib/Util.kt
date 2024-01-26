@@ -1,8 +1,6 @@
 package lib
 
 import com.revrobotics.CANSparkBase
-import com.revrobotics.CANSparkMax
-import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -33,7 +31,12 @@ fun Boolean.toTrigger(): Trigger {
     return Trigger { this }
 }
 
-fun CANSparkBase.setVelocity(vel: Double): Unit {
+/**
+ *  Sets the velocity reference of a REV motor controller.
+ *
+ *  @param vel the velocity to set the motor to.
+ */
+fun CANSparkBase.setVelocity(vel: Double) {
     this.pidController.setReference(vel, CANSparkBase.ControlType.kVelocity)
 }
 
