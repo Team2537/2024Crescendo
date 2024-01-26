@@ -1,6 +1,8 @@
 package lib
 
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
@@ -28,4 +30,8 @@ fun Double.powScale(exp: Double): Double {
  */
 fun Boolean.toTrigger(): Trigger {
     return Trigger { this }
+}
+
+inline fun <reified T> Json.encodeToString(data: T): String {
+    return Json.encodeToJsonElement(data).toString()
 }

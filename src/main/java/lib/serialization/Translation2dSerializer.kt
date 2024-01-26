@@ -26,9 +26,8 @@ class Translation2dSerializer : KSerializer<Translation2d> {
      */
     @OptIn(InternalSerializationApi::class)
     override val descriptor: SerialDescriptor
-        get() = buildSerialDescriptor(
+        get() = buildClassSerialDescriptor(
             "Translation2d",
-            StructureKind.CLASS
         ){
             element<Double>("x")
             element<Double>("y")
