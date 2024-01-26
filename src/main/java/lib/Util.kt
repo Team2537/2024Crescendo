@@ -39,7 +39,12 @@ fun Boolean.toTrigger(): Trigger {
     return Trigger { this }
 }
 
-fun CANSparkBase.setVelocity(vel: Double): Unit {
+/**
+ *  Sets the velocity reference of a REV motor controller.
+ *
+ *  @param vel the velocity to set the motor to.
+ */
+fun CANSparkBase.setVelocity(vel: Double) {
     this.pidController.setReference(vel, CANSparkBase.ControlType.kVelocity)
 }
 
