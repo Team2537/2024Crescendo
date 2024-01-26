@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lib.setVelocity
 
 object IntakeSubsystem : SubsystemBase() {
-    val intakeMotor : CANSparkMax = CANSparkMax(0, MotorType.kBrushless)
+    val intakeMotor : CANSparkMax = CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless)
 
     init {
         val pidController = intakeMotor.pidController
