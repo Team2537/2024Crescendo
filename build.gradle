@@ -6,6 +6,9 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'org.jetbrains.dokka' version '1.9.10'
     id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+
+    // json serialization
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.21'
 }
 
 
@@ -99,6 +102,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // json serialization
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
 }
 
 test {
