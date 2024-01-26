@@ -45,4 +45,10 @@ object Constants {
     object FileConstants {
         val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
     }
+
+    object IntakeConstants {
+        val INTAKE_KP : Double = 0.1
+        val INTAKE_KI : Double = 0.0
+        val INTAKE_KD : Double = 0.0
+    }
 }

@@ -1,5 +1,8 @@
 package lib
 
+import com.revrobotics.CANSparkBase
+import com.revrobotics.CANSparkMax
+import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -29,3 +32,8 @@ fun Double.powScale(exp: Double): Double {
 fun Boolean.toTrigger(): Trigger {
     return Trigger { this }
 }
+
+fun CANSparkBase.setVelocity(vel: Double): Unit {
+    this.pidController.setReference(vel, CANSparkBase.ControlType.kVelocity)
+}
+
