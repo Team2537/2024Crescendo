@@ -9,8 +9,8 @@ import frc.robot.Constants.LauncherConstants
 
 
 object LauncherSubsystem : SubsystemBase() {
-    val leftLauncherMotor : CANSparkFlex = CANSparkFlex(1, CANSparkLowLevel.MotorType.kBrushless)
-    val rightLauncherMotor : CANSparkFlex = CANSparkFlex(2, CANSparkLowLevel.MotorType.kBrushless)
+    val leftLauncherMotor : CANSparkFlex = CANSparkFlex(LauncherConstants.LEFT_LAUNCHER_PORT, CANSparkLowLevel.MotorType.kBrushless)
+    val rightLauncherMotor : CANSparkFlex = CANSparkFlex(LauncherConstants.RIGHT_LAUNCHER_PORT, CANSparkLowLevel.MotorType.kBrushless)
 
 
     val leftPID = leftLauncherMotor.pidController
