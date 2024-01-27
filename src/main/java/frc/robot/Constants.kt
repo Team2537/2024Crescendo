@@ -45,4 +45,10 @@ object Constants {
     object FileConstants {
         val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
     }
+
+    object LauncherConstants {
+        const val LAUNCHER_P : Double = 0.0002
+        const val LAUNCHER_I : Double = 0.00001
+        const val LAUNCHER_D : Double = 0.00001
+    }
 }
