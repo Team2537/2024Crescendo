@@ -47,10 +47,10 @@ object Constants {
     }
 
     object IntakeConstants {
-        val INTAKE_MOTOR_ID = 0 //TODO: Update this
+        const val INTAKE_MOTOR_ID: Int = 0 //TODO: Update this
 
-        val INTAKE_KP : Double = 0.1
-        val INTAKE_KI : Double = 0.0
-        val INTAKE_KD : Double = 0.0
+        const val INTAKE_KP : Double = 0.1
+        const val INTAKE_KI : Double = 0.0
+        const val INTAKE_KD : Double = 0.0
     }
 }
