@@ -69,7 +69,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
      * @return the estimated position of the limelight
      * @see Pose3d
      */
-    private val position: Pose3d
+     val position: Pose3d
         get() {
             val results: DoubleArray = botpose.get()
 
