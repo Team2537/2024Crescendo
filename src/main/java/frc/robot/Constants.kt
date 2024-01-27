@@ -46,7 +46,12 @@ object Constants {
         val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
     }
 
-    object LauncherConstants {
+    object LauncherConstants{
+        val ANGLE_MOTOR_PORT = 3
+        val ANGLE_KP = 0.001
+        val ANGLE_KI = 0.0
+        val ANGLE_KD = 0.0
+      
         const val LAUNCHER_P : Double = 0.0002
         const val LAUNCHER_I : Double = 0.00001
         const val LAUNCHER_D : Double = 0.00001
