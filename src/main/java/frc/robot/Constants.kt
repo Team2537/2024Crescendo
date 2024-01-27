@@ -51,5 +51,12 @@ object Constants {
         val ANGLE_KP = 0.001
         val ANGLE_KI = 0.0
         val ANGLE_KD = 0.0
+      
+        const val LAUNCHER_P : Double = 0.0002
+        const val LAUNCHER_I : Double = 0.00001
+        const val LAUNCHER_D : Double = 0.00001
+
+        const val LEFT_LAUNCHER_PORT : Int = 1
+        const val RIGHT_LAUNCHER_PORT : Int = 2
     }
 }
