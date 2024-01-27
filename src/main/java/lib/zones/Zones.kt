@@ -6,14 +6,10 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.InputStream
 import java.net.URL
-import java.util.Scanner
 import java.util.Spliterator
 import java.util.function.Consumer
-import java.util.regex.Pattern
 import java.util.stream.Stream
 import kotlin.collections.ArrayList
-
-private val bracketDelimiter = Pattern.compile("[{}]")
 
 /**
  * A singleton manager for [Zone]s
@@ -28,12 +24,10 @@ private val bracketDelimiter = Pattern.compile("[{}]")
  * @see Zone
  */
 object Zones : List<Zone> {
-//    private val zoneMap: MutableMap<in String, Zone>
     private val zoneList: MutableList<Zone>
 
 
     init {
-//        zoneMap = HashMap()
         zoneList = ArrayList()
         loadZones(javaClass.getResourceAsStream("/ZoneList.json")!!)
     }
@@ -48,42 +42,12 @@ object Zones : List<Zone> {
 
         if(doClose)
             stream.close()
-
-//        val jsonScanner = Scanner(stream)
-//            .useDelimiter(bracketDelimiter)
-
-//        var opens = 0
-//        jsonScanner.use {
-//            val sb: StringBuilder = StringBuilder()
-//
-//            while(jsonScanner.hasNext()) {
-//                val token = jsonScanner.next()
-//
-//                // Only append if we are in a block
-//                if(opens != 0)
-//                    sb.append(token)
-//
-//                if ('{' in token)
-//                    opens++
-//                if ('}' in token)
-//                    opens--
-//
-//                if(opens == 0 && sb.isNotEmpty()){
-//                    val zone = Json.decodeFromString<Zone>(sb.toString())
-////                    zoneMap[zone.tag] = zone
-//                    zoneList.add(zone)
-//                    sb.setLength(0) // clear builder
-//                }
-//            }
-
-//        }
     }
 
     fun loadZones(resource: URL, doClose: Boolean = true){
         loadZones(resource.openStream(), doClose)
     }
 
-//    operator fun get(tag: String): Zone? = zoneMap[tag]
     /**
      * Gets a zone by its tag. If multiple zones are present, the first one found will
      * be returned. If no zone with the given tag is found, `null` will be returned.
@@ -144,11 +108,6 @@ object Zones : List<Zone> {
         return zoneList.stream()
     }
 
-//    @Deprecated("toArray is deprecated")
-//    override fun <T : Any?> toArray(generator: IntFunction<Array<T>>?): Array<T> {
-//        return zoneList.toArray(generator)
-//    }
-
     override fun listIterator(): ListIterator<Zone> {
         return zoneList.listIterator()
     }
@@ -182,12 +141,7 @@ object Zones : List<Zone> {
     }
 
     override fun equals(other: Any?): Boolean {
-        if(other === this) return true
-        if(javaClass != other?.javaClass) return false
-
-        other as Zones
-
-        return zoneList == other.zoneList
+        return this === other
     }
 
     override fun hashCode(): Int {
