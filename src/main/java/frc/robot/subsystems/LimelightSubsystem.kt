@@ -1,5 +1,6 @@
 package frc.robot.subsystems
 
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
@@ -11,6 +12,13 @@ import lib.vision.Limelight
  */
 object LimelightSubsystem : SubsystemBase() {
     private val limelight: Limelight = Limelight(NetworkTableInstance.getDefault().getTable("limelight"))
+
+
+    /**
+     * Get the position of the bot as estimated by the limelight
+     */
+    val botpose: Pose3d
+        get() = limelight.position
 
     /**
      * Gets the horizontal offset of the target from the crosshair.
