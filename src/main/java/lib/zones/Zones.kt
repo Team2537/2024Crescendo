@@ -1,15 +1,16 @@
 package lib.zones
 
+import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Translation2d
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import lib.zones.Zones.loadZones
 import java.io.InputStream
 import java.net.URL
-import java.util.Spliterator
+import java.util.*
 import java.util.function.Consumer
 import java.util.stream.Stream
-import kotlin.collections.ArrayList
 
 /**
  * A singleton manager for [Zone]s
@@ -25,6 +26,12 @@ import kotlin.collections.ArrayList
  */
 object Zones : List<Zone> {
     private val zoneList: MutableList<Zone>
+
+    private val defaultZone: Zone = Zone( // Encapsulates the field
+        0.0, 0.0,
+        16.54, 8.21,
+        "default", "Default Zone"
+    )
 
 
     init {
@@ -49,28 +56,43 @@ object Zones : List<Zone> {
     }
 
     /**
-     * Gets a zone by its tag. If multiple zones are present, the first one found will
-     * be returned. If no zone with the given tag is found, `null` will be returned.
+     * Gets a zone by its tag, or returns a default if none are found
      *
-     * @param tag The tag to search with
+     * @param tag The tag to search by
+     * @param default The default value if no zone is found
      *
-     * @return The zone with the given tag, or `null` if none are found
+     * @return A non-null zone with given tag
      */
-    operator fun get(tag: String): Zone? {
-        return zoneList.find { it.tag == tag }
+    operator fun get(tag: String, default: Zone = defaultZone): Zone {
+        return zoneList.find { it.tag == tag} ?: default
     }
 
     /**
      * Gets the zone that the given position is inside. If multiple zones overlap,
      * the first one found will be returned. If the position is not inside a zone,
-     * `null` will be returned.
+     * the default will be returned.
      *
      * @param position The position on the field
+     * @param default The default zone if no zone is found
      *
      * @return The zone the position is inside, or `null` if it is not inside a zone
      */
-    operator fun get(position: Translation2d): Zone? {
-        return zoneList.find { position in it }
+    operator fun get(position: Translation2d, default: Zone = defaultZone): Zone {
+        return zoneList.find { position in it } ?: default
+    }
+
+    /**
+     * Gets the zone that the given position is inside. If multiple zones overlap,
+     * the first one found will be returned. If the position is not inside a zone,
+     * the default value will be returned.
+     *
+     * @param pose The position on the field
+     * @param default The default zone if no zone is found
+     *
+     * @return The zone the position is inside, or `null` if it is not inside a zone
+     */
+    operator fun get(pose: Pose2d, default: Zone = defaultZone): Zone {
+        return get(pose.translation, default)
     }
 
     override val size: Int
@@ -126,18 +148,6 @@ object Zones : List<Zone> {
 
     override fun indexOf(element: Zone): Int {
         return zoneList.indexOf(element)
-    }
-
-    /**
-     * Gets a zone by its tag, or returns a default if none are found
-     *
-     * @param tag The tag to search by
-     * @param default The default value if no zone is found
-     *
-     * @return A non-null zone with given tag
-     */
-    fun getOrDefault(tag: String, default: Zone): Zone {
-        return get(tag) ?: default
     }
 
     override fun equals(other: Any?): Boolean {
