@@ -47,7 +47,7 @@ object Constants {
     }
 
     object LauncherConstants{
-        val ANGLE_MOTOR = 1
+        val ANGLE_MOTOR_PORT = 3
         val ANGLE_KP = 0.001
         val ANGLE_KI = 0.0
         val ANGLE_KD = 0.0
