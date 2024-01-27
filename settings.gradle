@@ -34,3 +34,6 @@ plugins {
 
 Properties props = System.getProperties();
 props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
+include 'src:main:resources'
+findProject(':src:main:resources')?.name = 'resources'
+
