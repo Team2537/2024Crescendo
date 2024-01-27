@@ -1,8 +1,9 @@
 package lib.zones
 
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.units.Distance
+import edu.wpi.first.units.Measure
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationStrategy
 import lib.serialization.Translation2dSerializer
 import kotlin.math.max
 import kotlin.math.min
@@ -55,6 +56,40 @@ data class Zone(
      */
     val displayName: String,
 ) {
+
+    /**
+     * Creates a zone with rectangular bounds defined by opposite corners at points
+     * (x1, y1) and (x2, y2).
+     *
+     * @param x1 The first corner's x-coordinate
+     * @param y1 The first corner's y-coordinate
+     * @param x2 The second corner's x-coordinate
+     * @param y2 The second corner's y-coordinate
+     * @param tag A short tag to denote the zone's purpose
+     * @param displayName A unique display name for the user
+     */
+    constructor(
+        x1: Double, y1: Double,
+        x2: Double, y2: Double,
+        tag: String, displayName: String
+    ) : this(Translation2d(x1, y1), Translation2d(x2, y2), tag, displayName)
+
+    /**
+     * Creates a zone with rectangular bounds defined by opposite corners at points
+     * (x1, y1) and (x2, y2).
+     *
+     * @param x1 The first corner's x-coordinate
+     * @param y1 The first corner's y-coordinate
+     * @param x2 The second corner's x-coordinate
+     * @param y2 The second corner's y-coordinate
+     * @param tag A short tag to denote the zone's purpose
+     * @param displayName A unique display name for the user
+     */
+    constructor(
+        x1: Measure<Distance>, y1: Measure<Distance>,
+        x2: Measure<Distance>, y2: Measure<Distance>,
+        tag: String, displayName: String
+    ) : this(Translation2d(x1, y1), Translation2d(x2, y2), tag, displayName)
 
     companion object {
 

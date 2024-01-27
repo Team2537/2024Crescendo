@@ -2,7 +2,7 @@ package lib
 
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.serializer
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
@@ -33,5 +33,5 @@ fun Boolean.toTrigger(): Trigger {
 }
 
 inline fun <reified T> Json.encodeToString(data: T): String {
-    return Json.encodeToJsonElement(data).toString()
+    return encodeToString(serializersModule.serializer(), data)
 }
