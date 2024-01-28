@@ -11,7 +11,7 @@ import frc.robot.commands.swerve.*
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
-import lib.zones.Zones
+import lib.zoneTrigger
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -84,9 +84,17 @@ object RobotContainer {
         { -controller.leftX }
     )
 
-    val faceSpeakerTrigger: Trigger = Trigger { Zones[SwerveSubsystem.getPose()] == Zones["speaker"] && controller.hid.leftTriggerAxis > 0.75 }
-    val faceAmpTrigger: Trigger = Trigger { Zones[SwerveSubsystem.getPose()] == Zones["amp"] && controller.hid.leftTriggerAxis > 0.75 }
-    val faceSourceTrigger: Trigger = Trigger { Zones[SwerveSubsystem.getPose()] == Zones["source"] && controller.hid.leftTriggerAxis > 0.75 }
+    // Please, I worked so hard (no I didn't lol) on that zoneTrigger function
+    // Ok for real though you don't want to check based on Zones[<position>], because
+    // that will only return one zone, even if you are in multiple. zoneTrigger() has been
+    // changed (at least on one branch) to properly use `<position> in zone` which will
+    // work no matter how many zones or where they are
+    //
+    // This problem should be avoided by having well-made zones, but I still would prefer
+    // if we didn't directly compare any zones' equality
+    val faceSpeakerTrigger: Trigger = zoneTrigger("speaker").and { controller.hid.leftTriggerAxis > 0.75 }
+    val faceAmpTrigger: Trigger = zoneTrigger("amp").and { controller.hid.leftTriggerAxis > 0.75 }
+    val faceSourceTrigger: Trigger = zoneTrigger("source").and { controller.hid.leftTriggerAxis > 0.75 }
 
     var speakerPub: StructPublisher<Pose2d> = NetworkTableInstance.getDefault().
             getStructTopic("FieldConstants/BLUE_SPEAKER", Pose2d.struct).publish()
