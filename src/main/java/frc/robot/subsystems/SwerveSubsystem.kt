@@ -8,17 +8,14 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.math.util.Units
-import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
-import java.util.function.DoubleSupplier
 
 /**
  * The subsystem that controls the swerve drive.
@@ -36,28 +33,12 @@ object SwerveSubsystem : SubsystemBase() {
 
     init {
         try {
-            swerveDrive = SwerveParser(Constants.FileConstants.SWERVE_CONFIG).createSwerveDrive(maximumSpeed)
+            swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
             throw RuntimeException("Error creating swerve drive", e)
         }
 
         swerveDrive.setHeadingCorrection(false)
-        tab.addDouble("FL Absolute") { swerveDrive.modules[0].absolutePosition }
-        tab.addDouble("FR Absolute") { swerveDrive.modules[1].absolutePosition }
-        tab.addDouble("BL Absolute") { swerveDrive.modules[2].absolutePosition }
-        tab.addDouble("BR Absolute") { swerveDrive.modules[3].absolutePosition }
-
-        tab.addDouble("FL Angle") { swerveDrive.modules[0].angleMotor.position }
-        tab.addDouble("FR Angle") { swerveDrive.modules[1].angleMotor.position }
-        tab.addDouble("BL Angle") { swerveDrive.modules[2].angleMotor.position }
-        tab.addDouble("BR Angle") { swerveDrive.modules[3].angleMotor.position }
-
-        tab.addDouble("FL Drive") { swerveDrive.modules[0].driveMotor.position }
-        tab.addDouble("FR Drive") { swerveDrive.modules[1].driveMotor.position }
-        tab.addDouble("BL Drive") { swerveDrive.modules[2].driveMotor.position }
-        tab.addDouble("BR Drive") { swerveDrive.modules[3].driveMotor.position }
-
-        tab.addDouble("Heading") { getHeading().degrees }
 
         setMotorBrake(true)
     }
