@@ -43,6 +43,6 @@ object Constants {
     }
 
     object FileConstants {
-        val BOUNTY_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve/bounty")
+        val BOUNTY_CONFIG: File = File(Filesystem.getDeployDirectory(), "/swerve/bounty")
     }
 }

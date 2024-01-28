@@ -35,6 +35,7 @@ object SwerveSubsystem : SubsystemBase() {
         try {
             swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
+            e.printStackTrace()
             throw RuntimeException("Error creating swerve drive", e)
         }
 
