@@ -1,5 +1,7 @@
 package frc.robot
 
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
@@ -37,12 +39,18 @@ object Constants {
         const val WHEEL_LOCK_TIME = 10.0 // seconds
     }
 
+    object FieldConstants {
+        val BLUE_SPEAKER = Pose2d(0.0, 5.5, Rotation2d(0.0))
+        val BLUE_AMP = Pose2d(1.9, 8.5, Rotation2d(0.0))
+        val BLUE_SOURCE = Pose2d(15.7, 0.7, Rotation2d(0.0))
+    }
+
     object IOConstants {
         const val DRIVER_CONTROLLER_PORT = 0
         const val OPERATOR_CONTROLLER_PORT = 1
     }
 
     object FileConstants {
-        val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
+        val BOUNTY_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve/bounty")
     }
 }
