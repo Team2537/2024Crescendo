@@ -1,5 +1,7 @@
 package lib.zones
 
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
@@ -155,6 +157,32 @@ data class Zone(
     operator fun contains(point: Translation2d): Boolean {
         return (point.x in bottomX..topX) and
                 (point.y in leftY..rightY)
+    }
+
+    /**
+     * Checks if a [Pose2d] is contained within the rectangular
+     * bounding provided by this zone
+     *
+     * @param pose The position on the field to check
+     *
+     * @return `true` if the point is within this zone, `false` if it
+     * is outside it
+     */
+    operator fun contains(pose: Pose2d): Boolean {
+        return pose.translation in this
+    }
+
+    /**
+     * Checks if a [Pose3d] is contained within the rectangular
+     * bounding provided by this zone
+     *
+     * @param pose The position on the field to check
+     *
+     * @return `true` if the point is within this zone, `false` if it
+     * is outside it
+     */
+    operator fun contains(pose: Pose3d): Boolean {
+        return pose.toPose2d() in this
     }
 
     /**

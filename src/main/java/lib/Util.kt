@@ -62,7 +62,7 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
  * @return A trigger that checks against a specific zone
  */
 inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
-    return Trigger { Zones[position.invoke()] == zone }
+    return Trigger { position.invoke() in zone }
 }
 
 private fun getAngleToShootRaw(
