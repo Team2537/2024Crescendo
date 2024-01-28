@@ -22,5 +22,41 @@
     },
     "tag": "example2",
     "displayName": "Second Example Zone"
+  },
+  {
+    "corner1": {
+      "x": 1.81,
+      "y": 7.27
+    },
+    "corner2": {
+      "x": 0.05,
+      "y": 3.94
+    },
+    "tag": "speaker",
+    "displayName": "Speaker Zone"
+  },
+  {
+    "corner1": {
+      "x": 16.54,
+      "y": 2.08
+    },
+    "corner2": {
+      "x": 13.6,
+      "y": 0.11
+    },
+    "tag": "source",
+    "displayName": "Source Zone"
+  },
+  {
+    "corner1": {
+      "x": 3.35,
+      "y": 8.23
+    },
+    "corner2": {
+      "x": 0.02,
+      "y": 7.29
+    },
+    "tag": "amp",
+    "displayName": "Amp Zone"
   }
 ]
