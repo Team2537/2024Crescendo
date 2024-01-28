@@ -32,7 +32,7 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
-    val trackTarget = TrackTargetCommand()
+//    val trackTarget = TrackTargetCommand()
 
     // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
     //     No, uninverting both doesn't fix it :(
@@ -75,7 +75,7 @@ object RobotContainer {
     private fun initializeObjects() {
         Autos
         SwerveSubsystem
-        LimelightSubsystem
+//        LimelightSubsystem
         DriverProfile
         IntakeSubsystem
     }
