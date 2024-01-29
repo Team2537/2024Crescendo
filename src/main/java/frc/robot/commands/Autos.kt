@@ -1,11 +1,9 @@
 package frc.robot.commands
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.CommandBase
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.PrintCommand
-import frc.robot.subsystems.ExampleSubsystem
 
 object Autos {
     private val autoModeChooser =
@@ -21,9 +19,16 @@ object Autos {
         get() = autoModeChooser.selected?.command ?: defaultAutonomousCommand
 
     /** Example static factory for an autonomous command.  */
-    private fun exampleAuto(): CommandBase = Commands.sequence(ExampleSubsystem.exampleMethodCommand(), ExampleCommand())
 
-    private fun exampleAuto2() = PrintCommand("An example Auto Mode that just prints a value")
+    init {
+        val tab = Shuffleboard.getTab("Autonomous")
+        tab.add(autoModeChooser)
+    }
+
+    private fun examplePath(): Command {
+        // return SwerveSubsystem.getAutonomousCommand("examplePath", true)
+        return PrintCommand("Example Path")
+    }
 
     /**
      * An enumeration of the available autonomous modes. It provides an easy
@@ -35,15 +40,12 @@ object Autos {
      */
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: Command) {
-        // TODO: Replace with real auto modes and their corresponding commands
-        CUSTOM_AUTO_1("Custom Auto Mode 1", exampleAuto()),
-        CUSTOM_AUTO_2("Custom Auto Mode 2", exampleAuto2()),
-        CUSTOM_AUTO_3("Custom Auto Mode 3", ExampleCommand()),
+        EXAMPLE_PATH("Example Path", examplePath()),
         ;
 
         companion object {
             /** The default auto mode. */
-            val default = CUSTOM_AUTO_1
+            val default = EXAMPLE_PATH
         }
     }
 }

@@ -4,7 +4,7 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
-        String frcYear = '2023'
+        String frcYear = '2024'
         File frcHome
         if (OperatingSystem.current().isWindows()) {
             String publicFolder = System.getenv('PUBLIC')
@@ -24,4 +24,16 @@ pluginManagement {
             url frcHomeMaven
         }
     }
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    }
 }
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+}
+
+Properties props = System.getProperties();
+props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
+include 'src:main:resources'
+findProject(':src:main:resources')?.name = 'resources'
+

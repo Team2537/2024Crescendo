@@ -24,7 +24,7 @@ object Constants {
         const val LEFT_Y_DEADBAND = 0.01
     }
 
-    object Auton {
+    object Auto {
         val xAutoPID: PIDFConfig = PIDFConfig(0.7, 0.0, 0.0)
         val yAutoPID: PIDFConfig = PIDFConfig(0.7, 0.0, 0.0)
         val angleAutoPID: PIDFConfig = PIDFConfig(0.4, 0.0, 0.01)
@@ -43,6 +43,6 @@ object Constants {
     }
 
     object FileConstants {
-        val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
+        val BOUNTY_CONFIG: File = File(Filesystem.getDeployDirectory(), "/swerve/bounty")
     }
 }

@@ -1,45 +1,44 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-package frc.robot.commands.swervedrive.drivebase
+package frc.robot.commands.swerve
 
-import SwerveSubsystem
-import SwerveSubsystem.drive
-import SwerveSubsystem.getSwerveController
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.CommandBase
+import edu.wpi.first.wpilibj2.command.Command
+import frc.robot.subsystems.SwerveSubsystem
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
 /**
- * An example command that uses an example subsystem.
+ * A command that controls the swerve drive using joystick inputs.
+ * @param vForward The x velocity of the robot.
+ * @param vStrafe The y velocity of the robot.
+ * @param omega The angular velocity of the robot.
+ * @param driveMode Boolean supplier that returns true if the robot should drive in field-oriented mode.
+ * @param slowMode Boolean supplier that returns true if the robot should drive in slow mode.
+ * @see SwerveSubsystem
  */
-class TeleopDrive(
-    vX: DoubleSupplier,
-    vY: DoubleSupplier,
+class TeleopDriveCommand(
+    vForward: DoubleSupplier,
+    vStrafe: DoubleSupplier,
     omega: DoubleSupplier,
     driveMode: BooleanSupplier,
     slowMode: BooleanSupplier,
-) : CommandBase() {
-    private val vX: DoubleSupplier
-    private val vY: DoubleSupplier
+) : Command() {
+    private val vForward: DoubleSupplier
+    private val vStrafe: DoubleSupplier
     private val omega: DoubleSupplier
     private val driveMode: BooleanSupplier
     private val slowMode: BooleanSupplier
     private val controller: SwerveController
     private val swerve: SwerveSubsystem
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param swerve The subsystem used by this command.
-     */
     init {
         this.swerve = SwerveSubsystem
-        this.vX = vX
-        this.vY = vY
+        this.vForward = vForward
+        this.vStrafe = vStrafe
         this.omega = omega
         this.driveMode = driveMode
         this.slowMode = slowMode
@@ -48,37 +47,37 @@ class TeleopDrive(
         addRequirements(swerve)
     }
 
-    // Called when the command is initially scheduled.
+    /** @suppress */
     override fun initialize() {}
 
-    // Called every time the scheduler runs while the command is scheduled.
+    /** @suppress */
     override fun execute() {
-        var xVelocity = vX.asDouble
-        var yVelocity = vY.asDouble
+        var forwardVelocity = vForward.asDouble
+        var strafeVelocity = vStrafe.asDouble
         var angVelocity = omega.asDouble
         val slowMode = slowMode.asBoolean
-        SmartDashboard.putNumber("vX", xVelocity)
-        SmartDashboard.putNumber("vY", yVelocity)
+        SmartDashboard.putNumber("vX", forwardVelocity)
+        SmartDashboard.putNumber("vY", strafeVelocity)
         SmartDashboard.putNumber("omega", angVelocity)
 
         if (slowMode) {
-            xVelocity *= 0.6
-            yVelocity *= 0.6
+            forwardVelocity *= 0.6
+            strafeVelocity *= 0.6
             angVelocity *= 0.6
         }
 
         // Drive using raw values.
         swerve.drive(
-            Translation2d(xVelocity * swerve.maximumSpeed, yVelocity * swerve.maximumSpeed),
+            Translation2d(forwardVelocity * swerve.maximumSpeed, strafeVelocity * swerve.maximumSpeed),
             angVelocity * controller.config.maxAngularVelocity,
             driveMode.asBoolean,
         )
     }
 
-    // Called once the command ends or is interrupted.
+    /** @suppress */
     override fun end(interrupted: Boolean) {}
 
-    // Returns true when the command should end.
+    /** @suppress */
     override fun isFinished(): Boolean {
         return false
     }
