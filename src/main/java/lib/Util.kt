@@ -35,9 +35,7 @@ fun Double.powScale(exp: Double): Double {
 /**
  * Converts a boolean to a [Trigger] object
  */
-fun Boolean.toTrigger(): Trigger {
-    return Trigger { this }
-}
+fun Boolean.toTrigger(): Trigger = Trigger { this }
 
 /**
  *  Sets the velocity reference of a REV motor controller.
@@ -71,4 +69,13 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
  */
 inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
     return Trigger { Zones[position.invoke()] == zone }
+}
+
+/**
+ * Sets the position reference of a REV motor controller.
+ *
+ * @param pos the position to set the motor to.
+ */
+fun CANSparkBase.setPosition(pos: Double) {
+    this.pidController.setReference(pos, CANSparkBase.ControlType.kPosition)
 }
