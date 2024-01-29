@@ -12,14 +12,21 @@ import swervelib.SwerveController
 import swervelib.math.SwerveMath
 import java.util.function.DoubleSupplier
 
+/**
+ *  A Command that lets you provide a direct heading rather than an angular velocity
+ *  @param vForwards Supplier for the forwards velocity of the robot
+ *  @param vStrafe Supplier for the side-to-side velocity of the robot
+ *  @param headingX X Component of the desired heading
+ *  @param headingY Y Component of the desired heading
+ */
 class AbsoluteDriveCommand(
     vForwards: DoubleSupplier,
     vStrafe: DoubleSupplier,
     headingX: DoubleSupplier,
     headingY: DoubleSupplier,
 ) : Command() {
-    private val swerveSubsystem = SwerveSubsystem
 
+    private val swerveSubsystem = SwerveSubsystem
     val vForwards: DoubleSupplier
     val vStrafe: DoubleSupplier
     val headingX: DoubleSupplier
@@ -37,10 +44,12 @@ class AbsoluteDriveCommand(
 
     }
 
+    /** @suppress */
     override fun initialize() {
         initRotation = true
     }
 
+    /** @suppress */
     override fun execute() {
         var desiredSpeeds: ChassisSpeeds = swerveSubsystem.getTargetSpeeds(vForwards.asDouble, vStrafe.asDouble, headingX.asDouble, headingY.asDouble)
 
@@ -65,10 +74,9 @@ class AbsoluteDriveCommand(
         swerveSubsystem.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true)
     }
 
+    /** @suppress */
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
         return false
     }
-
-    override fun end(interrupted: Boolean) {}
 }
