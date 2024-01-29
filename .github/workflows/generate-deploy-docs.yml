@@ -1,0 +1,39 @@
+name: Generate and Deploy Dokka Docs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'corretto'
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
+
+      - name: Gradle Build
+        run: ./gradlew build
+
+      - name: Generate Dokka Docs
+        run: ./gradlew dokkaHtml
+
+      - name: Install rsync 📚
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rsync
+
+      - name: Deploy Dokka Docs
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build/dokka/html
+          token: ${{ secrets.DEPLOY_TOKEN }}
