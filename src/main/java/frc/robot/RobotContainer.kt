@@ -1,19 +1,17 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.networktables.StructPublisher
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
-import frc.robot.commands.swerve.AbsoluteDriveCommand
-import frc.robot.commands.swerve.CornerSpinCommand
-import frc.robot.commands.swerve.TeleopDriveCommand
-import frc.robot.commands.vision.TrackTargetCommand
-import frc.robot.subsystems.LimelightSubsystem
+import frc.robot.commands.swerve.*
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
-import kotlin.math.abs
+import lib.zoneTrigger
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,7 +29,8 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
-    val trackTarget = TrackTargetCommand()
+
+//    val trackTarget = TrackTargetCommand()
 
     // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
     //     No, uninverting both doesn't fix it :(
@@ -40,7 +39,7 @@ object RobotContainer {
             { -controller.leftY },
             { -controller.leftX },
             { -controller.rightX },
-            { controller.hid.leftBumper },
+            { !controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
 
@@ -58,13 +57,58 @@ object RobotContainer {
         { -controller.rightY }
     )
 
+    val faceClosestFieldElementCommand: AbsoluteDriveElementListRelativeCommand = AbsoluteDriveElementListRelativeCommand(
+        listOf(Constants.FieldConstants.BLUE_AMP,
+            Constants.FieldConstants.BLUE_SOURCE,
+            Constants.FieldConstants.BLUE_SPEAKER
+        ),
+        { -controller.leftY },
+        { -controller.leftX }
+    )
+
+    val faceSpeakerCommand: AbsoluteDriveElementRelativeCommand = AbsoluteDriveElementRelativeCommand(
+        Constants.FieldConstants.BLUE_SPEAKER,
+        { -controller.leftY },
+        { -controller.leftX }
+    )
+
+    val faceAmpCommand: AbsoluteDriveElementRelativeCommand = AbsoluteDriveElementRelativeCommand(
+        Constants.FieldConstants.BLUE_AMP,
+        { -controller.leftY },
+        { -controller.leftX }
+    )
+
+    val faceSourceCommand: AbsoluteDriveElementRelativeCommand = AbsoluteDriveElementRelativeCommand(
+        Constants.FieldConstants.BLUE_SOURCE,
+        { -controller.leftY },
+        { -controller.leftX }
+    )
+
+    // Please, I worked so hard (no I didn't lol) on that zoneTrigger function
+    // Ok for real though you don't want to check based on Zones[<position>], because
+    // that will only return one zone, even if you are in multiple. zoneTrigger() has been
+    // changed (at least on one branch) to properly use `<position> in zone` which will
+    // work no matter how many zones or where they are
+    //
+    // This problem should be avoided by having well-made zones, but I still would prefer
+    // if we didn't directly compare any zones' equality
+    val faceSpeakerTrigger: Trigger = zoneTrigger("speaker").and { controller.hid.leftTriggerAxis > 0.75 }
+    val faceAmpTrigger: Trigger = zoneTrigger("amp").and { controller.hid.leftTriggerAxis > 0.75 }
+    val faceSourceTrigger: Trigger = zoneTrigger("source").and { controller.hid.leftTriggerAxis > 0.75 }
+
+    var speakerPub: StructPublisher<Pose2d> = NetworkTableInstance.getDefault().
+            getStructTopic("FieldConstants/BLUE_SPEAKER", Pose2d.struct).publish()
+    var ampPub: StructPublisher<Pose2d> = NetworkTableInstance.getDefault().
+            getStructTopic("FieldConstants/BLUE_AMP", Pose2d.struct).publish()
+    var sourcePub: StructPublisher<Pose2d> = NetworkTableInstance.getDefault().
+            getStructTopic("FieldConstants/BLUE_SOURCE", Pose2d.struct).publish()
+
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
         initializeObjects()
 
         configureBindings()
-
         SwerveSubsystem.defaultCommand = teleopDrive
     }
 
@@ -74,8 +118,15 @@ object RobotContainer {
     private fun initializeObjects() {
         Autos
         SwerveSubsystem
-        LimelightSubsystem
+//        LimelightSubsystem
         DriverProfile
+    }
+
+    public fun periodic() {
+        speakerPub.set(Constants.FieldConstants.BLUE_SPEAKER)
+        ampPub.set(Constants.FieldConstants.BLUE_AMP)
+        sourcePub.set(Constants.FieldConstants.BLUE_SOURCE)
+
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -90,5 +141,10 @@ object RobotContainer {
     private fun configureBindings() {
         controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.y().toggleOnTrue(absoluteDrive)
+        controller.x().toggleOnTrue(faceClosestFieldElementCommand)
+
+        faceSpeakerTrigger.whileTrue(faceSpeakerCommand)
+        faceAmpTrigger.whileTrue(faceAmpCommand)
+        faceSourceTrigger.whileTrue(faceSourceCommand)
     }
 }

@@ -11,12 +11,11 @@ import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
+import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
-import java.util.function.DoubleSupplier
 
 /**
  * The subsystem that controls the swerve drive.
@@ -34,7 +33,7 @@ object SwerveSubsystem : SubsystemBase() {
 
     init {
         try {
-            swerveDrive = SwerveParser(Constants.FileConstants.SWERVE_CONFIG).createSwerveDrive(maximumSpeed)
+            swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
             throw RuntimeException("Error creating swerve drive", e)
         }
@@ -237,4 +236,12 @@ object SwerveSubsystem : SubsystemBase() {
      * Method to get the current pitch of the robot.
      */
     fun getPitch() = swerveDrive.pitch
+
+    fun addVisionMeasurement(measurement: Pose2d, timestamp: Double) {
+        swerveDrive.addVisionMeasurement(measurement, timestamp)
+    }
+
+    fun addVisionMeasurement(measurement: VisionMeasurement) {
+        swerveDrive.addVisionMeasurement(measurement.position.toPose2d(), measurement.timestamp)
+    }
 }
