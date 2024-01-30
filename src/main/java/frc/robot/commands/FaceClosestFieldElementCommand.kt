@@ -1,9 +1,10 @@
 package frc.robot.commands
 
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.SwerveSubsystem
-import lib.getRotationTo
+import lib.getAngleTo
 
 class FaceClosestFieldElementCommand(elements: List<Pose2d>) : Command() {
     private val swerveSubsystem = SwerveSubsystem
@@ -20,7 +21,7 @@ class FaceClosestFieldElementCommand(elements: List<Pose2d>) : Command() {
     override fun execute() {
         val pose = swerveSubsystem.getPose()
         val closestElement = pose.nearest(elements)
-        val angle = pose.getRotationTo(closestElement)
+        val angle = pose.getAngleTo(closestElement).`in`(Degrees)
         println(angle)
     }
 
