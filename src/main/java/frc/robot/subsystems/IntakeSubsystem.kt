@@ -39,8 +39,7 @@ object IntakeSubsystem : SubsystemBase() {
         pidController.i = IntakeConstants.INTAKE_KI
         pidController.d = IntakeConstants.INTAKE_KD
 
-        //TODO replace with dedicated class in the near future
-        val infraredSensor = DigitalInput(1)
+        val infraredSensor = DigitalInput(IntakeConstants.INFRARED_SENSOR_CHANNEL)
         noteDetector = infraredSensor.get().toTrigger()
 
         noteDetector.onTrue(onDetectNote)
