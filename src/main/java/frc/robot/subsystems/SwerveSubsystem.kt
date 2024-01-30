@@ -6,8 +6,11 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
+import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.networktables.StructArrayPublisher
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
@@ -30,31 +33,18 @@ object SwerveSubsystem : SubsystemBase() {
     /** @suppress */
     var maximumSpeed: Double = Units.feetToMeters(12.0)
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")
+    var swerveStates: StructArrayPublisher<SwerveModuleState> = NetworkTableInstance.getDefault().
+        getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
 
     init {
         try {
             swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
+            e.printStackTrace()
             throw RuntimeException("Error creating swerve drive", e)
         }
 
         swerveDrive.setHeadingCorrection(false)
-        tab.addDouble("FL Absolute") { swerveDrive.modules[0].absolutePosition }
-        tab.addDouble("FR Absolute") { swerveDrive.modules[1].absolutePosition }
-        tab.addDouble("BL Absolute") { swerveDrive.modules[2].absolutePosition }
-        tab.addDouble("BR Absolute") { swerveDrive.modules[3].absolutePosition }
-
-        tab.addDouble("FL Angle") { swerveDrive.modules[0].angleMotor.position }
-        tab.addDouble("FR Angle") { swerveDrive.modules[1].angleMotor.position }
-        tab.addDouble("BL Angle") { swerveDrive.modules[2].angleMotor.position }
-        tab.addDouble("BR Angle") { swerveDrive.modules[3].angleMotor.position }
-
-        tab.addDouble("FL Drive") { swerveDrive.modules[0].driveMotor.position }
-        tab.addDouble("FR Drive") { swerveDrive.modules[1].driveMotor.position }
-        tab.addDouble("BL Drive") { swerveDrive.modules[2].driveMotor.position }
-        tab.addDouble("BR Drive") { swerveDrive.modules[3].driveMotor.position }
-
-        tab.addDouble("Heading") { getHeading().degrees }
 
         setMotorBrake(true)
     }
@@ -243,5 +233,9 @@ object SwerveSubsystem : SubsystemBase() {
 
     fun addVisionMeasurement(measurement: VisionMeasurement) {
         swerveDrive.addVisionMeasurement(measurement.position.toPose2d(), measurement.timestamp)
+    }
+
+    override fun periodic() {
+        swerveStates.set(swerveDrive.states)
     }
 }
