@@ -6,7 +6,8 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.SwerveSubsystem
-import lib.getAngleTo
+import lib.angle
+import lib.getRotationTo
 import swervelib.SwerveController
 import java.util.function.DoubleSupplier
 
@@ -35,7 +36,7 @@ class AbsoluteDriveElementRelativeCommand(
 
     override fun execute() {
         val pose = swerveSubsystem.getPose()
-        val angle = pose.getAngleTo(target)
+        val angle = pose.getRotationTo(target).angle
         val rotation = anglePID.calculate(swerveSubsystem.getHeading().degrees, angle.`in`(Units.Degrees)) * controller.config.maxAngularVelocity
 
         val forwardVelocity = vForward.asDouble * swerveSubsystem.maximumSpeed

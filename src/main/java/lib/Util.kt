@@ -1,6 +1,7 @@
 package lib
 
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
@@ -44,12 +45,35 @@ fun Boolean.toTrigger(): Trigger {
     return Trigger { this }
 }
 
+@Deprecated("Replace with getRotationTo")
 fun Pose2d.getAngleTo(other: Pose2d): Measure<Angle> {
     val relativePose = this.relativeTo(other)
     val fieldOffset: Measure<Angle> = Degrees.of(180.0)
     var angle: Measure<Angle> = Radians.of(atan2(relativePose.y, relativePose.x)).plus(fieldOffset)
     return angle
 }
+
+/**
+ * Gets a rotation towards another position on the field.
+ *
+ * @return A rotation towards the position from the current position
+ */
+fun Pose2d.getRotationTo(other: Pose2d): Rotation2d {
+    val relative = other.relativeTo(this)
+    return Rotation2d(relative.x, relative.y)
+}
+
+/**
+ * Rotates a [Pose2d] towards another.
+ *
+ * @returns The transformed posed
+ */
+fun Pose2d.rotateTowards(other: Pose2d): Pose2d {
+    return Pose2d(this.translation, this.getRotationTo(other))
+}
+
+val Rotation2d.angle: Measure<Angle>
+    get() = Radians.of(this.radians)
 
 inline fun <reified T> Json.encodeToString(data: T): String {
     return encodeToString(serializersModule.serializer(), data)
