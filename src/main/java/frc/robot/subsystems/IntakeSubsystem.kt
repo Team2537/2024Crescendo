@@ -3,6 +3,7 @@ package frc.robot.subsystems
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.wpilibj.DigitalInput
+import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants.IntakeConstants
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
@@ -23,16 +24,25 @@ object IntakeSubsystem : SubsystemBase() {
      */
     val noteDetector: Trigger
 
+    /**
+     * TODO logic/documentation
+     */
+    private val onDetectNote: Command = runOnce {
+        println("note detected")
+    }
+
 
     init {
-        //TODO replace with dedicated class in the near future
-        val infraredSensor = DigitalInput(1)
-        noteDetector = infraredSensor.get().toTrigger()
-
         val pidController = intakeMotor.pidController
 
         pidController.p = IntakeConstants.INTAKE_KP
         pidController.i = IntakeConstants.INTAKE_KI
         pidController.d = IntakeConstants.INTAKE_KD
+
+        //TODO replace with dedicated class in the near future
+        val infraredSensor = DigitalInput(1)
+        noteDetector = infraredSensor.get().toTrigger()
+
+        noteDetector.onTrue(onDetectNote)
     }
 }
