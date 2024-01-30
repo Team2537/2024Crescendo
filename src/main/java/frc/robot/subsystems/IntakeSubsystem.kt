@@ -2,8 +2,11 @@ package frc.robot.subsystems
 
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax
+import edu.wpi.first.wpilibj.DigitalInput
 import frc.robot.Constants.IntakeConstants
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.button.Trigger
+import lib.toTrigger
 
 /**
  * The Intake subsystem contains methods and objects for controlling the under-the-bumper intake system,
@@ -15,7 +18,17 @@ object IntakeSubsystem : SubsystemBase() {
      */
     val intakeMotor : CANSparkMax = CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless)
 
+    /**
+     * Trigger for detecting when a note has entered the intake.
+     */
+    val noteDetector: Trigger
+
+
     init {
+        //TODO replace with dedicated class in the near future
+        val infraredSensor = DigitalInput(1)
+        noteDetector = infraredSensor.get().toTrigger()
+
         val pidController = intakeMotor.pidController
 
         pidController.p = IntakeConstants.INTAKE_KP
