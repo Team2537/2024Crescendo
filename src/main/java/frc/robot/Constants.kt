@@ -47,6 +47,8 @@ object Constants {
     }
 
     object IntakeConstants {
+        const val INFRARED_SENSOR_CHANNEL = 1 //TODO: Update this
+
         const val INTAKE_MOTOR_ID: Int = 0 //TODO: Update this
 
         const val INTAKE_KP : Double = 0.1
