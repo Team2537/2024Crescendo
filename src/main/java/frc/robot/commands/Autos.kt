@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 object Autos {
     private val autoModeChooser =
         SendableChooser<AutoMode>().apply {
-            AutoMode.values().forEach { addOption(it.optionName, it) }
+            AutoMode.entries.forEach { addOption(it.optionName, it) }
             setDefaultOption(AutoMode.default.optionName, AutoMode.default)
         }
 
