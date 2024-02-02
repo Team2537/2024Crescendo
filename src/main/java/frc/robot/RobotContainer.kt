@@ -72,8 +72,8 @@ object RobotContainer {
      * Use to eager initialize objects
      */
     private fun initializeObjects() {
-        Autos
         SwerveSubsystem
+        Autos
 //        LimelightSubsystem
         DriverProfile
     }
