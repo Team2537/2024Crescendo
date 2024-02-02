@@ -34,7 +34,7 @@ object Autos {
     }
 
     private fun testAuto(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Bruh Moment", true)
+        return SwerveSubsystem.getAutonomousCommand("testAuto", true)
     }
 
     /**
