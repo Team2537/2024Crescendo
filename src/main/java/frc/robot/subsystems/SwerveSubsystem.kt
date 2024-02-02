@@ -102,11 +102,11 @@ object SwerveSubsystem : SubsystemBase() {
         autoName: String,
         setOdomAtStart: Boolean,
     ): Command {
-        val path: Pose2d = PathPlannerAuto.getStaringPoseFromAutoFile(autoName)
+        val path: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
 
         if (setOdomAtStart)
             {
-                resetOdometry(Pose2d(path.translation, getHeading()))
+                resetOdometry(Pose2d(path, getHeading()))
             }
 
         // TODO: Configure path planner's AutoBuilder
