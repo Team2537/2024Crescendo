@@ -65,6 +65,6 @@ object Constants {
 
         const val ABSOLUTE_ENCODER_PORT = 0
 
-
+        const val IR_PIECE_SENSOR_ID = 0
     }
 }

@@ -1,17 +1,15 @@
 package frc.robot.subsystems
 
 import com.revrobotics.*
-import edu.wpi.first.wpilibj.DutyCycleEncoder
-import com.revrobotics.CANSparkBase
-import com.revrobotics.CANSparkFlex
-import com.revrobotics.CANSparkLowLevel
-import com.revrobotics.CANSparkMax
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.wpilibj.DigitalInput
+import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.Constants
 import frc.robot.Constants.LauncherConstants
 
 object LauncherSubsystem : SubsystemBase() {
@@ -31,6 +29,8 @@ object LauncherSubsystem : SubsystemBase() {
 
     val relativeAngleEncoder: RelativeEncoder = angleMotor.encoder
     val absoluteAngleEncoder: DutyCycleEncoder = DutyCycleEncoder(LauncherConstants.ABSOLUTE_ENCODER_PORT)
+
+    val irPieceSensor = DigitalInput(Constants.LauncherConstants.IR_PIECE_SENSOR_ID)
 
 
     init {
@@ -73,13 +73,11 @@ object LauncherSubsystem : SubsystemBase() {
     fun intake() {
         storePID.setReference(0.5, CANSparkBase.ControlType.kPosition)
     }
-
+    val piecePresent: Boolean
+        get() = irPieceSensor.get()
     fun outtake() {
         storeMotor.set(0.5)
     }
-
-
-
 
     override fun periodic() {}
 }
