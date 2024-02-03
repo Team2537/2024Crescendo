@@ -63,6 +63,8 @@ object Constants {
         const val STORE_I = 0.00001
         const val STORE_D = 0.00001
 
+        const val ABSOLUTE_ENCODER_PORT = 0
+
 
     }
 }
