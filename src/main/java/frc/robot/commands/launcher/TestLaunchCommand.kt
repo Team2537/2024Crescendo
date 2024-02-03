@@ -17,7 +17,9 @@ class TestLaunchCommand : Command() {
     }
 
     override fun execute() {
-
+        if(launcherSubsystem.leftLauncherMotor.encoder.velocity > 6600.0){
+            launcherSubsystem.outtake()
+        }
     }
 
     override fun isFinished(): Boolean {
