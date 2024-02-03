@@ -95,6 +95,7 @@ object RobotContainer {
     }
 
     private fun addNamedCommands() {
-        NamedCommands.registerCommand("Print Hello", PrintCommand("Hello"))
+        NamedCommands.registerCommand("Intake", PrintCommand("Intake"))
+        NamedCommands.registerCommand("Launch", PrintCommand("Launch"))
     }
 }
