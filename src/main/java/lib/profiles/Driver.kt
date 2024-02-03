@@ -1,19 +1,37 @@
 package lib.profiles
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import lib.controllers.ProfileController
+import lib.profiles.Driver.loadControllers
 import java.util.*
 import java.util.function.Consumer
 import java.util.stream.Stream
 
+/**
+ * A singleton manager for [controllers][ProfileController]
+ *
+ * The Driver manager keeps a list of all controllers that are in use.
+ * The [ShuffleboardTab] named `"Controllers"` allows for the changing of
+ * each controllers' profile at any time. The profile choices are obtained
+ * through [DriverProfile.Profile].
+ *
+ * By default, no controllers are present in the Driver object (this should
+ * be changed), but controllers can be loaded through [loadControllers]
+ *
+ * @author Matthew Clark
+ *
+ * @since 2024-02-03
+ */
 object Driver : List<ProfileController> {
-    private val controllers: MutableList<ProfileController>
+    // list impl is subject to change
+    private val controllers: MutableList<ProfileController> = ArrayList()
 
-    init {
-        // list impl is subject to change
-        controllers = ArrayList()
+    override val size: Int
+        get() = controllers.size
 
+    private fun reloadShuffleboard(){
         val tab = Shuffleboard.getTab("Controllers")
 
         val chooser = SendableChooser<ProfileController>().apply {
@@ -42,9 +60,6 @@ object Driver : List<ProfileController> {
         tab.add(profileChooser)
     }
 
-    override val size: Int
-        get() = controllers.size
-
     /**
      * Loads controllers into this driver from a [Stream].
      *
@@ -59,6 +74,8 @@ object Driver : List<ProfileController> {
             this.controllers.clear()
 
         controllers.forEach { this.controllers.add(it) }
+
+        reloadShuffleboard()
     }
 
     /**
@@ -71,6 +88,8 @@ object Driver : List<ProfileController> {
         if(doClear)
             this.controllers.clear()
         this.controllers.addAll(controllers)
+
+        reloadShuffleboard()
     }
 
     /**
@@ -83,6 +102,8 @@ object Driver : List<ProfileController> {
         if(doClear)
             this.controllers.clear()
         this.controllers.addAll(controllers)
+
+        reloadShuffleboard()
     }
 
 
