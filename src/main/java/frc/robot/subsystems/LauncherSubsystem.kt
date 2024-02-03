@@ -2,6 +2,13 @@ package frc.robot.subsystems
 
 import com.revrobotics.*
 import edu.wpi.first.wpilibj.DutyCycleEncoder
+import com.revrobotics.CANSparkBase
+import com.revrobotics.CANSparkFlex
+import com.revrobotics.CANSparkLowLevel
+import com.revrobotics.CANSparkMax
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -51,8 +58,8 @@ object LauncherSubsystem : SubsystemBase() {
 
     }
 
-    fun setAngle(angle: Double) {
-        anglePID.setReference(angle, CANSparkBase.ControlType.kPosition)
+    fun setAngle(angle: Measure<Angle>) {
+        anglePID.setReference(angle.`in`(Units.Rotations), CANSparkBase.ControlType.kPosition)
     }
     
     fun setRawLaunchSpeed(rA: Double, rB: Double) {
