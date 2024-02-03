@@ -19,6 +19,10 @@ interface Gamepad {
     val dPadDown: Boolean
     val dPadLeft: Boolean
     val dPadRight: Boolean
+    val dPadUpRight: Boolean
+    val dPadDownRight: Boolean
+    val dPadDownLeft: Boolean
+    val dPadUpLeft: Boolean
     val startButton: Boolean
     val selectButton: Boolean
 }

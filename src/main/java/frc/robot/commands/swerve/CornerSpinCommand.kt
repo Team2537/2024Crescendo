@@ -3,10 +3,10 @@ package frc.robot.commands.swerve
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.SwerveSubsystem
-import frc.robot.util.SingletonXboxController
 import swervelib.SwerveController
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
+import java.util.function.Supplier
 
 /**
  * A Command that allows rotation around a corner/swerve module.
@@ -19,6 +19,7 @@ class CornerSpinCommand(
     rotation: DoubleSupplier,
     driveMode: BooleanSupplier,
     slowMode: BooleanSupplier,
+    center: Supplier<Translation2d>,
 ) : Command() {
     private val swerveSubsystem = SwerveSubsystem
 
@@ -26,6 +27,8 @@ class CornerSpinCommand(
 
     private val driveMode: BooleanSupplier
     private val slowMode: BooleanSupplier
+
+    private val center: Supplier<Translation2d>
 
     private val controller: SwerveController
 
@@ -35,6 +38,7 @@ class CornerSpinCommand(
         this.rotation = rotation
         this.driveMode = driveMode
         this.slowMode = slowMode
+        this.center = center
 
         controller = swerveSubsystem.getSwerveController()
     }
@@ -47,7 +51,7 @@ class CornerSpinCommand(
         var rot = rotation.asDouble
         val driveMode = driveMode.asBoolean
 
-        val center: Translation2d = SingletonXboxController.getPOVasCorner()
+        val center: Translation2d = center.get()
 
         if (slowMode.asBoolean) {
             rot *= 0.6

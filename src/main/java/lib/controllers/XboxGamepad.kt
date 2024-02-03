@@ -63,4 +63,12 @@ open class XboxGamepad(port: Int) : Joystick(port), Gamepad {
 
     override val dPadRight: Boolean
         get() = this.pov == 90
+    override val dPadUpRight: Boolean
+        get() = this.pov == 45
+    override val dPadDownRight: Boolean
+        get() = this.pov == 135
+    override val dPadDownLeft: Boolean
+        get() = this.pov == 225
+    override val dPadUpLeft: Boolean
+        get() = this.pov == 315
 }

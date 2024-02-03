@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
-import frc.robot.util.SingletonXboxController
+import java.util.function.DoubleSupplier
 import kotlin.math.abs
 
 /**
@@ -14,7 +14,9 @@ import kotlin.math.abs
  * @see SwerveSubsystem
  * @see LimelightSubsystem
  */
-class TrackTargetCommand : Command() {
+class TrackTargetCommand(
+    private val leftX: DoubleSupplier
+) : Command() {
     private val limelightSubsystem = LimelightSubsystem
     private val drivebase = SwerveSubsystem
     private val pidController: PIDController
@@ -36,9 +38,9 @@ class TrackTargetCommand : Command() {
         rotation = pidController.calculate(limelightSubsystem.xOffset.magnitude(), 0.0)
 
         if ((abs(limelightSubsystem.xOffset.magnitude()) < 2 && limelightSubsystem.area < 3.5) && limelightSubsystem.targetVisible) {
-            translation = Translation2d(0.3, -SingletonXboxController.leftX)
+            translation = Translation2d(0.3, -leftX.asDouble)
         } else {
-            translation = Translation2d(0.0, -SingletonXboxController.leftX)
+            translation = Translation2d(0.0, -leftX.asDouble)
         }
         drivebase.drive(translation, rotation, false)
     }

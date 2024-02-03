@@ -1,10 +1,13 @@
 package lib
 
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import lib.controllers.ProfileController
 import lib.zones.Zone
 import lib.zones.Zones
 import kotlin.math.absoluteValue
@@ -59,3 +62,16 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
 inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
     return Trigger { Zones[position.invoke()] == zone }
 }
+
+val ProfileController.povAsCorner: Translation2d
+    get() {
+        if(this.dPadUp.asBoolean)       return Translation2d(Units.inchesToMeters(10.0), 0.0)
+        if(this.dPadUpRight.asBoolean)  return Translation2d(Units.inchesToMeters(10.0), -Units.inchesToMeters(10.0))
+        if(this.dPadRight.asBoolean)    return Translation2d(0.0, -Units.inchesToMeters(10.0))
+        if(this.dPadDownRight.asBoolean)return Translation2d(-Units.inchesToMeters(10.0), -Units.inchesToMeters(10.0))
+        if(this.dPadDown.asBoolean)     return Translation2d(-Units.inchesToMeters(10.0), 0.0)
+        if(this.dPadDownLeft.asBoolean) return Translation2d(-Units.inchesToMeters(10.0), Units.inchesToMeters(10.0))
+        if(this.dPadLeft.asBoolean)     return Translation2d(0.0, Units.inchesToMeters(10.0))
+        if(this.dPadUpLeft.asBoolean)   return Translation2d(Units.inchesToMeters(10.0), Units.inchesToMeters(10.0))
+        return Translation2d(0.0, 0.0)
+    }

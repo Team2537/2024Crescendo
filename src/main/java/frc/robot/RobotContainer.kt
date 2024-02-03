@@ -1,7 +1,6 @@
 package frc.robot
 
 import com.pathplanner.lib.auto.NamedCommands
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -10,13 +9,10 @@ import frc.robot.commands.Autos
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
-import frc.robot.commands.vision.TrackTargetCommand
-import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
-import frc.robot.util.SingletonXboxController
+import lib.povAsCorner
 import lib.profiles.Driver
 import lib.profiles.DriverProfile
-import kotlin.math.abs
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,7 +28,8 @@ import kotlin.math.abs
 object RobotContainer {
     // Testing pre-commit
 
-    private val controller = SingletonXboxController // TODO: refactor to use ProfileController
+//    private val controller = SingletonXboxController // TODO: refactor to use ProfileController
+    private val controller = Driver[0]
 
 //    val trackTarget = TrackTargetCommand()
 
@@ -40,25 +37,26 @@ object RobotContainer {
     //     No, uninverting both doesn't fix it :(
     val teleopDrive: TeleopDriveCommand =
         TeleopDriveCommand(
-            { -controller.leftY },
-            { -controller.leftX },
-            { -controller.rightX },
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
+            { -controller.leftYAxis },
+            { -controller.leftXAxis },
+            { -controller.rightXAxis },
+            { controller.leftShoulderButton.asBoolean },
+            { controller.rightShoulderButton.asBoolean },
         )
 
     val cornerSpin: CornerSpinCommand =
         CornerSpinCommand(
-            { -controller.rightX },
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
+            { -controller.rightXAxis },
+            { controller.leftShoulderButton.asBoolean },
+            { controller.rightShoulderButton.asBoolean },
+            { controller.povAsCorner }
         )
 
     val absoluteDrive: AbsoluteDriveCommand = AbsoluteDriveCommand(
-        { -controller.leftY },
-        { -controller.leftX },
-        { -controller.rightX },
-        { -controller.rightY }
+        { -controller.leftYAxis },
+        { -controller.leftXAxis },
+        { -controller.rightXAxis },
+        { -controller.rightYAxis }
     )
 
 
@@ -92,8 +90,8 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.y().toggleOnTrue(absoluteDrive)
+        controller.aButton.onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        controller.yButton.toggleOnTrue(absoluteDrive)
     }
 
     private fun addNamedCommands() {
