@@ -14,6 +14,7 @@ import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
+import lib.profiles.Driver
 import lib.profiles.DriverProfile
 import kotlin.math.abs
 
@@ -78,6 +79,7 @@ object RobotContainer {
         Autos
 //        LimelightSubsystem
         DriverProfile
+        Driver
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
