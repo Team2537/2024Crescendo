@@ -34,9 +34,18 @@ object Autos {
     }
 
 
-    private fun `Amp Side Two Piece`(): Command {
-        return SwerveSubsystem.getAutonomousCommand("AmpSide_TwoPiece", false)
+    private fun `Test Two Piece`(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Test Two Piece", true)
     }
+
+    private fun `Test Auto`(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Auto Test", true)
+    }
+
+    private fun `X Drift Test`(): Command {
+        return SwerveSubsystem.getAutonomousCommand("X Drift", true)
+    }
+
 
     /**
      * An enumeration of the available autonomous modes. It provides an easy
@@ -49,7 +58,9 @@ object Autos {
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: Command) {
         EXAMPLE_PATH("Example Path", examplePath()),
-        AMP_S_2P("Amp Side Two Piece", `Amp Side Two Piece`())
+        AMP_S_2P("Amp Side Two Piece", `Test Two Piece`()),
+        TEST_AUTO("Test Auto", `Test Auto`()),
+        X_DRIFT("X Drift Test", `X Drift Test`())
         ;
 
         companion object {

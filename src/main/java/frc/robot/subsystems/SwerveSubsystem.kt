@@ -24,6 +24,7 @@ import frc.robot.Constants
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
+import swervelib.telemetry.SwerveDriveTelemetry
 import java.nio.file.Path
 
 /**
@@ -37,16 +38,22 @@ object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
 
     /** @suppress */
-    var maximumSpeed: Double = Units.feetToMeters(12.0)
+    var maximumSpeed: Double = Units.feetToMeters(9.0)
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")
     var swerveStates: StructArrayPublisher<SwerveModuleState> = NetworkTableInstance.getDefault().
         getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
 
+
+
     init {
+
+        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.LOW
+
         try {
             swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
             e.printStackTrace()
+            throw RuntimeException("Error creating swerve drive", e)
             throw RuntimeException("Error creating swerve drive", e)
         }
 
@@ -55,6 +62,8 @@ object SwerveSubsystem : SubsystemBase() {
         setMotorBrake(true)
 
         configurePathPlanner()
+
+        tab.addDouble("Heading") { getHeading().degrees }
     }
 
     /**
@@ -69,13 +78,9 @@ object SwerveSubsystem : SubsystemBase() {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             HolonomicPathFollowerConfig(
-                PIDConstants(5.0, 0.0, 0.0),
-                PIDConstants(
-                    swerveDrive.swerveController.config.headingPIDF.p,
-                    swerveDrive.swerveController.config.headingPIDF.i,
-                    swerveDrive.swerveController.config.headingPIDF.d
-                ),
-                4.5,
+                PIDConstants(10.0, 0.0, 0.0),
+                PIDConstants(10.0, 0.0, 0.0),
+                2.7,
                 swerveDrive.swerveDriveConfiguration.driveBaseRadiusMeters,
                 ReplanningConfig()
             ),

@@ -57,6 +57,7 @@ object Robot : TimedRobot() {
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
+        Autos.selectedAutonomousCommand.cancel()
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
         Autos.selectedAutonomousCommand.schedule()

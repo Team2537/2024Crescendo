@@ -1,0 +1,16 @@
+{
+  "robotWidth": 0.9,
+  "robotLength": 0.9,
+  "holonomicMode": true,
+  "pathFolders": [
+    "Drift Test Paths"
+  ],
+  "autoFolders": [
+    "Drift Tests"
+  ],
+  "defaultMaxVel": 2.7,
+  "defaultMaxAccel": 2.0,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
+  "maxModuleSpeed": 2.7
+}
