@@ -5,6 +5,7 @@ import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.Constants
 
+@Deprecated("Replace with ProfileController")
 object SingletonXboxController : CommandXboxController(Constants.IOConstants.DRIVER_CONTROLLER_PORT) {
     fun getPOVasCorner(): Translation2d {
         when (this.hid.pov) {
