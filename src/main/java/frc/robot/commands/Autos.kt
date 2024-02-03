@@ -46,6 +46,10 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("X Drift", true)
     }
 
+    private fun `Y Drift Test`(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Y Drift", true)
+    }
+
 
     /**
      * An enumeration of the available autonomous modes. It provides an easy
@@ -60,7 +64,8 @@ object Autos {
         EXAMPLE_PATH("Example Path", examplePath()),
         AMP_S_2P("Amp Side Two Piece", `Test Two Piece`()),
         TEST_AUTO("Test Auto", `Test Auto`()),
-        X_DRIFT("X Drift Test", `X Drift Test`())
+        X_DRIFT("X Drift Test", `X Drift Test`()),
+        Y_DRIFT("Y Drift Test", `Y Drift Test`())
         ;
 
         companion object {
