@@ -65,7 +65,8 @@ object Driver : Iterable<ProfileController> {
         //  when the controller is switched, but I don't know how to do that or if it is even
         //  possible
         profileChooser.onChange {
-            controllerChooser.selected.profile = it
+            if(controllerChooser.selected != null)
+                controllerChooser.selected.profile = it
         }
         // Proper information in case the choosers get outdated selection (see to-do above)
         tab.addString("Active") { "${controllerChooser.selected?.name}: ${controllerChooser.selected?.profile}" }
