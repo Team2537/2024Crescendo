@@ -50,7 +50,7 @@ object Driver : Iterable<ProfileController> {
 
         tab = Shuffleboard.getTab("Controllers")
         controllerChooser = SendableChooser<ProfileController>().apply {
-            addOption("Controller 0", controller0)
+            setDefaultOption("Controller 0", controller0)
             addOption("Controller 1", controller1)
             addOption("Controller 2", controller2)
             addOption("Controller 3", controller3)
@@ -60,6 +60,7 @@ object Driver : Iterable<ProfileController> {
             DriverProfile.Profile.entries.forEach {
                 addOption(it.friendlyName, it)
             }
+            setDefaultOption(DriverProfile.Profile.default.friendlyName, DriverProfile.Profile.default)
         }
         // TODO: I'd prefer if the selected profile switched to the one active on the controller
         //  when the controller is switched, but I don't know how to do that or if it is even
