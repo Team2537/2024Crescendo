@@ -1,5 +1,6 @@
 package frc.robot.subsystems
 
+import com.ctre.phoenix6.hardware.Pigeon2
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
 import com.pathplanner.lib.path.PathPlannerPath
@@ -36,6 +37,7 @@ import java.nio.file.Path
  */
 object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
+    private var pigeon: Pigeon2? = null
 
     /** @suppress */
     var maximumSpeed: Double = Units.feetToMeters(9.0)
@@ -64,6 +66,9 @@ object SwerveSubsystem : SubsystemBase() {
         configurePathPlanner()
 
         tab.addDouble("Heading") { getHeading().degrees }
+        pigeon = swerveDrive.swerveDriveConfiguration.imu.imu as Pigeon2
+
+        tab.addDouble("Pigeon Yaw") { pigeon!!.yaw.value }
     }
 
     /**
@@ -281,5 +286,6 @@ object SwerveSubsystem : SubsystemBase() {
 
     override fun periodic() {
         swerveStates.set(swerveDrive.states)
+        pigeon!!.setYaw(0.0)
     }
 }
