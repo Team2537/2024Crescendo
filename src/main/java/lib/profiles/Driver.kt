@@ -68,7 +68,7 @@ object Driver : Iterable<ProfileController> {
             controllerChooser.selected.profile = it
         }
         // Proper information in case the choosers get outdated selection (see to-do above)
-        tab.addString("Active") { "${controllerChooser.selected.name}: ${controllerChooser.selected.profile}" }
+        tab.addString("Active") { "${controllerChooser.selected?.name}: ${controllerChooser.selected?.profile}" }
         tab.add(controllerChooser)
         tab.add(profileChooser)
     }
