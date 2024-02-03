@@ -33,8 +33,9 @@ object Autos {
         return PrintCommand("Example Path")
     }
 
-    private fun testAuto(): Command {
-        return SwerveSubsystem.getAutonomousCommand("testAuto", true)
+
+    private fun `Amp Side Two Piece`(): Command {
+        return SwerveSubsystem.getAutonomousCommand("AmpSide_TwoPiece", false)
     }
 
     /**
@@ -48,7 +49,7 @@ object Autos {
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: Command) {
         EXAMPLE_PATH("Example Path", examplePath()),
-        TEST_AUTO("Test Auto", testAuto())
+        AMP_S_2P("Amp Side Two Piece", `Amp Side Two Piece`())
         ;
 
         companion object {
