@@ -1,14 +1,17 @@
 package frc.robot.commands
 
+import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.commands.PathPlannerAuto
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.PrintCommand
+import frc.robot.subsystems.SwerveSubsystem
 
 object Autos {
     private val autoModeChooser =
         SendableChooser<AutoMode>().apply {
-            AutoMode.values().forEach { addOption(it.optionName, it) }
+            AutoMode.entries.forEach { addOption(it.optionName, it) }
             setDefaultOption(AutoMode.default.optionName, AutoMode.default)
         }
 
@@ -22,12 +25,16 @@ object Autos {
 
     init {
         val tab = Shuffleboard.getTab("Autonomous")
-        tab.add(autoModeChooser)
+        tab.add("Auto Chooser", autoModeChooser)
     }
 
     private fun examplePath(): Command {
         // return SwerveSubsystem.getAutonomousCommand("examplePath", true)
         return PrintCommand("Example Path")
+    }
+
+    private fun testAuto(): Command {
+        return SwerveSubsystem.getAutonomousCommand("testAuto", true)
     }
 
     /**
@@ -41,6 +48,7 @@ object Autos {
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: Command) {
         EXAMPLE_PATH("Example Path", examplePath()),
+        TEST_AUTO("Test Auto", testAuto())
         ;
 
         companion object {

@@ -1,7 +1,11 @@
 package frc.robot.subsystems
 
 import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.commands.PathPlannerAuto
 import com.pathplanner.lib.path.PathPlannerPath
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig
+import com.pathplanner.lib.util.PIDConstants
+import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
@@ -11,6 +15,7 @@ import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.networktables.StructArrayPublisher
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
@@ -19,6 +24,7 @@ import frc.robot.Constants
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
+import java.nio.file.Path
 
 /**
  * The subsystem that controls the swerve drive.
@@ -47,6 +53,8 @@ object SwerveSubsystem : SubsystemBase() {
         swerveDrive.setHeadingCorrection(false)
 
         setMotorBrake(true)
+
+        configurePathPlanner()
     }
 
     /**
@@ -55,7 +63,34 @@ object SwerveSubsystem : SubsystemBase() {
      */
     fun configurePathPlanner()  {
         // TODO: Configure path planner's AutoBuilder
+        AutoBuilder.configureHolonomic(
+            this::getPose,
+            this::resetOdometry,
+            this::getRobotVelocity,
+            this::setChassisSpeeds,
+            HolonomicPathFollowerConfig(
+                PIDConstants(5.0, 0.0, 0.0),
+                PIDConstants(
+                    swerveDrive.swerveController.config.headingPIDF.p,
+                    swerveDrive.swerveController.config.headingPIDF.i,
+                    swerveDrive.swerveController.config.headingPIDF.d
+                ),
+                4.5,
+                swerveDrive.swerveDriveConfiguration.driveBaseRadiusMeters,
+                ReplanningConfig()
+            ),
+            {
+                if (DriverStation.getAlliance().isPresent){
+                    DriverStation.getAlliance().get() == DriverStation.Alliance.Red
+                } else {
+                    false
+                }
+            },
+            this
+
+        )
     }
+
 
     /**
      * Gets a command that follows a path created in PathPlanner.
@@ -64,18 +99,18 @@ object SwerveSubsystem : SubsystemBase() {
      * @return A command that follows the path.
      */
     fun getAutonomousCommand(
-        pathName: String,
+        autoName: String,
         setOdomAtStart: Boolean,
     ): Command {
-        val path: PathPlannerPath = PathPlannerPath.fromPathFile(pathName)
+        val path: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
 
         if (setOdomAtStart)
             {
-                resetOdometry(Pose2d(path.getPoint(0).position, getHeading()))
+                resetOdometry(Pose2d(path, getHeading()))
             }
 
         // TODO: Configure path planner's AutoBuilder
-        return AutoBuilder.followPath(path)
+        return PathPlannerAuto(autoName)
     }
 
     /**
@@ -114,6 +149,10 @@ object SwerveSubsystem : SubsystemBase() {
      */
     fun drive(velocity: ChassisSpeeds) {
         swerveDrive.drive(velocity)
+    }
+
+    fun setChassisSpeeds(chassisSpeeds: ChassisSpeeds) {
+        swerveDrive.setChassisSpeeds(chassisSpeeds)
     }
 
     /**
