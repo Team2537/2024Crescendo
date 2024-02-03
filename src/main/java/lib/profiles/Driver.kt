@@ -7,6 +7,7 @@ import lib.controllers.ProfileController
 import lib.controllers.XboxGamepad
 import lib.profiles.Driver.loadControllers
 import java.util.*
+import java.util.function.Consumer
 
 /**
  * A singleton manager for [controllers][ProfileController]
@@ -156,5 +157,14 @@ object Driver : Iterable<ProfileController> {
     /** @suppress */
     override fun toString(): String {
         return "[$controller0, $controller1, $controller2, $controller3]"
+    }
+
+    /** @suppress */
+    override fun forEach(action: Consumer<in ProfileController>?) {
+        if(action == null) return
+        action.accept(controller0)
+        controller1?.let { action.accept(it) }
+        controller2?.let { action.accept(it) }
+        controller3?.let { action.accept(it) }
     }
 }
