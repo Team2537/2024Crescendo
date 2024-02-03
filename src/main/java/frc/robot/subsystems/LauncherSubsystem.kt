@@ -1,26 +1,29 @@
 package frc.robot.subsystems
 
-import com.revrobotics.CANSparkBase
-import com.revrobotics.CANSparkFlex
-import com.revrobotics.CANSparkLowLevel
-import com.revrobotics.CANSparkMax
+import com.revrobotics.*
+import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LauncherConstants
 
 object LauncherSubsystem : SubsystemBase() {
-    val angleMotor = CANSparkMax(LauncherConstants.ANGLE_MOTOR_PORT, CANSparkLowLevel.MotorType.kBrushless)
 
+    val angleMotor = CANSparkMax(LauncherConstants.ANGLE_MOTOR_PORT, CANSparkLowLevel.MotorType.kBrushless)
     val storeMotor: CANSparkMax = CANSparkMax(LauncherConstants.STORE_MOTOR_PORT, CANSparkLowLevel.MotorType.kBrushless)
-  
     val leftLauncherMotor : CANSparkFlex = CANSparkFlex(LauncherConstants.LEFT_LAUNCHER_PORT, CANSparkLowLevel.MotorType.kBrushless)
     val rightLauncherMotor : CANSparkFlex = CANSparkFlex(LauncherConstants.RIGHT_LAUNCHER_PORT, CANSparkLowLevel.MotorType.kBrushless)
 
 
-    val launchPID = leftLauncherMotor.pidController
-    val storePID = storeMotor.pidController
-    val anglePID = angleMotor.pidController
+    val launchPID: SparkPIDController = leftLauncherMotor.pidController
+    val storePID: SparkPIDController = storeMotor.pidController
+    val anglePID: SparkPIDController = angleMotor.pidController
+
+    val launchEncoder: RelativeEncoder = leftLauncherMotor.encoder
+    val storeEncoder: RelativeEncoder = storeMotor.encoder
+
+    val relativeAngleEncoder: RelativeEncoder = angleMotor.encoder
+    val absoluteAngleEncoder: DutyCycleEncoder = DutyCycleEncoder(LauncherConstants.ABSOLUTE_ENCODER_PORT)
 
 
     init {
@@ -56,13 +59,19 @@ object LauncherSubsystem : SubsystemBase() {
         leftLauncherMotor.set(rA)
     }
 
-    fun setLaunchVelocity(velocity: Double){
+    fun setLaunchVelocity(velocity: Double) {
         launchPID.setReference(velocity, CANSparkBase.ControlType.kVelocity)
     }
     
-    fun intake(){
-        
+    fun intake() {
+        storePID.setReference(0.5, CANSparkBase.ControlType.kPosition)
     }
+
+    fun outtake() {
+        storeMotor.set(0.5)
+    }
+
+
 
 
     override fun periodic() {}
