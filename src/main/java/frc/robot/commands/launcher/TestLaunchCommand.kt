@@ -1,5 +1,6 @@
 package frc.robot.commands.launcher
 
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LauncherSubsystem
@@ -17,7 +18,7 @@ class TestLaunchCommand : Command() {
     }
 
     override fun initialize() {
-        launcherSubsystem.setLaunchVelocity(6700.0)
+        launcherSubsystem.setLaunchVelocity(Units.RPM.of(6700.0))
         timer.restart()
     }
 
