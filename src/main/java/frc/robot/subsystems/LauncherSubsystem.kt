@@ -4,6 +4,7 @@ import com.revrobotics.*
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
@@ -66,8 +67,8 @@ object LauncherSubsystem : SubsystemBase() {
         leftLauncherMotor.set(rA)
     }
 
-    fun setLaunchVelocity(velocity: Double) {
-        launchPID.setReference(velocity, CANSparkBase.ControlType.kVelocity)
+    fun setLaunchVelocity(velocity: Measure<Velocity<Angle>>) {
+        launchPID.setReference(velocity.`in`(Units.RPM), CANSparkBase.ControlType.kVelocity)
     }
     
     fun intake() {
