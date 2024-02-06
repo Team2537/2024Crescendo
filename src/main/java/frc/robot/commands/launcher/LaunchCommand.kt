@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LauncherSubsystem
 
-class TestLaunchCommand : Command() {
+class LaunchCommand : Command() {
     private val launcherSubsystem = LauncherSubsystem
 
     private val timer: Timer
