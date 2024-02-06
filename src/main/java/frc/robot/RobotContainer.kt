@@ -1,6 +1,5 @@
 package frc.robot
 
-import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
@@ -16,6 +15,7 @@ import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.commands.vision.TrackTargetCommand
+import frc.robot.subsystems.LauncherSubsystem
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
@@ -65,6 +65,8 @@ object RobotContainer {
         { -controller.rightY }
     )
 
+    val testLaunchCommand: TestLaunchCommand = TestLaunchCommand()
+
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
@@ -79,6 +81,7 @@ object RobotContainer {
      * Use to eager initialize objects
      */
     private fun initializeObjects() {
+        Autos
         SwerveSubsystem
         Autos
 //        LimelightSubsystem
@@ -97,6 +100,7 @@ object RobotContainer {
     private fun configureBindings() {
         controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.y().toggleOnTrue(absoluteDrive)
+        controller.leftBumper().onTrue(testLaunchCommand)
 
         stateBindings()
     }
