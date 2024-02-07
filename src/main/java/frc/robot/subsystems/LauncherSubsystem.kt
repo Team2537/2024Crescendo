@@ -1,10 +1,8 @@
 package frc.robot.subsystems
 
 import com.revrobotics.*
-import edu.wpi.first.units.Angle
-import edu.wpi.first.units.Measure
-import edu.wpi.first.units.Units
-import edu.wpi.first.units.Velocity
+import edu.wpi.first.units.Units.RPM
+import edu.wpi.first.units.Units.Rotations
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
@@ -12,6 +10,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 import frc.robot.Constants.LauncherConstants
+import lib.math.units.Rotation
+import lib.math.units.RotationVelocity
+import lib.math.units.velocity
 
 object LauncherSubsystem : SubsystemBase() {
 
@@ -37,7 +38,6 @@ object LauncherSubsystem : SubsystemBase() {
     init {
         val driveTab: ShuffleboardTab = Shuffleboard.getTab("Launcher Subsystem")
 
-
         anglePID.p = LauncherConstants.ANGLE_KP
         anglePID.i = LauncherConstants.ANGLE_KI
         anglePID.d = LauncherConstants.ANGLE_KD
@@ -49,26 +49,26 @@ object LauncherSubsystem : SubsystemBase() {
 
 
         driveTab.addNumber("Motor1 Velocity") {
-            leftLauncherMotor.encoder.velocity
-            rightLauncherMotor.encoder.velocity
+            leftLauncherMotor.velocity.`in`(RPM)
+            rightLauncherMotor.velocity.`in`(RPM)
         }
 
         driveTab.addNumber("Motor Velocity") {
-            angleMotor.encoder.velocity
+            angleMotor.velocity.`in`(RPM)
         }
 
     }
 
-    fun setAngle(angle: Measure<Angle>) {
-        anglePID.setReference(angle.`in`(Units.Rotations), CANSparkBase.ControlType.kPosition)
+    fun setAngle(angle: Rotation) {
+        anglePID.setReference(angle.`in`(Rotations), CANSparkBase.ControlType.kPosition)
     }
     
     fun setRawLaunchSpeed(rA: Double, rB: Double) {
         leftLauncherMotor.set(rA)
     }
 
-    fun setLaunchVelocity(velocity: Measure<Velocity<Angle>>) {
-        launchPID.setReference(velocity.`in`(Units.RPM), CANSparkBase.ControlType.kVelocity)
+    fun setLaunchVelocity(velocity: RotationVelocity) {
+        leftLauncherMotor.velocity = velocity
     }
     
     fun intake() {
