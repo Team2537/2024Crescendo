@@ -2,6 +2,7 @@ package lib.vision
 
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.networktables.DoubleArraySubscriber
 import edu.wpi.first.networktables.DoubleSubscriber
 import edu.wpi.first.networktables.NetworkTable
@@ -35,6 +36,8 @@ class Limelight(table: NetworkTable) : AutoCloseable {
 
     private val visionTab: ShuffleboardTab
 
+    private var offset: Translation3d
+
     init {
         // Get the NetworkTableEntry objects for the Limelight
         tx = table.getDoubleTopic("tx").subscribe(0.0)
@@ -56,10 +59,15 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         visionTab.addDouble("Area") { area }
         visionTab.addBoolean("Target Visible") { targetVisible }
 
-
+        offset = Translation3d(0.0, 0.0, 0.0)
         // FIXME - remove if possible
         // Create a Shuffleboard tab for the Limelight
         val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
+    }
+
+    //TODO do this better
+    fun configureOffset(offset: Translation3d){
+        this.offset = offset
     }
 
     /**
@@ -73,16 +81,34 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         get() {
             val results: DoubleArray = botpose.get()
 
+            val pos = Translation3d(results[0], results[1], results[2]) - offset
+
             return Pose3d(
-                results[0],
-                results[1],
-                results[2],
+                pos,
                 Rotation3d(
                     results[3],
                     results[4],
                     results[5],
                 )
             )
+        }
+
+    val poseMeasurement: VisionMeasurement
+        get() {
+            val results = botpose.get()
+
+            val pos = Translation3d(results[0], results[1], results[2]) - offset
+
+            val pose = Pose3d(
+                pos,
+                Rotation3d(
+                    results[3],
+                    results[4],
+                    results[5],
+                )
+            )
+
+            return VisionMeasurement(pose, latency = results[6])
         }
 
     /**
