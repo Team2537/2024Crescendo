@@ -36,7 +36,12 @@ class Limelight(table: NetworkTable) : AutoCloseable {
 
     private val visionTab: ShuffleboardTab
 
-    private var offset: Translation3d
+    private var _mountPosition: Pose3d
+    var mountPosition: Pose3d
+        get() = _mountPosition
+        set(value) {
+            _mountPosition = value
+        }
 
     init {
         // Get the NetworkTableEntry objects for the Limelight
@@ -59,15 +64,20 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         visionTab.addDouble("Area") { area }
         visionTab.addBoolean("Target Visible") { targetVisible }
 
-        offset = Translation3d(0.0, 0.0, 0.0)
+        _mountPosition = Pose3d()
         // FIXME - remove if possible
         // Create a Shuffleboard tab for the Limelight
         val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
     }
 
-    //TODO do this better
-    fun configureOffset(offset: Translation3d){
-        this.offset = offset
+    /**
+     * nothing for now
+     *
+     * *Will* configure mounting position from the [frc.robot.Constants] object
+     */
+    fun configureMountPosition(){
+        //TODO: When things get mounted, do this
+//        _mountPosition = Pose3d()
     }
 
     /**
@@ -81,7 +91,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         get() {
             val results: DoubleArray = botpose.get()
 
-            val pos = Translation3d(results[0], results[1], results[2]) - offset
+            val pos = Translation3d(results[0], results[1], results[2])
 
             return Pose3d(
                 pos,
@@ -97,7 +107,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         get() {
             val results = botpose.get()
 
-            val pos = Translation3d(results[0], results[1], results[2]) - offset
+            val pos = Translation3d(results[0], results[1], results[2])
 
             val pose = Pose3d(
                 pos,
