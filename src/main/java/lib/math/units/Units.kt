@@ -17,7 +17,7 @@
  *
  * @author Matthew Clark
  *
- * @since 2024-06-08
+ * @since 2024-02-08
  */
 
 package lib.math.units
@@ -407,52 +407,114 @@ typealias Span = Measure<Distance>
 typealias Rotation = Measure<Angle>
 typealias TimeSpan = Measure<Time>
 
-inline val Double.meters: Span
-    get() = Meters.of(this)
+operator fun <U : Unit<U>> Measure<U>.rangeTo(endInclusive: Measure<U>): ClosedMeasureRange<Measure<U>, U> {
+    return ClosedMeasureRange(this, endInclusive);
+}
 
-inline val Double.feet: Span
-    get() = Feet.of(this)
+operator fun <U : Unit<U>> Measure<U>.rangeUntil(endExclusive: Measure<U>): OpenEndMeasureRange<Measure<U>, U> {
+    return OpenEndMeasureRange(this, endExclusive);
+}
 
-inline val Double.centimeters: Span
-    get() = Centimeters.of(this)
+infix fun <U : Unit<U>> Measure<U>.downTo(endInclusive: Measure<U>): UnSteppedMeasureProgression<U> {
+    return UnSteppedMeasureProgression(this, endInclusive)
+}
 
-inline val Double.millimeters: Span
-    get() = Millimeters.of(this)
+class UnSteppedMeasureProgression<U : Unit<U>> (val start: Measure<U>, val endInclusive: Measure<U>) {
+    infix fun step(step: Double): ClosedMeasureProgression<U> {
+        return ClosedMeasureProgression(start, endInclusive, step)
+    }
+}
 
-inline val Double.radians: Rotation
-    get() = Radians.of(this)
+class ClosedMeasureRange<M, U>(override val start: M, override val endInclusive: M) : ClosedFloatingPointRange<M>
+    where M : Measure<U>, M : Comparable<Measure<U>>, U : Unit<U>
+{
+    override fun lessThanOrEquals(a: M, b: M): Boolean = a <= b
 
-inline val Double.degrees: Rotation
-    get() = Degrees.of(this)
+    @Suppress("ConvertTwoComparisonsToRangeCheck")
+    override fun contains(value: M): Boolean = start <= value && value <= endInclusive
+    override fun isEmpty(): Boolean = start > endInclusive
 
-inline val Double.rotations: Rotation
-    get() = Rotations.of(this)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-inline val Double.revolutions: Rotation
-    get() = Revolutions.of(this)
+        other as ClosedMeasureRange<*, *>
 
-inline val Double.metersPerSecond: SpanVelocity
-    get() = MetersPerSecond.of(this)
+        if (endInclusive != other.endInclusive) return false
+        if (start != other.start) return false
 
-inline val Double.feetPerSecond: SpanVelocity
-    get() = FeetPerSecond.of(this)
+        return true
+    }
 
-inline val Double.inchesPerSecond: SpanVelocity
-    get() = InchesPerSecond.of(this)
-inline val Double.degreesPerSecond: RotationVelocity
-    get() = DegreesPerSecond.of(this)
+    override fun hashCode(): Int {
+        var result = endInclusive.hashCode()
+        result = 31 * result + start.hashCode()
+        return result
+    }
 
-inline val Double.radiansPerSecond: RotationVelocity
-    get() = RadiansPerSecond.of(this)
+    override fun toString(): String {
+        return "$endInclusive..$start"
+    }
 
-inline val Double.rpm: RotationVelocity
-    get() = RPM.of(this)
+    infix fun step(step: Double): ClosedMeasureProgression<U> {
+        return ClosedMeasureProgression(this.start, this.endInclusive, step)
+    }
 
-inline val Double.seconds: TimeSpan
-    get() = Seconds.of(this)
+}
 
-inline val Double.minutes: TimeSpan
-    get() = Minutes.of(this)
+open class ClosedMeasureProgression<U : Unit<U>>(val start: Measure<U>, val endInclusive: Measure<U>, val step: Double)
+    : Iterable<Measure<U>> {
+    /**
+     * Returns an iterator over the elements of this object.
+     */
+    override fun iterator(): Iterator<Measure<U>> {
+        return object : Iterator<Measure<U>> {
+            var current: MutableMeasure<U> = MutableMeasure.mutable(start)
+            val step: Measure<U> = current.unit().of(this@ClosedMeasureProgression.step)
+            val stepRaw: Double = step into current.unit()
 
-inline val Double.milliseconds: TimeSpan
-    get() = Milliseconds.of(this)
+            override fun hasNext(): Boolean
+                // use compareTo here to avoid potentially creating garbage measures by adding or subtracting
+                = this@ClosedMeasureProgression.endInclusive.compareTo(current) <= stepRaw
+
+            override fun next(): Measure<U> {
+                return current.mut_plus(step)
+            }
+
+        }
+    }
+
+}
+
+class OpenEndMeasureRange<M, U>(override val start: M, override val endExclusive: M) : OpenEndRange<M>
+    where M : Measure<U>, M : Comparable<Measure<U>>, U : Unit<U>
+{
+    @Suppress("ConvertTwoComparisonsToRangeCheck")
+    override fun contains(value: M): Boolean = start <= value && value < endExclusive
+
+    override fun isEmpty(): Boolean = start >= endExclusive
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as OpenEndMeasureRange<*, *>
+
+        if (start != other.start) return false
+        if (endExclusive != other.endExclusive) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = start.hashCode()
+        result = 31 * result + endExclusive.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "$start..<$endExclusive"
+    }
+
+}
+
