@@ -1,3 +1,25 @@
+/**
+ * Copyright (c) 2024 Matthew Clark and FRC Robotics Team 2537 "Space Raiders"
+ * All rights reserved
+ *
+ * - - -
+ *
+ * A simple extension set for the [edu.wpi.first.units] library.
+ *
+ * This extension set aims to reduce the boilerplate and verbosity of the
+ * wpilib units library while maintaining its inherent type-safety and unit
+ * conversion. The extension is built for the Kotlin programming language,
+ * making heavy use of Kotlin's extension function syntax, which may not
+ * work as intended in Java.
+ *
+ * A thank you to the other members of Team 2537 "Space Raiders" for helping avoid
+ * naming conflicts while maintaining clarity.
+ *
+ * @author Matthew Clark
+ *
+ * @since 2024-06-08
+ */
+
 package lib.math.units
 
 import com.revrobotics.CANSparkBase
@@ -6,6 +28,14 @@ import edu.wpi.first.units.*
 import edu.wpi.first.units.Unit
 import edu.wpi.first.units.Units.*
 
+/**
+ * Converts a measure into a given unit, return the value as a double.
+ *
+ * @return The measure's magnitude converted into the given unit.
+ * @see Measure.in
+ *
+ * @since 2024-02-08
+ */
 infix fun <U : Unit<U>> Measure<U>.into(unit: U): Double {
     return this.`in`(unit)
 }
@@ -14,6 +44,7 @@ infix fun <U : Unit<U>> Measure<U>.into(unit: U): Double {
  * Negates a [Measure] through its [Measure.negate] method
  *
  * @return The resulting measure
+ * @see Measure.negate
  */
 operator fun <U : Unit<U>?> Measure<U>.unaryMinus(): Measure<U> {
     return this.negate()
@@ -28,66 +59,192 @@ operator fun <U : Unit<U>?> Measure<U>.unaryPlus(): Measure<U> {
     return if(this is ImmutableMeasure) this else mutableCopy()
 }
 
+/**
+ * The velocity that the motor is rotating at. The velocity is measured by
+ * this motor's [com.revrobotics.RelativeEncoder], and controlled by its
+ * [com.revrobotics.SparkPIDController].
+ *
+ * @see CANSparkBase.encoder
+ * @see CANSparkBase.pidController
+ */
 var CANSparkBase.velocity: RotationVelocity
     get() = encoder.velocity.rpm
     set(value) {
         pidController.setReference(value into RPM, CANSparkBase.ControlType.kVelocity)
     }
 
+/**
+ * Gets the forward span of this translation
+ *
+ * @return the x coordinate as a [Span]
+ * @see Translation3d.getX
+ */
 val Translation3d.forward: Span
     get() = x.meters
 
+/**
+ * Gets the backwards span of this translation
+ *
+ * @return the -x coordinate as a [Span]
+ * @see Translation3d.getX
+ */
 val Translation3d.backwards: Span
     get() = -forward
 
+/**
+ * Gets the leftwards span of this translation
+ *
+ * @return the y coordinate as a [Span]
+ * @see Translation3d.getY
+ */
 val Translation3d.left: Span
     get() = y.meters
 
+/**
+ * Gets the rightwards span of this translation
+ *
+ * @return the -y coordinate as a [Span]
+ * @see Translation3d.getY
+ */
 val Translation3d.right: Span
     get() = -left
 
+/**
+ * Gets the upwards span of this translation
+ *
+ * @return the z coordinate as a [Span]
+ * @see Translation3d.getZ
+ */
 val Translation3d.up: Span
     get() = z.meters
 
+/**
+ * Gets the downwards span of this translation
+ *
+ * @return the -z coordinate as a [Span]
+ * @see Translation3d.getZ
+ */
 val Translation3d.down: Span
-    get() = -up // Why? consistency
+    get() = -up
 
+/**
+ * Gets the roll rotation of this translation
+ *
+ * @return the roll as a [Rotation]
+ * @see Rotation3d.getX
+ */
 val Rotation3d.roll: Rotation
     get() = x.radians
 
+/**
+ * Gets the pitch rotation of this translation
+ *
+ * @return the pitch as a [Rotation]
+ * @see Rotation3d.getY
+ */
 val Rotation3d.pitch: Rotation
     get() = y.radians
 
+/**
+ * Gets the yaw rotation of this translation
+ *
+ * @return the yaw as a [Rotation]
+ * @see Rotation3d.getZ
+ */
 val Rotation3d.yaw: Rotation
     get() = z.radians
 
+/**
+ * Gets the forward span of this translation
+ *
+ * @return the x coordinate as a [Span]
+ * @see Translation2d.getX
+ */
 val Translation2d.forward: Span
     get() = x.meters
 
+/**
+ * Gets the backwards span of this translation
+ *
+ * @return the -x coordinate as a [Span]
+ * @see Translation2d.getX
+ */
 val Translation2d.backwards: Span
     get() = -forward
 
+/**
+ * Gets the leftwards span of this translation
+ *
+ * @return the x coordinate as a [Span]
+ * @see Translation2d.getX
+ */
 val Translation2d.left: Span
     get() = y.meters
 
+/**
+ * Gets the rightward span of this translation
+ *
+ * @return the -y coordinate as a [Span]
+ * @see Translation2d.getY
+ */
 val Translation2d.right: Span
     get() = -left
 
+/**
+ * Gets the measure of this rotation
+ *
+ * @return the angle of this rotation as a [Rotation]
+ */
 val Rotation2d.measure: Rotation
     get() = radians.radians
 
+/**
+ * Gets the forward span of this pose
+ *
+ * @return the x coordinate as a [Span]
+ * @see Pose3d.getX
+ * @see Translation3d.forward
+ */
 val Pose3d.forward: Span
     get() = translation.forward
 
+/**
+ * Gets the backwards span of this pose
+ *
+ * @return the -x coordinate as a [Span]
+ * @see Pose3d.getX
+ * @see Translation3d.backwards
+ */
 val Pose3d.backwards: Span
     get() = translation.backwards
 
+/**
+ * Gets the leftwards span of this pose
+ *
+ * @return the y coordinate as a [Span]
+ * @see Pose3d.getY
+ * @see Translation3d.left
+ */
 val Pose3d.left: Span
     get() = translation.left
 
+/**
+ * Gets the rightward span of this pose
+ *
+ * @return the -y coordinate as a [Span]
+ * @see Pose3d.getY
+ * @see Translation3d.right
+ */
 val Pose3d.right: Span
     get() = translation.right
 
+/**
+ * Gets the forward span of this pose
+ *
+ * @return the x coordinate as a [Span]
+ * @see Pose3d.getX
+ * @see Translation3d.forward
+ */
 val Pose3d.up: Span
     get() = translation.up
 
