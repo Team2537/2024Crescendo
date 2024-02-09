@@ -45,6 +45,8 @@ infix fun <U : Unit<U>> Measure<U>.into(unit: U): Double {
  *
  * @return The resulting measure
  * @see Measure.negate
+ *
+ * @since 2024-02-08
  */
 operator fun <U : Unit<U>?> Measure<U>.unaryMinus(): Measure<U> {
     return this.negate()
@@ -54,6 +56,8 @@ operator fun <U : Unit<U>?> Measure<U>.unaryMinus(): Measure<U> {
  * Does nothing to a measure. If this measure was mutable, it will return a mutable copy
  *
  * @return The resulting measure
+ *
+ * @since 2024-02-08
  */
 operator fun <U : Unit<U>?> Measure<U>.unaryPlus(): Measure<U> {
     return if(this is ImmutableMeasure) this else mutableCopy()
@@ -66,6 +70,8 @@ operator fun <U : Unit<U>?> Measure<U>.unaryPlus(): Measure<U> {
  *
  * @see CANSparkBase.encoder
  * @see CANSparkBase.pidController
+ *
+ * @since 2024-02-08
  */
 var CANSparkBase.velocity: RotationVelocity
     get() = encoder.velocity.rpm
@@ -78,6 +84,8 @@ var CANSparkBase.velocity: RotationVelocity
  *
  * @return the x coordinate as a [Span]
  * @see Translation3d.getX
+ *
+ * @since 2024-02-08
  */
 val Translation3d.forward: Span
     get() = x.meters
@@ -87,6 +95,8 @@ val Translation3d.forward: Span
  *
  * @return the -x coordinate as a [Span]
  * @see Translation3d.getX
+ *
+ * @since 2024-02-08
  */
 val Translation3d.backwards: Span
     get() = -forward
@@ -96,6 +106,8 @@ val Translation3d.backwards: Span
  *
  * @return the y coordinate as a [Span]
  * @see Translation3d.getY
+ *
+ * @since 2024-02-08
  */
 val Translation3d.left: Span
     get() = y.meters
@@ -105,6 +117,8 @@ val Translation3d.left: Span
  *
  * @return the -y coordinate as a [Span]
  * @see Translation3d.getY
+ *
+ * @since 2024-02-08
  */
 val Translation3d.right: Span
     get() = -left
@@ -114,6 +128,8 @@ val Translation3d.right: Span
  *
  * @return the z coordinate as a [Span]
  * @see Translation3d.getZ
+ *
+ * @since 2024-02-08
  */
 val Translation3d.up: Span
     get() = z.meters
@@ -123,6 +139,8 @@ val Translation3d.up: Span
  *
  * @return the -z coordinate as a [Span]
  * @see Translation3d.getZ
+ *
+ * @since 2024-02-08
  */
 val Translation3d.down: Span
     get() = -up
@@ -132,6 +150,8 @@ val Translation3d.down: Span
  *
  * @return the roll as a [Rotation]
  * @see Rotation3d.getX
+ *
+ * @since 2024-02-08
  */
 val Rotation3d.roll: Rotation
     get() = x.radians
@@ -141,6 +161,8 @@ val Rotation3d.roll: Rotation
  *
  * @return the pitch as a [Rotation]
  * @see Rotation3d.getY
+ *
+ * @since 2024-02-08
  */
 val Rotation3d.pitch: Rotation
     get() = y.radians
@@ -150,6 +172,8 @@ val Rotation3d.pitch: Rotation
  *
  * @return the yaw as a [Rotation]
  * @see Rotation3d.getZ
+ *
+ * @since 2024-02-08
  */
 val Rotation3d.yaw: Rotation
     get() = z.radians
@@ -159,6 +183,8 @@ val Rotation3d.yaw: Rotation
  *
  * @return the x coordinate as a [Span]
  * @see Translation2d.getX
+ *
+ * @since 2024-02-08
  */
 val Translation2d.forward: Span
     get() = x.meters
@@ -168,6 +194,8 @@ val Translation2d.forward: Span
  *
  * @return the -x coordinate as a [Span]
  * @see Translation2d.getX
+ *
+ * @since 2024-02-08
  */
 val Translation2d.backwards: Span
     get() = -forward
@@ -177,6 +205,8 @@ val Translation2d.backwards: Span
  *
  * @return the x coordinate as a [Span]
  * @see Translation2d.getX
+ *
+ * @since 2024-02-08
  */
 val Translation2d.left: Span
     get() = y.meters
@@ -186,6 +216,8 @@ val Translation2d.left: Span
  *
  * @return the -y coordinate as a [Span]
  * @see Translation2d.getY
+ *
+ * @since 2024-02-08
  */
 val Translation2d.right: Span
     get() = -left
@@ -194,6 +226,8 @@ val Translation2d.right: Span
  * Gets the measure of this rotation
  *
  * @return the angle of this rotation as a [Rotation]
+ *
+ * @since 2024-02-08
  */
 val Rotation2d.measure: Rotation
     get() = radians.radians
@@ -204,6 +238,8 @@ val Rotation2d.measure: Rotation
  * @return the x coordinate as a [Span]
  * @see Pose3d.getX
  * @see Translation3d.forward
+ *
+ * @since 2024-02-08
  */
 val Pose3d.forward: Span
     get() = translation.forward
@@ -214,6 +250,8 @@ val Pose3d.forward: Span
  * @return the -x coordinate as a [Span]
  * @see Pose3d.getX
  * @see Translation3d.backwards
+ *
+ * @since 2024-02-08
  */
 val Pose3d.backwards: Span
     get() = translation.backwards
@@ -224,6 +262,8 @@ val Pose3d.backwards: Span
  * @return the y coordinate as a [Span]
  * @see Pose3d.getY
  * @see Translation3d.left
+ *
+ * @since 2024-02-08
  */
 val Pose3d.left: Span
     get() = translation.left
@@ -234,44 +274,129 @@ val Pose3d.left: Span
  * @return the -y coordinate as a [Span]
  * @see Pose3d.getY
  * @see Translation3d.right
+ *
+ * @since 2024-02-08
  */
 val Pose3d.right: Span
     get() = translation.right
 
 /**
- * Gets the forward span of this pose
+ * Gets the upward span of this pose
  *
- * @return the x coordinate as a [Span]
- * @see Pose3d.getX
- * @see Translation3d.forward
+ * @return the z coordinate as a [Span]
+ * @see Pose3d.getZ
+ * @see Translation3d.up
+ *
+ * @since 2024-02-08
  */
 val Pose3d.up: Span
     get() = translation.up
 
+/**
+ * Gets the downward span of this pose
+ *
+ * @return the -z coordinate as a [Span]
+ * @see Pose3d.getX
+ * @see Translation3d.down
+ *
+ * @since 2024-02-08
+ */
 val Pose3d.down: Span
     get() = translation.down
 
+/**
+ * Gets the roll rotation of this pose
+ *
+ * @return the roll as a [Rotation]
+ * @see Pose3d.getRotation
+ * @see Rotation3d.roll
+ *
+ * @since 2024-02-08
+ */
 val Pose3d.roll: Rotation
     get() = rotation.roll
 
+/**
+ * Gets the pitch rotation of this pose
+ *
+ * @return the pitch as a [Rotation]
+ * @see Pose3d.getRotation
+ * @see Rotation3d.pitch
+ *
+ * @since 2024-02-08
+ */
 val Pose3d.pitch: Rotation
     get() = rotation.pitch
 
+/**
+ * Gets the yaw rotation of this pose
+ *
+ * @return the yaw as a [Rotation]
+ * @see Pose3d.getRotation
+ * @see Rotation3d.yaw
+ *
+ * @since 2024-02-08
+ */
 val Pose3d.yaw: Rotation
     get() = rotation.yaw
 
+/**
+ * Gets the forward span of this pose
+ *
+ * @return the x coordinate as a [Span]
+ * @see Pose2d.getTranslation
+ * @see Translation2d.forward
+ *
+ * @since 2024-02-08
+ */
 val Pose2d.forward: Span
     get() = translation.forward
 
+/**
+ * Gets the backwards span of this pose
+ *
+ * @return the -x coordinate as a [Span]
+ * @see Pose2d.getTranslation
+ * @see Translation2d.backwards
+ *
+ * @since 2024-02-08
+ */
 val Pose2d.backwards: Span
     get() = translation.backwards
 
+/**
+ * Gets the leftwards span of this pose
+ *
+ * @return the y coordinate as a [Span]
+ * @see Pose2d.getTranslation
+ * @see Translation2d.left
+ *
+ * @since 2024-02-08
+ */
 val Pose2d.left: Span
     get() = translation.left
 
+/**
+ * Gets the rightwards span of this pose
+ *
+ * @return the -y coordinate as a [Span]
+ * @see Pose2d.getTranslation
+ * @see Translation2d.right
+ *
+ * @since 2024-02-08
+ */
 val Pose2d.right: Span
     get() = translation.right
 
+/**
+ * Gets the angle of rotation of this pose
+ *
+ * @return the rotation as a [Span]
+ * @see Pose2d.getRotation
+ * @see Rotation2d.measure
+ *
+ * @since 2024-02-08
+ */
 val Pose2d.spin: Rotation
     get() = rotation.measure
 
