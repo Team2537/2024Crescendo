@@ -22,15 +22,15 @@ object IntakeSubsystem : SubsystemBase() {
     /**
      * Trigger for detecting when a note has entered the intake.
      */
-    val noteDetector: Trigger
+    private val noteDetector: Trigger
 
-    /**
-     * TODO logic/documentation
-     */
-    private val onDetectNote: Command = runOnce {
-        println("note detected")
+    enum class State {
+        kNoteHeld,
+        kReady,
+        kActive,
     }
 
+    private var state: State = State.kReady
 
     init {
         val pidController = intakeMotor.pidController
@@ -42,6 +42,26 @@ object IntakeSubsystem : SubsystemBase() {
         val infraredSensor = DigitalInput(IntakeConstants.INFRARED_SENSOR_CHANNEL)
         noteDetector = infraredSensor.get().toTrigger()
 
-        noteDetector.onTrue(onDetectNote)
+        noteDetector.onTrue(runOnce { state = State.kNoteHeld })
     }
+
+    override fun periodic() {
+        updateState()
+    }
+
+    private fun updateState() {
+        when (state) {
+            State.kNoteHeld -> {
+                // wait for launch note
+            }
+            State.kReady -> {
+                // wait for detect note (LIMELIGHT YIPPEE)
+            }
+            State.kActive -> {
+                // wait for detect note (INFRARED YIPPEE)
+            }
+        }
+    }
+
+    fun getState(): State = state
 }
