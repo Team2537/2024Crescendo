@@ -12,6 +12,7 @@ import frc.robot.Constants
 import frc.robot.Constants.LauncherConstants
 import lib.math.units.Rotation
 import lib.math.units.RotationVelocity
+import lib.math.units.into
 import lib.math.units.velocity
 
 object LauncherSubsystem : SubsystemBase() {
@@ -49,18 +50,18 @@ object LauncherSubsystem : SubsystemBase() {
 
 
         driveTab.addNumber("Motor1 Velocity") {
-            leftLauncherMotor.velocity.`in`(RPM)
-            rightLauncherMotor.velocity.`in`(RPM)
+            leftLauncherMotor.velocity into RPM
+            rightLauncherMotor.velocity into RPM
         }
 
         driveTab.addNumber("Motor Velocity") {
-            angleMotor.velocity.`in`(RPM)
+            angleMotor.velocity into RPM
         }
 
     }
 
     fun setAngle(angle: Rotation) {
-        anglePID.setReference(angle.`in`(Rotations), CANSparkBase.ControlType.kPosition)
+        anglePID.setReference(angle into Rotations, CANSparkBase.ControlType.kPosition)
     }
     
     fun setRawLaunchSpeed(rA: Double, rB: Double) {
