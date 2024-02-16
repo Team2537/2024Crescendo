@@ -11,7 +11,8 @@ import lib.vision.Limelight
  * The subsystem that controls the limelight.
  */
 object LimelightSubsystem : SubsystemBase() {
-    private val limelight: Limelight = Limelight(NetworkTableInstance.getDefault().getTable("limelight"))
+    // TODO: get the actual position of the limelight
+    private val limelight: Limelight = Limelight(NetworkTableInstance.getDefault().getTable("limelight"), Pose3d())
 
 
     /**
