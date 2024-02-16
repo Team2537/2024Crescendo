@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
  *
  * @author Matthew Clark
  */
-class Limelight(table: NetworkTable) : AutoCloseable {
+class Limelight(table: NetworkTable, mountPosition: Pose3d) : AutoCloseable {
     // NetworkTableEntry objects for getting data from the Limelight
     private val tx: DoubleSubscriber
     private val ty: DoubleSubscriber
@@ -64,7 +64,7 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         visionTab.addDouble("Area") { area }
         visionTab.addBoolean("Target Visible") { targetVisible }
 
-        _mountPosition = Pose3d()
+        _mountPosition = mountPosition
         // FIXME - remove if possible
         // Create a Shuffleboard tab for the Limelight
         val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
