@@ -2,6 +2,7 @@ package lib.vision
 
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.networktables.DoubleArraySubscriber
 import edu.wpi.first.networktables.DoubleSubscriber
 import edu.wpi.first.networktables.NetworkTable
@@ -23,7 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
  *
  * @author Matthew Clark
  */
-class Limelight(table: NetworkTable) : AutoCloseable {
+class Limelight(table: NetworkTable, mountPosition: Pose3d) : AutoCloseable {
     // NetworkTableEntry objects for getting data from the Limelight
     private val tx: DoubleSubscriber
     private val ty: DoubleSubscriber
@@ -34,6 +35,13 @@ class Limelight(table: NetworkTable) : AutoCloseable {
     private val botpose: DoubleArraySubscriber
 
     private val visionTab: ShuffleboardTab
+
+    private var _mountPosition: Pose3d
+    var mountPosition: Pose3d
+        get() = _mountPosition
+        set(value) {
+            _mountPosition = value
+        }
 
     init {
         // Get the NetworkTableEntry objects for the Limelight
@@ -56,10 +64,20 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         visionTab.addDouble("Area") { area }
         visionTab.addBoolean("Target Visible") { targetVisible }
 
-
+        _mountPosition = mountPosition
         // FIXME - remove if possible
         // Create a Shuffleboard tab for the Limelight
         val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
+    }
+
+    /**
+     * nothing for now
+     *
+     * *Will* configure mounting position from the [frc.robot.Constants] object
+     */
+    fun configureMountPosition(){
+        //TODO: When things get mounted, do this
+//        _mountPosition = Pose3d()
     }
 
     /**
@@ -73,16 +91,34 @@ class Limelight(table: NetworkTable) : AutoCloseable {
         get() {
             val results: DoubleArray = botpose.get()
 
+            val pos = Translation3d(results[0], results[1], results[2])
+
             return Pose3d(
-                results[0],
-                results[1],
-                results[2],
+                pos,
                 Rotation3d(
                     results[3],
                     results[4],
                     results[5],
                 )
             )
+        }
+
+    val poseMeasurement: VisionMeasurement
+        get() {
+            val results = botpose.get()
+
+            val pos = Translation3d(results[0], results[1], results[2])
+
+            val pose = Pose3d(
+                pos,
+                Rotation3d(
+                    results[3],
+                    results[4],
+                    results[5],
+                )
+            )
+
+            return VisionMeasurement(pose, latency = results[6])
         }
 
     /**
