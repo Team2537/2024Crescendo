@@ -1,6 +1,9 @@
 package frc.robot
 
 import com.pathplanner.lib.auto.NamedCommands
+import edu.wpi.first.hal.simulation.RoboRioDataJNI
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
@@ -68,6 +71,7 @@ object RobotContainer {
         configureBindings()
 
         SwerveSubsystem.defaultCommand = teleopDrive
+
     }
 
     /**
@@ -92,6 +96,7 @@ object RobotContainer {
     private fun configureBindings() {
         controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.y().toggleOnTrue(absoluteDrive)
+        controller.b().onTrue(PrintCommand(System.getenv().get("serialnum")))
     }
 
     private fun addNamedCommands() {
