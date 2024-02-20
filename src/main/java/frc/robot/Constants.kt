@@ -56,4 +56,17 @@ object Constants {
 
         const val INFRARED_SENSOR = 0
     }
+
+    object PivotConstants {
+        const val ABSOLUTE_ENCODER_PORT = 1
+        const val PIVOT_MOTOR_PORT = 21
+
+        const val ABSOLUTE_OFFSET = 0.06
+        const val REL_ENCODER_CONVERSION = (40.0 / 18.0) * 36.0
+        const val ABS_ENCODER_CONVERSION = (40.0 / 18.0)
+
+        val distanceMap: HashMap<Double, Double> = hashMapOf(
+            1.0 to 54.0
+        )
+    }
 }
