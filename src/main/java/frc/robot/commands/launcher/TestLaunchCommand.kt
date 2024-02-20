@@ -1,10 +1,9 @@
 package frc.robot.commands.launcher
 
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LauncherSubsystem
-import lib.math.units.rpm
-import lib.math.units.velocity
 
 class TestLaunchCommand : Command() {
     private val launcherSubsystem = LauncherSubsystem
@@ -19,26 +18,14 @@ class TestLaunchCommand : Command() {
     }
 
     override fun initialize() {
-//        launcherSubsystem.setLaunchVelocity(Units.RPM.of(6700.0))
-        launcherSubsystem.setLaunchVelocity(6700.0.rpm)
+        launcherSubsystem.setLaunchVelocity(Units.RPM.of(6700.0))
+
         timer.restart()
     }
 
     override fun execute() {
-        if(launcherSubsystem.leftLauncherMotor.velocity > 6600.0.rpm){
+        if (launcherSubsystem.leftLauncherMotor.encoder.velocity > 6600.0) {
             launcherSubsystem.outtake()
         }
-
-        if(launcherSubsystem.piecePresent){
-            timer.reset()
-        }
-    }
-
-    override fun isFinished(): Boolean {
-        return timer.hasElapsed(0.3)
-    }
-
-    override fun end(interrupted: Boolean) {
-        timer.stop()
     }
 }
