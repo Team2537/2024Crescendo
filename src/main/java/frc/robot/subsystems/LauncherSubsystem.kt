@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
+import lib.near
+import lib.zoneTrigger
 
 object LauncherSubsystem : SubsystemBase() {
 
@@ -22,6 +24,8 @@ object LauncherSubsystem : SubsystemBase() {
 
     private val noteTimer: Timer = Timer()
 
+    var fire: Boolean = false
+
     enum class State {
         STORED,
         EMPTY,
@@ -32,6 +36,8 @@ object LauncherSubsystem : SubsystemBase() {
 
     var state: State = State.EMPTY
         get() = this.state
+
+    var storePosition: Double = getRollerPosition()
 
     init {
         configureMotors()
@@ -79,6 +85,102 @@ object LauncherSubsystem : SubsystemBase() {
         rollerMotor.encoder.positionConversionFactor = 1.0
         rollerMotor.encoder.velocityConversionFactor = 1.0
     }
+
+    fun setLauncherSpeed(speed: Double){
+        leftLauncher.set(speed)
+    }
+
+    fun getLauncherVelocity(): Double {
+        return leftLauncher.encoder.velocity
+    }
+
+    fun setRollerSpeed(speed: Double) {
+        rollerMotor.set(speed)
+    }
+
+    fun stop() {
+        setRollerMode(CANSparkBase.IdleMode.kBrake)
+
+        leftLauncher.set(0.0)
+        rollerMotor.set(0.0)
+    }
+
+    fun setRollerMode(idleMode: CANSparkBase.IdleMode){
+        rollerMotor.setIdleMode(idleMode)
+    }
+
+    fun intake(){
+        storePosition = getRollerPosition() - 1
+        println("Intake ran, setting to $storePosition")
+        rollerPID.setReference(storePosition, CANSparkBase.ControlType.kSmartMotion)
+    }
+
+    fun getRollerPosition(): Double {
+        return rollerMotor.encoder.position
+    }
+
+    fun inZone(): Boolean {
+        return zoneTrigger("primeZone").asBoolean
+    }
+
+    fun updateState(){
+        when(state){
+            State.EMPTY -> {
+                stop()
+                if(!noteDetector.asBoolean){
+                    state = State.STORED
+                }
+                rollerPID.p = 0.0001
+                rollerPID.i = 0.000001
+            }
+            State.STORED -> {
+                if(noteDetector.asBoolean){
+                    state = State.EMPTY
+                } else if (!noteDetector.asBoolean && storePosition.near(getRollerPosition(), 0.2) && inZone()){
+                    state = State.PRIMED
+                }
+                rollerPID.p = 0.0001
+                rollerPID.i = 0.000001 // TODO: Tune?
+            }
+            State.PRIMED -> {
+                if(getLauncherVelocity() > 6000 && leftLauncher.encoder.velocity > 6000){
+                    state = State.AT_SPEED
+                } else if (noteDetector.asBoolean) {
+                    state = State.EMPTY
+                }
+            }
+            State.AT_SPEED -> {
+                if(fire){
+                    fire = false
+                    state = State.FIRING
+                }
+            }
+            State.FIRING -> {
+                if(noteTimer.hasElapsed(0.5)){
+                    state = State.EMPTY
+                }
+            }
+        }
+    }
+
+    fun getState(): State {
+        return state
+    }
+
+    fun setState(state: State){
+        this.state = state
+    }
+
+    fun triggerFactory(state: State): Trigger {
+        return Trigger() { getState() == state}
+    }
+
+    override fun periodic() {
+        if(noteDetector.asBoolean){
+            noteTimer.reset()
+        }
+    }
+
 
 
 }
