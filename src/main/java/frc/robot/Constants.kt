@@ -46,25 +46,14 @@ object Constants {
         val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
     }
 
-    object LauncherConstants{
-        const val ANGLE_MOTOR_PORT = 3
-        const val ANGLE_KP = 0.001
-        const val ANGLE_KI = 0.0
-        const val ANGLE_KD = 0.0
+    object LauncherConstants {
+        const val LEFT_LAUNCHER_PORT = 22
+        const val RIGHT_LAUNCHER_PORT = 23
 
-        const val LEFT_LAUNCHER_PORT : Int = 1
-        const val RIGHT_LAUNCHER_PORT : Int = 2
-        const val LAUNCHER_P : Double = 0.0002
-        const val LAUNCHER_I : Double = 0.00001
-        const val LAUNCHER_D : Double = 0.00001
+        const val ROLLER_MOTOR_PORT = 20
+        const val ROLLER_P = 0.0001
+        const val ROLLER_I = 0.000001
 
-        const val STORE_MOTOR_PORT : Int = 4
-        const val STORE_P = 0.0002
-        const val STORE_I = 0.00001
-        const val STORE_D = 0.00001
-
-        const val ABSOLUTE_ENCODER_PORT = 0
-
-        const val IR_PIECE_SENSOR_ID = 0
+        const val INFRARED_SENSOR = 0
     }
 }
