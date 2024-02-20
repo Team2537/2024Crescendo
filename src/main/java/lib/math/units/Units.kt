@@ -471,11 +471,13 @@ open class ClosedMeasureProgression<U : Unit<U>>(val start: Measure<U>, val endI
         return object : Iterator<Measure<U>> {
             var current: MutableMeasure<U> = MutableMeasure.mutable(start)
             val step: Measure<U> = current.unit().of(this@ClosedMeasureProgression.step)
-            val stepRaw: Double = step into current.unit()
 
-            override fun hasNext(): Boolean
-                // use compareTo here to avoid potentially creating garbage measures by adding or subtracting
-                = this@ClosedMeasureProgression.endInclusive.compareTo(current) <= stepRaw
+            override fun hasNext(): Boolean {
+                // Prevent garbage measures from being created
+                val ret = current.mut_plus(step) <= this@ClosedMeasureProgression.endInclusive
+                current.mut_minus(step)
+                return ret
+            }
 
             override fun next(): Measure<U> {
                 return current.mut_plus(step)
