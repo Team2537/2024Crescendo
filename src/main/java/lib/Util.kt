@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import lib.zones.Zone
 import lib.zones.Zones
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 
@@ -58,4 +59,8 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
  */
 inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
     return Trigger { Zones[position.invoke()] == zone }
+}
+
+fun Double.near(target: Double, error: Double): Boolean{
+    return abs(this - target) < error
 }
