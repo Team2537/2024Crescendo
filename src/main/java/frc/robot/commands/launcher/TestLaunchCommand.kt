@@ -19,13 +19,24 @@ class TestLaunchCommand : Command() {
 
     override fun initialize() {
         launcherSubsystem.setLaunchVelocity(Units.RPM.of(6700.0))
-
         timer.restart()
     }
 
     override fun execute() {
-        if (launcherSubsystem.leftLauncherMotor.encoder.velocity > 6600.0) {
+        if(launcherSubsystem.leftLauncherMotor.encoder.velocity > 6600.0){
             launcherSubsystem.outtake()
         }
+
+        if(launcherSubsystem.piecePresent){
+            timer.reset()
+        }
+    }
+
+    override fun isFinished(): Boolean {
+        return timer.hasElapsed(0.3)
+    }
+
+    override fun end(interrupted: Boolean) {
+        timer.stop()
     }
 }
