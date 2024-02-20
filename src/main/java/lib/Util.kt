@@ -1,6 +1,7 @@
 package lib
 
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
 import kotlinx.serialization.json.Json
@@ -63,4 +64,12 @@ inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { Swerve
 
 fun Double.near(target: Double, error: Double): Boolean{
     return abs(this - target) < error
+}
+
+fun InterpolatingDoubleTreeMap.putMap(map: HashMap<Double, Double>){
+    for(entry in map.entries){
+        val key = entry.key
+        val value = entry.value
+        this.put(key, value)
+    }
 }
