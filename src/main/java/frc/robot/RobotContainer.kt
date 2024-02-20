@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
-import frc.robot.commands.launcher.TestLaunchCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
@@ -61,8 +60,6 @@ object RobotContainer {
         { -controller.rightY }
     )
 
-    val testLaunchCommand: TestLaunchCommand = TestLaunchCommand()
-
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
@@ -95,7 +92,6 @@ object RobotContainer {
     private fun configureBindings() {
         controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.y().toggleOnTrue(absoluteDrive)
-        controller.leftBumper().onTrue(testLaunchCommand)
     }
 
     private fun addNamedCommands() {
