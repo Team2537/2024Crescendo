@@ -130,8 +130,6 @@ object LauncherSubsystem : SubsystemBase() {
                 if(!noteDetector.asBoolean){
                     state = State.STORED
                 }
-                rollerPID.p = 0.0001
-                rollerPID.i = 0.000001
             }
             State.STORED -> {
                 if(noteDetector.asBoolean){
@@ -139,8 +137,6 @@ object LauncherSubsystem : SubsystemBase() {
                 } else if (!noteDetector.asBoolean && storePosition.near(getRollerPosition(), 0.2) && inZone()){
                     state = State.PRIMED
                 }
-                rollerPID.p = 0.0001
-                rollerPID.i = 0.000001 // TODO: Tune?
             }
             State.PRIMED -> {
                 if(getLauncherVelocity() > 6000 && leftLauncher.encoder.velocity > 6000){
