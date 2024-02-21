@@ -2,10 +2,13 @@ package frc.robot.subsystems
 
 import com.revrobotics.*
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants
 import frc.robot.Robot
+import lib.math.units.Rotation
+import lib.math.units.into
 import lib.putMap
 
 object PivotSubsystem : SubsystemBase() {
@@ -54,6 +57,10 @@ object PivotSubsystem : SubsystemBase() {
 
     fun setTargetPosition(position: Double){
         pidController.setReference(position, CANSparkBase.ControlType.kPosition)
+    }
+
+    fun setTargetPosition(position: Rotation){
+        pidController.setReference(position into Units.Rotations, CANSparkBase.ControlType.kPosition)
     }
 
     fun getPosition() = relativeEncoder.position
