@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
+import lib.math.units.RotationVelocity
+import lib.math.units.rpm
+import lib.math.units.velocity
 import lib.near
 import lib.zoneTrigger
 
@@ -90,8 +93,8 @@ object LauncherSubsystem : SubsystemBase() {
         leftLauncher.set(speed)
     }
 
-    fun getLauncherVelocity(): Double {
-        return leftLauncher.encoder.velocity
+    fun getLauncherVelocity(): RotationVelocity {
+        return leftLauncher.velocity
     }
 
     fun setRollerSpeed(speed: Double) {
@@ -139,7 +142,8 @@ object LauncherSubsystem : SubsystemBase() {
                 }
             }
             State.PRIMED -> {
-                if(getLauncherVelocity() > 6000 && leftLauncher.encoder.velocity > 6000){
+                if(leftLauncher.velocity > Constants.LauncherConstants.MINIMUM_VELOCITY
+                    && rightLauncher.velocity > Constants.LauncherConstants.MINIMUM_VELOCITY){
                     state = State.AT_SPEED
                 } else if (noteDetector.asBoolean) {
                     state = State.EMPTY
