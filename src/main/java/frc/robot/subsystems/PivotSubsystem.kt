@@ -15,7 +15,7 @@ object PivotSubsystem : SubsystemBase() {
     private val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(Constants.PivotConstants.ABSOLUTE_ENCODER_PORT)
     private val pivotMotor: CANSparkMax = CANSparkMax(Constants.PivotConstants.PIVOT_MOTOR_PORT,
         CANSparkLowLevel.MotorType.kBrushless)
-    private val relativeEncoder: RelativeEncoder = pivotMotor.encoder
+    private val relativeEncoder: RelativeEncoder = pivotMotor.encoder   
     val pidController: SparkPIDController = pivotMotor.pidController
 
     private var encoderSet: Boolean = false
@@ -68,7 +68,7 @@ object PivotSubsystem : SubsystemBase() {
     override fun periodic() {
         if(Robot.isEnabled && !encoderSet){
             configureEncoders()
-            configureEncoders()
+            configurePID()
             encoderSet = true
         }
     }
