@@ -1,5 +1,6 @@
 package lib.profiles
 
+import kotlinx.serialization.Serializable
 import lib.profiles.DriverProfile.Presets
 import java.util.function.Consumer
 
@@ -20,6 +21,7 @@ import java.util.function.Consumer
  * @see lib.controllers.Gamepad
  * @see lib.controllers.ProfileController
  */
+@Serializable
 data class DriverProfile (
     val friendlyName: String,
     val invertLeftX: Boolean,
