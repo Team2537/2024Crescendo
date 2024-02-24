@@ -6,13 +6,13 @@ import lib.profiles.DriverProfile
 import lib.toTrigger
 
 /**
- * Wrapper class for any [Gamepad] that applies the currently active [Profile][DriverProfile.Profile]
+ * Wrapper class for any [Gamepad] that applies the currently active [Profile][DriverProfile.DriverProfile]
  *
  * @see Gamepad
  * @see DriverProfile
  */
 class ProfileController(private val gamepad: Gamepad, val name: String = "null") {
-    var profile: DriverProfile.Profile = DriverProfile.Profile.default
+    var profile: DriverProfile = DriverProfile.default
 
     private val leftXInverse: Double
         get() = if (profile.invertLeftX) -1.0 else 1.0

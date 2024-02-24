@@ -15,7 +15,7 @@ import java.util.function.Consumer
  * The Driver manager keeps a list of all controllers that are in use.
  * The [ShuffleboardTab] named `"Controllers"` allows for the changing of
  * each controllers' profile at any time. The profile choices are obtained
- * through [DriverProfile.Profile].
+ * through [DriverProfile].
  *
  * By default, an [XboxGamepad] on port 0 with a default profile is the only
  * controller, but controllers can be loaded through [loadControllers]
@@ -57,11 +57,11 @@ object Driver : Iterable<ProfileController> {
             addOption("Controller 3", controller3)
             //setDefaultOption(controllers[0].name, controllers[0])
         }
-        val profileChooser = SendableChooser<DriverProfile.Profile>().apply {
-            DriverProfile.Profile.entries.forEach {
+        val profileChooser = SendableChooser<DriverProfile>().apply {
+            DriverProfile.Presets.forEach {
                 addOption(it.friendlyName, it)
             }
-            setDefaultOption(DriverProfile.Profile.default.friendlyName, DriverProfile.Profile.default)
+            setDefaultOption(DriverProfile.default.friendlyName, DriverProfile.default)
         }
         // TODO: I'd prefer if the selected profile switched to the one active on the controller
         //  when the controller is switched, but I don't know how to do that or if it is even
