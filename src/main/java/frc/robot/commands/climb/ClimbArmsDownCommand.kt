@@ -11,8 +11,7 @@ class PidDownCommand: Command() {
     }
 
     override fun execute() {
-        ClimbSubsystem.leftMotor.set(-0.3)
-        ClimbSubsystem.rightMotor.set(-0.3)
+        ClimbSubsystem.armsDown()
     }
 
     override fun isFinished(): Boolean {
@@ -20,7 +19,6 @@ class PidDownCommand: Command() {
     }
 
     override fun end(Interrupted: Boolean) {
-        ClimbSubsystem.leftMotor.set(0.0);
-        ClimbSubsystem.rightMotor.set(0.0);
+        ClimbSubsystem.stop()
     }
 }

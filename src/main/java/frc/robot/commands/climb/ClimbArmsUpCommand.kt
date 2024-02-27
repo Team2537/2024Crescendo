@@ -10,8 +10,7 @@ class ClimbArmsUpCommand : Command() {
     }
 
     override fun execute() {
-        ClimbSubsystem.leftMotor.set(.3)
-        ClimbSubsystem.rightMotor.set(.3)
+        ClimbSubsystem.armsUp()
     }
 
     override fun isFinished(): Boolean {
@@ -21,7 +20,6 @@ class ClimbArmsUpCommand : Command() {
     }
 
     override fun end(Interrupted: Boolean) {
-        ClimbSubsystem.leftMotor.set(0.0);
-        ClimbSubsystem.rightMotor.set(0.0);
+        ClimbSubsystem.stop()
     }
 }
