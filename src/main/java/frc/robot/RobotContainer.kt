@@ -74,7 +74,7 @@ object RobotContainer {
 
         configureBindings()
 
-        SwerveSubsystem.defaultCommand = teleopDrive
+        SwerveSubsystem.defaultCommand = null
     }
 
     /**
