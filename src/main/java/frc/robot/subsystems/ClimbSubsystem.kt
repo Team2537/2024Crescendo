@@ -15,7 +15,7 @@ object ClimbSubsystem : SubsystemBase() {
     init{
         leftMotor.encoder.setPositionConversionFactor(16.0/1.0)
         rightMotor.encoder.setPositionConversionFactor(16.0/1.0)
-        val driveTab: ShuffleboardTab = Shuffleboard.getTab("Drive Subsystem")
+        val driveTab: ShuffleboardTab = Shuffleboard.getTab("Climb Subsystem")
         driveTab.addNumber("Left Climb Motor Velocity",) {return@addNumber leftMotor.encoder.velocity }
         driveTab.addNumber("Right Climb Motor Velocity",) {return@addNumber rightMotor.encoder.velocity}
     }
