@@ -1,3 +1,5 @@
+package frc.robot.subsystems
+
 import com.revrobotics.*
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.Timer
@@ -5,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
 import lib.math.units.RotationVelocity
-import lib.math.units.rpm
 import lib.math.units.velocity
 import lib.near
 import lib.zoneTrigger
@@ -38,7 +39,7 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     var state: State = State.EMPTY
-        get() = this.state
+        get() = state
 
     var storePosition: Double = getRollerPosition()
 
@@ -168,7 +169,7 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun setState(state: State){
-        this.state = state
+        LauncherSubsystem.state = state
     }
 
     fun triggerFactory(state: State): Trigger {

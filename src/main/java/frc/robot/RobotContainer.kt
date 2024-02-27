@@ -65,8 +65,6 @@ object RobotContainer {
         { -controller.rightY }
     )
 
-    val testLaunchCommand: TestLaunchCommand = TestLaunchCommand()
-
 
 
     init {
@@ -101,8 +99,6 @@ object RobotContainer {
     private fun configureBindings() {
         controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.y().toggleOnTrue(absoluteDrive)
-        controller.leftBumper().onTrue(testLaunchCommand)
-
         stateBindings()
     }
 
