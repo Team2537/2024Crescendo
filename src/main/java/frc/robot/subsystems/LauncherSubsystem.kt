@@ -38,7 +38,6 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     var state: State = State.EMPTY
-        get() = this.state
 
     var storePosition: Double = getRollerPosition()
 
@@ -163,16 +162,8 @@ object LauncherSubsystem : SubsystemBase() {
         }
     }
 
-    fun getState(): State {
-        return state
-    }
-
-    fun setState(state: State){
-        this.state = state
-    }
-
     fun triggerFactory(state: State): Trigger {
-        return Trigger() { getState() == state}
+        return Trigger() { this.state == state}
     }
 
     override fun periodic() {

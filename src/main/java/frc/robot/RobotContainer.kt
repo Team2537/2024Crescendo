@@ -17,6 +17,7 @@ import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
+import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
@@ -83,6 +84,8 @@ object RobotContainer {
         Autos
 //        LimelightSubsystem
         DriverProfile
+        PivotSubsystem
+        LauncherSubsystem
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed

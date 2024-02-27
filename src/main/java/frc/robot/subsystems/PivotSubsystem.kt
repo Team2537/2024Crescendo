@@ -4,6 +4,7 @@ import com.revrobotics.*
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.DutyCycleEncoder
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants
 import frc.robot.Robot
@@ -22,10 +23,15 @@ object PivotSubsystem : SubsystemBase() {
 
     private val interpolatedAimTable: InterpolatingDoubleTreeMap = InterpolatingDoubleTreeMap()
 
+    private val tab = Shuffleboard.getTab("Pivot")
     init{
         configureMotor()
         pivotMotor.stopMotor()
         interpolatedAimTable.putMap(Constants.PivotConstants.distanceMap)
+
+        tab.addDouble("Relative Position") { getPosition() }
+        tab.addDouble("Absolute Position") { getAbsEncoder() }
+        tab.addBoolean("Encoders Set") { encoderSet }
     }
 
     private fun configureMotor(){

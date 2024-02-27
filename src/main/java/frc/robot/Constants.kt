@@ -63,9 +63,9 @@ object Constants {
 
     object PivotConstants {
         const val ABSOLUTE_ENCODER_PORT = 1
-        const val PIVOT_MOTOR_PORT = 21
+        const val PIVOT_MOTOR_PORT = 16
 
-        const val ABSOLUTE_OFFSET = 0.06
+        const val ABSOLUTE_OFFSET = -0.052096177302404
         const val REL_ENCODER_CONVERSION = (40.0 / 18.0) * 36.0
         const val ABS_ENCODER_CONVERSION = (40.0 / 18.0)
 
