@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.units.Velocity
-import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
 import kotlinx.serialization.json.Json
