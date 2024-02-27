@@ -45,4 +45,11 @@ object Constants {
     object FileConstants {
         val SWERVE_CONFIG: File = File(Filesystem.getDeployDirectory(), "swerve")
     }
+
+    object ClimbConstants {
+        const val MOTOR_SPEED_UP = 0.3
+        const val MOTOR_SPEED_DOWN = -0.3
+        const val LEFT_CLIMB_PORT = 1 // placeholder value, replace with actual port
+        const val RIGHT_CLIMB_PORT = 5 // placeholder value, replace with actual port
+    }
 }

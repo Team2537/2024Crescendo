@@ -1,5 +1,7 @@
 package frc.robot.subsystems
 
+import frc.robot.Constants
+
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
@@ -7,8 +9,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object ClimbSubsystem : SubsystemBase() {
-    val leftMotor = CANSparkMax(1, CANSparkLowLevel.MotorType.kBrushless)
-    val rightMotor = CANSparkMax (5, CANSparkLowLevel.MotorType.kBrushless)
+    val leftMotor = CANSparkMax(Constants.ClimbConstants.LEFT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
+    val rightMotor = CANSparkMax(Constants.ClimbConstants.RIGHT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
 
     init{
         leftMotor.encoder.setPositionConversionFactor(16.0/1.0)
@@ -23,4 +25,19 @@ object ClimbSubsystem : SubsystemBase() {
 
     override fun simulationPeriodic() {
     }
+
+    fun armsUp() {
+        leftMotor.set(Constants.ClimbConstants.MOTOR_SPEED_UP)
+        rightMotor.set(Constants.ClimbConstants.MOTOR_SPEED_UP)
     }
+
+    fun armsDown() {
+        leftMotor.set(Constants.ClimbConstants.MOTOR_SPEED_DOWN)
+        rightMotor.set(Constants.ClimbConstants.MOTOR_SPEED_DOWN)
+    }
+
+    fun stop() {
+        leftMotor.set(0.0)
+        rightMotor.set(0.0)
+    }
+}
