@@ -20,13 +20,7 @@ object LimelightSubsystem : SubsystemBase() {
      */
     val botpose: Pose3d
         get() = limelight.position
-
-
-    /**
-     * Get the position of the bot as estimated by the limelight
-     */
-    val botpose: Pose3d
-        get() = limelight.position
+    
 
     /**
      * Gets the horizontal offset of the target from the crosshair.
