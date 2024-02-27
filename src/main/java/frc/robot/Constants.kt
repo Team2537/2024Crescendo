@@ -78,12 +78,7 @@ object Constants {
     }
 
     object IntakeConstants {
-        const val INFRARED_SENSOR_CHANNEL = 1 //TODO: Update this
-
-        const val INTAKE_MOTOR_ID: Int = 0 //TODO: Update this
-
-        const val INTAKE_KP : Double = 0.1
-        const val INTAKE_KI : Double = 0.0
-        const val INTAKE_KD : Double = 0.0
+        const val INTAKE_MOTOR_ID: Int = 20 //TODO: Update this
+        const val TRANSFER_MOTOR_ID: Int = 17 //TODO: Update this
     }
 }
