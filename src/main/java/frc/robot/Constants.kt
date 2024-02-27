@@ -52,7 +52,7 @@ object Constants {
         const val LEFT_LAUNCHER_PORT = 22
         const val RIGHT_LAUNCHER_PORT = 23
 
-        const val ROLLER_MOTOR_PORT = 20
+        const val ROLLER_MOTOR_PORT = 14
         const val ROLLER_P = 0.0001
         const val ROLLER_I = 0.000001
 
@@ -72,6 +72,9 @@ object Constants {
         val distanceMap: HashMap<Double, Double> = hashMapOf(
             1.0 to 54.0
         )
+
+        const val SUBWOOFER_POSITION = 0.276885539293289
+        const val AMP_POSITION = 0.049505945295095
     }
 
 }

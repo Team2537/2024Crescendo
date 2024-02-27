@@ -1,6 +1,7 @@
 import com.revrobotics.*
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
@@ -40,6 +41,7 @@ object LauncherSubsystem : SubsystemBase() {
     var state: State = State.EMPTY
 
     var storePosition: Double = getRollerPosition()
+    val tab = Shuffleboard.getTab("Launcher")
 
     init {
         configureMotors()
@@ -47,6 +49,10 @@ object LauncherSubsystem : SubsystemBase() {
         val irSensor: DigitalInput = DigitalInput(Constants.LauncherConstants.INFRARED_SENSOR)
         noteDetector = Trigger() { !irSensor.get() }
         noteTimer.start()
+
+        tab.addBoolean("Note Detector") { noteDetector.asBoolean }
+        tab.addString("State") { state.toString() }
+        tab.addDouble("Timer") { noteTimer.get() }
     }
 
 
@@ -112,7 +118,7 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun intake(){
-        storePosition = getRollerPosition() - 1
+        storePosition = getRollerPosition() - 0.5
         println("Intake ran, setting to $storePosition")
         rollerPID.setReference(storePosition, CANSparkBase.ControlType.kSmartMotion)
     }
@@ -122,21 +128,22 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun inZone(): Boolean {
-        return zoneTrigger("primeZone").asBoolean
+        //return zoneTrigger("primeZone").asBoolean
+        return true
     }
 
     fun updateState(){
         when(state){
             State.EMPTY -> {
                 stop()
-                if(!noteDetector.asBoolean){
+                if(noteDetector.asBoolean){
                     state = State.STORED
                 }
             }
             State.STORED -> {
-                if(noteDetector.asBoolean){
+                if(!noteDetector.asBoolean){
                     state = State.EMPTY
-                } else if (!noteDetector.asBoolean && storePosition.near(getRollerPosition(), 0.2) && inZone()){
+                } else if (noteDetector.asBoolean && storePosition.near(getRollerPosition(), 0.2) && inZone()){
                     state = State.PRIMED
                 }
             }
@@ -144,7 +151,7 @@ object LauncherSubsystem : SubsystemBase() {
                 if(leftLauncher.velocity > Constants.LauncherConstants.MINIMUM_VELOCITY
                     && rightLauncher.velocity > Constants.LauncherConstants.MINIMUM_VELOCITY){
                     state = State.AT_SPEED
-                } else if (noteDetector.asBoolean) {
+                } else if (!noteDetector.asBoolean) {
                     state = State.EMPTY
                 }
             }
@@ -170,6 +177,8 @@ object LauncherSubsystem : SubsystemBase() {
         if(noteDetector.asBoolean){
             noteTimer.reset()
         }
+
+        updateState()
     }
 
 
