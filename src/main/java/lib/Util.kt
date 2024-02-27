@@ -1,7 +1,10 @@
 package lib
 
+import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
+import com.revrobotics.CANSparkMax
+import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
 import kotlinx.serialization.json.Json
@@ -35,9 +38,17 @@ fun Double.powScale(exp: Double): Double {
 /**
  * Converts a boolean to a [Trigger] object
  */
-fun Boolean.toTrigger(): Trigger {
-    return Trigger { this }
+fun Boolean.toTrigger(): Trigger = Trigger { this }
+
+/**
+ *  Sets the velocity reference of a REV motor controller.
+ *
+ *  @param vel the velocity to set the motor to.
+ */
+fun CANSparkBase.setVelocity(vel: Double) {
+    this.pidController.setReference(vel, CANSparkBase.ControlType.kVelocity)
 }
+
 
 inline fun <reified T> Json.encodeToString(data: T): String {
     return encodeToString(serializersModule.serializer(), data)
@@ -73,4 +84,12 @@ fun InterpolatingDoubleTreeMap.putMap(map: HashMap<Double, Double>){
         val value = entry.value
         this.put(key, value)
     }
+}
+/**
+ * Sets the position reference of a REV motor controller.
+ *
+ * @param pos the position to set the motor to.
+ */
+fun CANSparkBase.setPosition(pos: Double) {
+    this.pidController.setReference(pos, CANSparkBase.ControlType.kPosition)
 }

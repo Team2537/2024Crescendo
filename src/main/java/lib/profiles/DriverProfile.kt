@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 object DriverProfile {
     private val driverProfileChooser =
         SendableChooser<Profile>().apply {
-            Profile.values().forEach { addOption(it.friendlyName, it) }
+            Profile.entries.forEach { addOption(it.friendlyName, it) }
             setDefaultOption(Profile.default.friendlyName, Profile.default)
         }
 
