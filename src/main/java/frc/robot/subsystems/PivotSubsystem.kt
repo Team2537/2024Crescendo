@@ -51,7 +51,8 @@ object PivotSubsystem : SubsystemBase() {
     }
 
     private fun configurePID(){
-        pidController.p = .5
+        // TODO: Figure out why lower values = more oscillation
+        pidController.p = 50.0
         pidController.i = .1
         pidController.d = 0.0
 //        pidController.setSmartMotionMaxAccel(5000.0, 0)
