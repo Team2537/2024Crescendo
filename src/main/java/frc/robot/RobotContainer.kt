@@ -3,6 +3,7 @@ package frc.robot
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -11,8 +12,6 @@ import frc.robot.commands.Autos
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
-import frc.robot.commands.launcher.pivot.ManualPivotCommand
-import frc.robot.commands.launcher.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
@@ -75,12 +74,7 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
-    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
-
-    val ampQuickPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
-    val speakerQuickPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
-    val intakeQuickPivot: QuickPivotCommand = QuickPivotCommand(0.21)
 
 
 
@@ -120,11 +114,11 @@ object RobotContainer {
     private fun configureBindings() {
 //        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
 //        controller.y().toggleOnTrue(absoluteDrive)
-        controller.b().toggleOnTrue(manualPivot)
-        controller.pov(90).onTrue(ampQuickPivot)
-        controller.pov(270).onTrue(speakerQuickPivot)
-        controller.pov(180).onTrue(intakeQuickPivot)
-        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
+        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::syncRelative))
+        controller.b().onTrue(InstantCommand(PivotSubsystem::resetEncoder))
+        controller.a().toggleOnTrue(Commands.run(
+            {PivotSubsystem.setVoltage(controller.leftY)}
+        ))
 //        intakeTrigger.whileTrue(ToggleIntakeCommand())
         stateBindings()
     }

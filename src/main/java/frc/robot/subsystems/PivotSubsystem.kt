@@ -1,101 +1,71 @@
 package frc.robot.subsystems
 
-import com.revrobotics.*
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
-import edu.wpi.first.units.Units
+import com.revrobotics.CANSparkLowLevel
+import com.revrobotics.CANSparkMax
+import com.revrobotics.RelativeEncoder
+import com.revrobotics.SparkPIDController
+import edu.wpi.first.math.controller.ArmFeedforward
+import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants
-import frc.robot.Robot
-import lib.math.units.Rotation
-import lib.math.units.into
-import lib.putMap
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.Constants.PivotConstants
 
 object PivotSubsystem : SubsystemBase() {
-    private val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(Constants.PivotConstants.ABSOLUTE_ENCODER_PORT)
-    private val pivotMotor: CANSparkMax = CANSparkMax(Constants.PivotConstants.PIVOT_MOTOR_PORT,
+    val pivotMotor: CANSparkMax = CANSparkMax(PivotConstants.PIVOT_MOTOR_PORT,
         CANSparkLowLevel.MotorType.kBrushless)
-    private val relativeEncoder: RelativeEncoder = pivotMotor.encoder
-    val pidController: SparkPIDController = pivotMotor.pidController
 
-    private var encoderSet: Boolean = false
+    val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(PivotConstants.ABSOLUTE_ENCODER_PORT)
+    val relativeEncoder: RelativeEncoder = pivotMotor.encoder
+    val pivotPID: SparkPIDController = pivotMotor.pidController
 
-    private val interpolatedAimTable: InterpolatingDoubleTreeMap = InterpolatingDoubleTreeMap()
+    val tab: ShuffleboardTab = Shuffleboard.getTab("Pivot")
 
-    private val tab = Shuffleboard.getTab("Pivot")
-    init{
-        configureMotor()
-        pivotMotor.stopMotor()
-        interpolatedAimTable.putMap(Constants.PivotConstants.distanceMap)
+    val feedforward: ArmFeedforward = ArmFeedforward(
+        PivotConstants.kS,
+        PivotConstants.kG,
+        PivotConstants.kV,
+        PivotConstants.kA
+    )
 
-        tab.addDouble("Relative Position") { getPosition() }
-        tab.addDouble("Absolute Position") { getAbsEncoder() }
-        tab.addBoolean("Encoders Set") { encoderSet }
+    init {
+        pivotMotor.restoreFactoryDefaults()
+        relativeEncoder.positionConversionFactor = PivotConstants.REL_ENCODER_CONVERSION
+        absoluteEncoder.distancePerRotation = PivotConstants.ABS_ENCODER_CONVERSION
+
+        pivotPID.p = PivotConstants.kP
+        pivotPID.i = PivotConstants.kI
+        pivotPID.d = PivotConstants.kD
+        pivotPID.ff = 0.0
+
+        tab.addDouble("Absolute Encoder") { getAbsolutePosition() }
+        tab.addDouble("Relative Position") { getRelativePosition() }
         tab.addDouble("Voltage Sent") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
     }
 
-    private fun configureMotor(){
-        pivotMotor.restoreFactoryDefaults()
-        pivotMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
-        pivotMotor.burnFlash()
+    fun getAbsolutePosition(): Double {
+        return absoluteEncoder.distance
     }
 
-    fun configureEncoders() {
-        relativeEncoder.setPosition(0.0)
-        relativeEncoder.positionConversionFactor = 1 / (Constants.PivotConstants.REL_ENCODER_CONVERSION)
+    fun getRelativePosition(): Double {
+        return relativeEncoder.position
     }
 
-    fun zeroEncoder(){
-        relativeEncoder.setPosition(0.0)
+    fun syncRelative(){
+        relativeEncoder.setPosition(getAbsolutePosition())
     }
 
-    private fun configurePID(){
-        // TODO: Figure out why lower values = more oscillation
-        pidController.p = 50.0
-        pidController.i = .1
-        pidController.d = 0.0
-//        pidController.setSmartMotionMaxAccel(5000.0, 0)
-//        pidController.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
-//        pidController.setSmartMotionMaxVelocity(5600.0, 0)
-//        pidController.setSmartMotionMinOutputVelocity(0.0, 0)
-//        pidController.setSmartMotionAllowedClosedLoopError(0.001, 0)
-        pidController.setFeedbackDevice(relativeEncoder)
-    }
-
-    fun getAbsEncoder(): Double {
-        return (absoluteEncoder.absolutePosition * Constants.PivotConstants.ABS_ENCODER_CONVERSION) - Constants.PivotConstants.ABSOLUTE_OFFSET
-    }
-
-    fun rawMotorSpeed(speed: Double){
+    fun setRawSpeed(speed: Double){
         pivotMotor.set(speed)
-        println("Raw motor speed is set to $speed")
+    }
+    fun setVoltage(voltage: Double) {
+        pivotMotor.setVoltage(voltage)
     }
 
-    fun setTargetPosition(position: Double){
-        pidController.setReference(position, CANSparkBase.ControlType.kPosition)
-        println("Set position to $position")
+    fun resetEncoder() {
+        absoluteEncoder.reset()
     }
-
-    fun setTargetPosition(position: Rotation){
-        pidController.setReference(position into Units.Rotations, CANSparkBase.ControlType.kPosition)
-    }
-
-    fun getPosition() = relativeEncoder.position
-
-    override fun periodic() {
-        if(Robot.isEnabled && !encoderSet){
-            configureEncoders()
-            configurePID()
-            encoderSet = true
-        }
-
-        if (Robot.isDisabled && encoderSet)
-        {
-            encoderSet = false
-        }
-    }
-
 
 
 }

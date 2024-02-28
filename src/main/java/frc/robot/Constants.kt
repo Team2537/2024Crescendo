@@ -65,15 +65,27 @@ object Constants {
     }
 
     object PivotConstants {
+
+        const val GEARBOX_RATIO: Double = 36.0/1.0
+        const val PULLEY_RATIO: Double = 40.0/18.0
+
         const val ABSOLUTE_ENCODER_PORT = 1
         const val PIVOT_MOTOR_PORT = 16
 
 
 
         const val ABSOLUTE_OFFSET = -0.052096177302404
-        const val REL_ENCODER_CONVERSION = ((40.0 / 18.0) * 36.0)
-        const val ABS_ENCODER_CONVERSION = (40.0 / 18.0)
+        const val REL_ENCODER_CONVERSION = 360 / (GEARBOX_RATIO * PULLEY_RATIO)
+        const val ABS_ENCODER_CONVERSION = 360 / PULLEY_RATIO
 
+        const val kG = 0.56
+        const val kV = 1.56
+        const val kA = 0.01
+        const val kS = 0.01
+
+        const val kP = 0.0
+        const val kI = 0.0
+        const val kD = 0.0
 
         val distanceMap: HashMap<Double, Double> = hashMapOf(
             1.0 to 54.0
