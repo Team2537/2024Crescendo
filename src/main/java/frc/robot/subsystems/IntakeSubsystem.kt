@@ -3,6 +3,7 @@ package frc.robot.subsystems
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.wpilibj.DigitalInput
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants.IntakeConstants
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -18,50 +19,16 @@ object IntakeSubsystem : SubsystemBase() {
      * [REV Neo 550](https://www.revrobotics.com/rev-21-1651/) that controls the under-bumper intake.
      */
     val intakeMotor : CANSparkMax = CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless)
+    val transferMotor: CANSparkMax = CANSparkMax(IntakeConstants.TRANSFER_MOTOR_ID, MotorType.kBrushless)
 
-    /**
-     * Trigger for detecting when a note has entered the intake.
-     */
-    private val noteDetector: Trigger
-
-    enum class State {
-        kNoteHeld,
-        kReady,
-        kActive,
-    }
-
-    private var state: State = State.kReady
+    private val tab = Shuffleboard.getTab("Intake")
 
     init {
-        val pidController = intakeMotor.pidController
-
-        pidController.p = IntakeConstants.INTAKE_KP
-        pidController.i = IntakeConstants.INTAKE_KI
-        pidController.d = IntakeConstants.INTAKE_KD
-
-        val infraredSensor = DigitalInput(IntakeConstants.INFRARED_SENSOR_CHANNEL)
-        noteDetector = infraredSensor.get().toTrigger()
-
-        noteDetector.onTrue(runOnce { state = State.kNoteHeld })
+        tab.addDouble("Intake Velocity") { intakeMotor.encoder.velocity }
+        tab.addDouble("Transfer Velocity") { transferMotor.encoder.velocity }
     }
 
     override fun periodic() {
-        updateState()
     }
 
-    private fun updateState() {
-        when (state) {
-            State.kNoteHeld -> {
-                // wait for launch note
-            }
-            State.kReady -> {
-                // wait for detect note (LIMELIGHT YIPPEE)
-            }
-            State.kActive -> {
-                // wait for detect note (INFRARED YIPPEE)
-            }
-        }
-    }
-
-    fun getState(): State = state
 }

@@ -8,10 +8,11 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
-import frc.robot.commands.launcher.FireCommand
-import frc.robot.commands.launcher.IntakeCommand
-import frc.robot.commands.launcher.PrimeLauncherCommand
-import frc.robot.commands.launcher.ReadyFireCommand
+import frc.robot.commands.intake.ManualIntakeCommand
+import frc.robot.commands.intake.ToggleIntakeCommand
+import frc.robot.commands.launcher.*
+import frc.robot.commands.launcher.pivot.ManualPivotCommand
+import frc.robot.commands.launcher.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
@@ -19,8 +20,9 @@ import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.IntakeSubsystem
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
+//import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
+import lib.math.units.rotations
 import lib.profiles.DriverProfile
 
 /**
@@ -38,6 +40,8 @@ object RobotContainer {
     // Testing pre-commit
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
+
+
 
 //    val trackTarget = TrackTargetCommand()
 
@@ -66,6 +70,18 @@ object RobotContainer {
         { -controller.rightY }
     )
 
+    val manualIntake: ManualIntakeCommand = ManualIntakeCommand(
+        { -controller.rightTriggerAxis },
+        { controller.leftTriggerAxis }
+    )
+
+    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
+
+
+    val ampQuickPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
+    val speakerQuickPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
+    val intakeQuickPivot: QuickPivotCommand = QuickPivotCommand(0.21)
+
 
 
     init {
@@ -74,7 +90,8 @@ object RobotContainer {
 
         configureBindings()
 
-        SwerveSubsystem.defaultCommand = null
+//        SwerveSubsystem.defaultCommand = null
+        IntakeSubsystem.defaultCommand = manualIntake
     }
 
     /**
@@ -82,7 +99,7 @@ object RobotContainer {
      */
     private fun initializeObjects() {
         Autos
-        SwerveSubsystem
+//        SwerveSubsystem
         Autos
 //        LimelightSubsystem
         DriverProfile
@@ -101,13 +118,20 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.y().toggleOnTrue(absoluteDrive)
+//        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+//        controller.y().toggleOnTrue(absoluteDrive)
+        controller.b().toggleOnTrue(manualPivot)
+        controller.pov(90).onTrue(ampQuickPivot)
+        controller.pov(270).onTrue(speakerQuickPivot)
+        controller.pov(180).onTrue(intakeQuickPivot)
+        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
+//        intakeTrigger.whileTrue(ToggleIntakeCommand())
         stateBindings()
     }
 
 
     private fun stateBindings(){
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.EMPTY)
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.STORED).whileTrue(IntakeCommand())
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.PRIMED).whileTrue(PrimeLauncherCommand())
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.AT_SPEED)

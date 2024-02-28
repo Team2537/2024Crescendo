@@ -135,7 +135,6 @@ object LauncherSubsystem : SubsystemBase() {
     fun updateState(){
         when(state){
             State.EMPTY -> {
-                stop()
                 if(noteDetector.asBoolean){
                     state = State.STORED
                 }
@@ -164,6 +163,7 @@ object LauncherSubsystem : SubsystemBase() {
             State.FIRING -> {
                 if(noteTimer.hasElapsed(0.5)){
                     state = State.EMPTY
+                    stop()
                 }
             }
         }
