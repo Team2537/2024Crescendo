@@ -1,16 +1,15 @@
 package frc.robot.subsystems
 
-import com.revrobotics.CANSparkLowLevel
-import com.revrobotics.CANSparkMax
-import com.revrobotics.RelativeEncoder
-import com.revrobotics.SparkPIDController
+import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
+import edu.wpi.first.math.util.Units
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
+import frc.robot.Robot
 
 object PivotSubsystem : SubsystemBase() {
     val pivotMotor: CANSparkMax = CANSparkMax(PivotConstants.PIVOT_MOTOR_PORT,
@@ -21,6 +20,8 @@ object PivotSubsystem : SubsystemBase() {
     val pivotPID: SparkPIDController = pivotMotor.pidController
 
     val tab: ShuffleboardTab = Shuffleboard.getTab("Pivot")
+
+    var encoderSet: Boolean = false
 
     val feedforward: ArmFeedforward = ArmFeedforward(
         PivotConstants.kS,
@@ -33,15 +34,19 @@ object PivotSubsystem : SubsystemBase() {
         pivotMotor.restoreFactoryDefaults()
         relativeEncoder.positionConversionFactor = PivotConstants.REL_ENCODER_CONVERSION
         absoluteEncoder.distancePerRotation = PivotConstants.ABS_ENCODER_CONVERSION
+        absoluteEncoder.positionOffset = PivotConstants.ABSOLUTE_OFFSET
 
         pivotPID.p = PivotConstants.kP
         pivotPID.i = PivotConstants.kI
         pivotPID.d = PivotConstants.kD
         pivotPID.ff = 0.0
 
-        tab.addDouble("Absolute Encoder") { getAbsolutePosition() }
+        tab.addDouble("Throughbore Distance") { getAbsolutePosition() }
+        tab.addDouble("Absolute Position") { absoluteEncoder.absolutePosition }
         tab.addDouble("Relative Position") { getRelativePosition() }
         tab.addDouble("Voltage Sent") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
+
+        zeroEncoder()
     }
 
     fun getAbsolutePosition(): Double {
@@ -56,6 +61,10 @@ object PivotSubsystem : SubsystemBase() {
         relativeEncoder.setPosition(getAbsolutePosition())
     }
 
+    fun zeroEncoder() {
+        relativeEncoder.setPosition(0.0)
+    }
+
     fun setRawSpeed(speed: Double){
         pivotMotor.set(speed)
     }
@@ -67,5 +76,31 @@ object PivotSubsystem : SubsystemBase() {
         absoluteEncoder.reset()
     }
 
+    fun setPIDPosition(position: Double) {
+        pivotPID.setReference(position, CANSparkBase.ControlType.kPosition)
+        println("Setting position to $position")
+    }
+
+    fun holdArm(position: Double){
+        pivotPID.setReference(position,
+            CANSparkBase.ControlType.kPosition,
+            0,
+            feedforward.calculate(Units.degreesToRadians(position), 0.0)
+        )
+        println("Setting position to $position")
+    }
+
+    fun stop() {
+        pivotMotor.stopMotor()
+    }
+
+    override fun periodic() {
+//        if(!encoderSet && Robot.isEnabled){
+//            syncRelative()
+//            encoderSet = true
+//        } else if (encoderSet && Robot.isDisabled) {
+//            encoderSet = false
+//        }
+    }
 
 }

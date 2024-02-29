@@ -74,25 +74,26 @@ object Constants {
 
 
 
-        const val ABSOLUTE_OFFSET = -0.052096177302404
+        const val ABSOLUTE_OFFSET = 0.320913258022831
         const val REL_ENCODER_CONVERSION = 360 / (GEARBOX_RATIO * PULLEY_RATIO)
         const val ABS_ENCODER_CONVERSION = 360 / PULLEY_RATIO
 
         const val kG = 0.56
         const val kV = 1.56
         const val kA = 0.01
-        const val kS = 0.01
+        const val kS = 0.1
 
-        const val kP = 0.0
-        const val kI = 0.0
+        const val kP = 0.5
+        const val kI = 0.01
         const val kD = 0.0
 
         val distanceMap: HashMap<Double, Double> = hashMapOf(
             1.0 to 54.0
         )
 
-        const val SUBWOOFER_POSITION = 0.22
+        const val SUBWOOFER_POSITION = 80.0
         const val AMP_POSITION = 0.0
+        const val INTAKE_POSITION = 69.0
     }
 
     object IntakeConstants {

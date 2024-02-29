@@ -27,6 +27,7 @@ object LauncherSubsystem : SubsystemBase() {
     private val noteDetector: Trigger
 
     private val noteTimer: Timer = Timer()
+    private val storedTimer: Timer = Timer()
 
     var fire: Boolean = false
 
@@ -49,6 +50,7 @@ object LauncherSubsystem : SubsystemBase() {
         val irSensor: DigitalInput = DigitalInput(Constants.LauncherConstants.INFRARED_SENSOR)
         noteDetector = Trigger() { !irSensor.get() }
         noteTimer.start()
+        storedTimer.start()
 
         tab.addBoolean("Note Detector") { noteDetector.asBoolean }
         tab.addString("State") { state.toString() }
@@ -118,7 +120,7 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun intake(){
-        storePosition = getRollerPosition() - 0.5
+        storePosition = getRollerPosition() + 0.1
         println("Intake ran, setting to $storePosition")
         rollerPID.setReference(storePosition, CANSparkBase.ControlType.kSmartMotion)
     }
@@ -138,11 +140,16 @@ object LauncherSubsystem : SubsystemBase() {
                 if(noteDetector.asBoolean){
                     state = State.STORED
                 }
+                stop()
             }
             State.STORED -> {
                 if(!noteDetector.asBoolean){
                     state = State.EMPTY
-                } else if (noteDetector.asBoolean && storePosition.near(getRollerPosition(), 0.2) && inZone()){
+                } else if (
+                    noteDetector.asBoolean
+                    && storePosition.near(getRollerPosition(), 0.2)
+                    && inZone()
+                    && storedTimer.hasElapsed(1.0) ){
                     state = State.PRIMED
                 }
             }
@@ -176,6 +183,8 @@ object LauncherSubsystem : SubsystemBase() {
     override fun periodic() {
         if(noteDetector.asBoolean){
             noteTimer.reset()
+        } else {
+            storedTimer.reset()
         }
 
         updateState()

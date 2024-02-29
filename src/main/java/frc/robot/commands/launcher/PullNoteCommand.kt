@@ -23,5 +23,7 @@ class PullNoteCommand : Command() {
         return false
     }
 
-    override fun end(interrupted: Boolean) {}
+    override fun end(interrupted: Boolean) {
+        launcherSubsystem.stop()
+    }
 }

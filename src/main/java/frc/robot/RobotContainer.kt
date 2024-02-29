@@ -2,26 +2,24 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
+import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
+import frc.robot.commands.pivot.ManualPivotCommand
+import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
-import frc.robot.commands.vision.TrackTargetCommand
 import frc.robot.subsystems.IntakeSubsystem
-import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.PivotSubsystem
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
-import lib.math.units.rotations
 import lib.profiles.DriverProfile
 
 /**
@@ -74,6 +72,12 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
+    val pullNoteCommand: PullNoteCommand = PullNoteCommand()
+
+    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION)
+    val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
+
+    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.leftY }
 
 
 
@@ -114,12 +118,12 @@ object RobotContainer {
     private fun configureBindings() {
 //        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
 //        controller.y().toggleOnTrue(absoluteDrive)
-        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::syncRelative))
-        controller.b().onTrue(InstantCommand(PivotSubsystem::resetEncoder))
-        controller.a().toggleOnTrue(Commands.run(
-            {PivotSubsystem.setVoltage(controller.leftY)}
-        ))
-//        intakeTrigger.whileTrue(ToggleIntakeCommand())
+        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
+        controller.a().toggleOnTrue(manualPivot)
+        controller.x().onTrue(intakePivot)
+        controller.b().onTrue(launcherPivot)
+        controller.rightBumper().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
+        controller.leftTrigger().onTrue(ReadyFireCommand())
         stateBindings()
     }
 
@@ -130,7 +134,7 @@ object RobotContainer {
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.PRIMED).whileTrue(PrimeLauncherCommand())
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.AT_SPEED)
             .and(controller.leftTrigger()).onTrue(ReadyFireCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.FIRING).whileTrue(FireCommand())
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.FIRING).whileTrue(FireCommand().alongWith(FeedLauncherCommand()))
     }
 
     private fun addNamedCommands() {

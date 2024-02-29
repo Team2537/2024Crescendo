@@ -3,7 +3,7 @@ package frc.robot.commands.intake
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.IntakeSubsystem
 
-class ToggleIntakeCommand : Command() {
+class FeedLauncherCommand : Command() {
     private val intakeSubsystem = IntakeSubsystem
 
 
@@ -13,7 +13,6 @@ class ToggleIntakeCommand : Command() {
     }
 
     override fun initialize() {
-        intakeSubsystem.intakeMotor.set(-1.0)
         intakeSubsystem.transferMotor.set(1.0)
     }
 
@@ -25,10 +24,6 @@ class ToggleIntakeCommand : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        intakeSubsystem.intakeMotor.stopMotor()
         intakeSubsystem.transferMotor.stopMotor()
-        if(interrupted){
-            println("Interrupted")
-        }
     }
 }
