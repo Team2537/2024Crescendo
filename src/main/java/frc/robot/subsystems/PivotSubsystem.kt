@@ -23,7 +23,7 @@ object PivotSubsystem : SubsystemBase() {
 
     var encoderSet: Boolean = false
 
-    val feedforward: ArmFeedforward = ArmFeedforward(
+    private val feedforward: ArmFeedforward = ArmFeedforward(
         PivotConstants.kS,
         PivotConstants.kG,
         PivotConstants.kV,
@@ -47,6 +47,8 @@ object PivotSubsystem : SubsystemBase() {
         tab.addDouble("Voltage Sent") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
 
         zeroEncoder()
+
+        pivotMotor.setSmartCurrentLimit(40)
     }
 
     fun getAbsolutePosition(): Double {
@@ -87,7 +89,6 @@ object PivotSubsystem : SubsystemBase() {
             0,
             feedforward.calculate(Units.degreesToRadians(position), 0.0)
         )
-        println("Setting position to $position")
     }
 
     fun stop() {

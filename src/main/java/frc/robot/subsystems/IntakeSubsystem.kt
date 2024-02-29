@@ -26,6 +26,9 @@ object IntakeSubsystem : SubsystemBase() {
     init {
         tab.addDouble("Intake Velocity") { intakeMotor.encoder.velocity }
         tab.addDouble("Transfer Velocity") { transferMotor.encoder.velocity }
+
+        intakeMotor.setSmartCurrentLimit(40)
+        transferMotor.setSmartCurrentLimit(40)
     }
 
     override fun periodic() {

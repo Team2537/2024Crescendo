@@ -76,6 +76,7 @@ object RobotContainer {
 
     val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION)
     val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
+    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
 
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.leftY }
 
@@ -122,6 +123,7 @@ object RobotContainer {
         controller.a().toggleOnTrue(manualPivot)
         controller.x().onTrue(intakePivot)
         controller.b().onTrue(launcherPivot)
+        controller.y().onTrue(ampPivot)
         controller.rightBumper().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
         controller.leftTrigger().onTrue(ReadyFireCommand())
         stateBindings()

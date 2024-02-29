@@ -121,7 +121,6 @@ object LauncherSubsystem : SubsystemBase() {
 
     fun intake(){
         storePosition = getRollerPosition() + 0.1
-        println("Intake ran, setting to $storePosition")
         rollerPID.setReference(storePosition, CANSparkBase.ControlType.kSmartMotion)
     }
 

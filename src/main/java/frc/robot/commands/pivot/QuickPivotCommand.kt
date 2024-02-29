@@ -21,9 +21,9 @@ class QuickPivotCommand(target: Double) : Command() {
 
     override fun execute() {
         if(pivotSubsystem.getRelativePosition() > target){
-            pivotSubsystem.pivotMotor.set(-0.1)
+            pivotSubsystem.pivotMotor.set(-0.2)
         } else {
-            pivotSubsystem.pivotMotor.set(0.1)
+            pivotSubsystem.pivotMotor.set(0.2)
         }
     }
 
