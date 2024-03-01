@@ -185,6 +185,12 @@ class Limelight(hostName: String, mountPosition: Pose3d) : AutoCloseable {
     val targetVisible: Boolean
         get() = tv.get() == 1.0
 
+    /**
+     * Returns the number of April tags that the limelight can see.
+     * Should not be used too often, as it takes ~2.5ms to get the result.
+     *
+     * @return Integer representing the number of tags
+     */
     fun getTagCount(): Int {
         val result = LimelightHelpers.getLatestResults(hostName)
         return result.targetingResults.botpose_tagcount.toInt()
