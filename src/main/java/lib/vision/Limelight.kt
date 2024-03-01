@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.networktables.DoubleArraySubscriber
 import edu.wpi.first.networktables.DoubleSubscriber
 import edu.wpi.first.networktables.NetworkTable
+import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units.Degrees
@@ -24,13 +25,17 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
  *
  * @author Matthew Clark
  */
-class Limelight(table: NetworkTable, mountPosition: Pose3d) : AutoCloseable {
+class Limelight(hostName: String, mountPosition: Pose3d) : AutoCloseable {
     // NetworkTableEntry objects for getting data from the Limelight
     private val tx: DoubleSubscriber
     private val ty: DoubleSubscriber
     private val ta: DoubleSubscriber
     private val ts: DoubleSubscriber
     private val tv: DoubleSubscriber
+
+    private val hostName: String
+
+    private val table: NetworkTable = NetworkTableInstance.getDefault().getTable(hostName)
 
     private val botpose: DoubleArraySubscriber
 
@@ -44,6 +49,8 @@ class Limelight(table: NetworkTable, mountPosition: Pose3d) : AutoCloseable {
         }
 
     init {
+        this.hostName = hostName
+
         // Get the NetworkTableEntry objects for the Limelight
         tx = table.getDoubleTopic("tx").subscribe(0.0)
         ty = table.getDoubleTopic("ty").subscribe(0.0)
@@ -177,6 +184,11 @@ class Limelight(table: NetworkTable, mountPosition: Pose3d) : AutoCloseable {
      */
     val targetVisible: Boolean
         get() = tv.get() == 1.0
+
+    fun getTagCount(): Int {
+        val result = LimelightHelpers.getLatestResults(hostName)
+        return result.targetingResults.botpose_tagcount.toInt()
+    }
 
     override fun close() {
         // Not entirely necessary, as most limelights will have the same lifespan as the robot, but still
