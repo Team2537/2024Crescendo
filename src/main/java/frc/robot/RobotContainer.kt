@@ -2,6 +2,10 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
+import edu.wpi.first.hal.simulation.RoboRioDataJNI
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -49,7 +53,7 @@ object RobotContainer {
             { -controller.leftY },
             { -controller.leftX },
             { -controller.rightX },
-            { controller.hid.leftBumper },
+            { !controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
 
@@ -89,8 +93,8 @@ object RobotContainer {
 
         configureBindings()
 
-//        SwerveSubsystem.defaultCommand = null
-        IntakeSubsystem.defaultCommand = manualIntake
+        SwerveSubsystem.defaultCommand = teleopDrive
+
     }
 
     /**
@@ -117,6 +121,9 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
+        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        controller.y().toggleOnTrue(absoluteDrive)
+        controller.b().onTrue(PrintCommand(System.getenv().get("serialnum")))
 //        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
 //        controller.y().toggleOnTrue(absoluteDrive)
         controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))

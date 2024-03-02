@@ -50,7 +50,7 @@ object SwerveSubsystem : SubsystemBase() {
         SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
 
         try {
-            swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
+            swerveDrive = SwerveParser(Constants.FileConstants.CRESCENDO_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("Error creating swerve drive", e)
