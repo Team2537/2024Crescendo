@@ -103,7 +103,12 @@ object Constants {
     }
 
     object ClimbConstants {
-        const val LEFT_ARM_ID: Int = 15
-        const val RIGHT_ARM_ID: Int = 18
+        const val MOTOR_SPEED_UP = 0.3
+        const val MOTOR_SPEED_DOWN = -0.3
+        const val LEFT_CLIMB_PORT = 1 // placeholder value, replace with actual port
+        const val RIGHT_CLIMB_PORT = 5 // placeholder value, replace with actual port
+        const val ARMS_UP_ENCODER_POSITION = 1.0
+        const val ARMS_DOWN_ENCODER_POSITION = 0.0
+        const val ARMS_ENCODER_TOLERANCE = 0.1
     }
 }
