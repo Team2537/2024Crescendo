@@ -45,7 +45,7 @@ object RobotContainer {
             { -controller.leftY },
             { -controller.leftX },
             { -controller.rightX },
-            { controller.hid.leftBumper },
+            { !controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
 
