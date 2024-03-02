@@ -1,5 +1,6 @@
 package frc.robot.commands
 
+import frc.robot.Constants
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
@@ -15,7 +16,7 @@ class PidDownCommand: Command() {
     }
 
     override fun isFinished(): Boolean {
-        return false
+        return abs(ClimbSubsystem.leftMotor.encoder.position - Constants.ClimbConstants.ARMS_DOWN_ENCODER_POSITION) <= Constants.ClimbConstants.ARMS_ENCODER_TOLERANCE
     }
 
     override fun end(Interrupted: Boolean) {

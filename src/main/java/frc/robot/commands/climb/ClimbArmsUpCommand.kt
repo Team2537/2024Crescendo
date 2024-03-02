@@ -1,5 +1,6 @@
 package frc.robot.commands
 
+import frc.robot.Constants
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.ClimbSubsystem
@@ -14,9 +15,7 @@ class ClimbArmsUpCommand : Command() {
     }
 
     override fun isFinished(): Boolean {
-        //return abs(ClimbSubsystem.leftMotor.encoder.position - 1.0) <= 0.1
-        //return abs(ClimbSubsystem.rightMotor.encoder.position - 1.0) <= 0.1
-        return false
+        return abs(ClimbSubsystem.leftMotor.encoder.position - Constants.ClimbConstants.ARMS_UP_ENCODER_POSITION) <= Constants.ClimbConstants.ARMS_ENCODER_TOLERANCE
     }
 
     override fun end(Interrupted: Boolean) {
