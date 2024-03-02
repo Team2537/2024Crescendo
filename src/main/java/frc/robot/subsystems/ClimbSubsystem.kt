@@ -13,8 +13,8 @@ object ClimbSubsystem : SubsystemBase() {
     val rightMotor = CANSparkMax(Constants.ClimbConstants.RIGHT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
 
     init{
-        leftMotor.encoder.setPositionConversionFactor(16.0/1.0)
-        rightMotor.encoder.setPositionConversionFactor(16.0/1.0)
+        leftMotor.encoder.setPositionConversionFactor(25.0/1.0)
+        rightMotor.encoder.setPositionConversionFactor(25.0/1.0)
         val driveTab: ShuffleboardTab = Shuffleboard.getTab("Climb Subsystem")
         driveTab.addNumber("Left Climb Motor Velocity",) {leftMotor.encoder.velocity}
         driveTab.addNumber("Right Climb Motor Velocity",) {rightMotor.encoder.velocity}
