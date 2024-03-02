@@ -18,6 +18,8 @@ object ClimbSubsystem : SubsystemBase() {
         val driveTab: ShuffleboardTab = Shuffleboard.getTab("Climb Subsystem")
         driveTab.addNumber("Left Climb Motor Velocity",) {leftMotor.encoder.velocity}
         driveTab.addNumber("Right Climb Motor Velocity",) {rightMotor.encoder.velocity}
+        driveTab.addNumber("Left Climb Motor Position",) {leftMotor.encoder.position}
+        driveTab.addNumber("Right Climb Motor Position",) {rightMotor.encoder.position}
     }
 
     override fun periodic() {
