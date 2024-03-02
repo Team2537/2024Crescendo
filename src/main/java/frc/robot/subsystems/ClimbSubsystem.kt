@@ -26,11 +26,13 @@ object ClimbSubsystem : SubsystemBase() {
     override fun simulationPeriodic() {
     }
 
+    // Caller must be responsible for calling stop() when the command is finished
     fun armsUp() {
         leftMotor.set(Constants.ClimbConstants.MOTOR_SPEED_UP)
         rightMotor.set(Constants.ClimbConstants.MOTOR_SPEED_UP)
     }
 
+    // Caller must be responsible for calling stop() when the command is finished
     fun armsDown() {
         leftMotor.set(Constants.ClimbConstants.MOTOR_SPEED_DOWN)
         rightMotor.set(Constants.ClimbConstants.MOTOR_SPEED_DOWN)
