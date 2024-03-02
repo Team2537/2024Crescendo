@@ -23,6 +23,7 @@ class FireCommand : Command() {
 
     override fun end(interrupted: Boolean) {
         launcherSubsystem.stop()
+        launcherSubsystem.stopRollers()
     }
 
 }

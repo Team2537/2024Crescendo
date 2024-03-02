@@ -109,10 +109,12 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun stop() {
-        setRollerMode(CANSparkBase.IdleMode.kBrake)
-
         leftLauncher.set(0.0)
-        rollerMotor.set(0.0)
+    }
+
+    fun stopRollers() {
+        setRollerMode(CANSparkBase.IdleMode.kBrake)
+        rollerMotor.stopMotor()
     }
 
     fun setRollerMode(idleMode: CANSparkBase.IdleMode){

@@ -22,6 +22,7 @@ import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.subsystems.IntakeSubsystem
 import frc.robot.subsystems.PivotSubsystem
+import frc.robot.subsystems.SwerveSubsystem
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
@@ -53,7 +54,7 @@ object RobotContainer {
             { -controller.leftY },
             { -controller.leftX },
             { -controller.rightX },
-            { !controller.hid.leftBumper },
+            { controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
 
@@ -82,7 +83,7 @@ object RobotContainer {
     val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
     val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
 
-    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.leftY }
+    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
 
 
@@ -121,17 +122,13 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.y().toggleOnTrue(absoluteDrive)
-        controller.b().onTrue(PrintCommand(System.getenv().get("serialnum")))
-//        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-//        controller.y().toggleOnTrue(absoluteDrive)
+        controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
-        controller.a().toggleOnTrue(manualPivot)
-        controller.x().onTrue(intakePivot)
-        controller.b().onTrue(launcherPivot)
-        controller.y().onTrue(ampPivot)
-        controller.rightBumper().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
+        controller.b().toggleOnTrue(manualPivot)
+        controller.pov(0).onTrue(ampPivot)
+        controller.pov(180).onTrue(launcherPivot)
+        controller.pov(90).onTrue(intakePivot)
+        controller.x().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
         controller.leftTrigger().onTrue(ReadyFireCommand())
         stateBindings()
     }

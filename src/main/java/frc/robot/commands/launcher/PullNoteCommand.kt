@@ -24,6 +24,6 @@ class PullNoteCommand : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        launcherSubsystem.stop()
+        launcherSubsystem.stopRollers()
     }
 }
