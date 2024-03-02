@@ -34,20 +34,8 @@ object Autos {
     }
 
 
-    private fun `Test Two Piece`(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Test Two Piece", true)
-    }
-
-    private fun `Test Auto`(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Auto Test", true)
-    }
-
-    private fun `X Drift Test`(): Command {
-        return SwerveSubsystem.getAutonomousCommand("X Drift", true)
-    }
-
-    private fun `Y Drift Test`(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Y Drift", true)
+    private fun midToTopNote(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Mid_To_TopNote", true)
     }
 
 
@@ -61,11 +49,8 @@ object Autos {
      */
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: Command) {
-        EXAMPLE_PATH("Example Path", examplePath()),
-        AMP_S_2P("Amp Side Two Piece", `Test Two Piece`()),
-        TEST_AUTO("Test Auto", `Test Auto`()),
-        X_DRIFT("X Drift Test", `X Drift Test`()),
-        Y_DRIFT("Y Drift Test", `Y Drift Test`())
+        MID_TO_TOPNOTE("Mid to Top Note", midToTopNote()),
+        EXAMPLE_PATH("Example Path", examplePath())
         ;
 
         companion object {

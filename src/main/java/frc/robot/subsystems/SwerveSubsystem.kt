@@ -16,16 +16,19 @@ import edu.wpi.first.math.util.Units
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.networktables.StructArrayPublisher
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.DriverStation.Alliance
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
+import lib.flip
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.nio.file.Path
+import java.util.*
 
 /**
  * The subsystem that controls the swerve drive.
@@ -47,10 +50,10 @@ object SwerveSubsystem : SubsystemBase() {
 
     init {
 
-        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.LOW
+        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH
 
         try {
-            swerveDrive = SwerveParser(Constants.FileConstants.BOUNTY_CONFIG).createSwerveDrive(maximumSpeed)
+            swerveDrive = SwerveParser(Constants.FileConstants.CRESCENDO_CONFIG).createSwerveDrive(maximumSpeed)
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("Error creating swerve drive", e)
@@ -107,7 +110,11 @@ object SwerveSubsystem : SubsystemBase() {
         autoName: String,
         setOdomAtStart: Boolean,
     ): Command {
-        val path: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
+        var path: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
+
+        if(DriverStation.getAlliance() == Optional.of(Alliance.Red)){
+            path = path.flip()
+        }
 
         if (setOdomAtStart)
             {

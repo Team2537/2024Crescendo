@@ -1,21 +1,32 @@
 package frc.robot
 
+import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
+import edu.wpi.first.hal.simulation.RoboRioDataJNI
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
+import frc.robot.commands.climb.ManualClimbCommand
+import frc.robot.commands.intake.FeedLauncherCommand
+import frc.robot.commands.intake.ManualIntakeCommand
+import frc.robot.commands.intake.ToggleIntakeCommand
+import frc.robot.commands.launcher.*
+import frc.robot.commands.pivot.ManualPivotCommand
+import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
-import frc.robot.commands.vision.TrackTargetCommand
-import frc.robot.subsystems.LimelightSubsystem
+import frc.robot.subsystems.IntakeSubsystem
+import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
+//import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
-import kotlin.math.abs
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,6 +43,8 @@ object RobotContainer {
     // Testing pre-commit
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
+
+
 
 //    val trackTarget = TrackTargetCommand()
 
@@ -60,24 +73,45 @@ object RobotContainer {
         { -controller.rightY }
     )
 
+    val manualIntake: ManualIntakeCommand = ManualIntakeCommand(
+        { -controller.rightTriggerAxis },
+        { controller.leftTriggerAxis }
+    )
+
+    val pullNoteCommand: PullNoteCommand = PullNoteCommand()
+
+    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION)
+    val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
+    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
+
+//    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
+
+    val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
+
+
+
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
         initializeObjects()
-
         configureBindings()
 
         SwerveSubsystem.defaultCommand = teleopDrive
+
     }
 
     /**
      * Use to eager initialize objects
      */
     private fun initializeObjects() {
-        SwerveSubsystem
+        Autos
+//        SwerveSubsystem
         Autos
 //        LimelightSubsystem
         DriverProfile
+        PivotSubsystem
+        LauncherSubsystem
+        IntakeSubsystem
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -90,8 +124,25 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.a().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.y().toggleOnTrue(absoluteDrive)
+        controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
+        controller.b().toggleOnTrue(manualClimb)
+        controller.pov(0).onTrue(ampPivot)
+        controller.pov(180).onTrue(launcherPivot)
+        controller.pov(90).onTrue(intakePivot)
+        controller.x().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
+        controller.leftTrigger().onTrue(ReadyFireCommand())
+        stateBindings()
+    }
+
+
+    private fun stateBindings(){
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.EMPTY)
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.STORED).whileTrue(IntakeCommand())
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.PRIMED).whileTrue(PrimeLauncherCommand())
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.AT_SPEED)
+            .and(controller.leftTrigger()).onTrue(ReadyFireCommand())
+        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.FIRING).whileTrue(FireCommand().alongWith(FeedLauncherCommand()))
     }
 
     private fun addNamedCommands() {

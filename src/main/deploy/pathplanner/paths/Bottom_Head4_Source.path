@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0,
-        "y": 7.0
+        "x": 0.6456678440422406,
+        "y": 4.3385312981452175
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.881966011250105,
-        "y": 7.0
+        "x": 1.6456678440422403,
+        "y": 4.3385312981452175
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 5.112834841054298,
+        "y": 0.8185908109707958
       },
       "prevControl": {
-        "x": 3.346628640997336,
-        "y": 7.000326399703702
+        "x": 4.112834841054298,
+        "y": 0.8185908109707958
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.7,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,7 +43,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Drift Test Paths",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "Launch_Source",
+  "previewStartingState": {
+    "rotation": -60.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }
