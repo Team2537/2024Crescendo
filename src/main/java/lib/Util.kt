@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import com.revrobotics.CANSparkMax
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
@@ -92,4 +93,8 @@ fun InterpolatingDoubleTreeMap.putMap(map: HashMap<Double, Double>){
  */
 fun CANSparkBase.setPosition(pos: Double) {
     this.pidController.setReference(pos, CANSparkBase.ControlType.kPosition)
+}
+
+fun Translation2d.flip(): Translation2d {
+    return Translation2d(16.54 - this.x, this.y)
 }

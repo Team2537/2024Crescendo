@@ -101,4 +101,9 @@ object Constants {
         const val INTAKE_MOTOR_ID: Int = 20 //TODO: Update this
         const val TRANSFER_MOTOR_ID: Int = 17 //TODO: Update this
     }
+
+    object ClimbConstants {
+        const val LEFT_ARM_ID: Int = 15
+        const val RIGHT_ARM_ID: Int = 18
+    }
 }

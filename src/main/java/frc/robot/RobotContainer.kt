@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
+import frc.robot.commands.climb.ManualClimbCommand
 import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
@@ -83,7 +84,9 @@ object RobotContainer {
     val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
     val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
 
-    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
+//    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
+
+    val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
 
 
 
@@ -91,7 +94,6 @@ object RobotContainer {
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
         initializeObjects()
-
         configureBindings()
 
         SwerveSubsystem.defaultCommand = teleopDrive
@@ -124,7 +126,7 @@ object RobotContainer {
     private fun configureBindings() {
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
-        controller.b().toggleOnTrue(manualPivot)
+        controller.b().toggleOnTrue(manualClimb)
         controller.pov(0).onTrue(ampPivot)
         controller.pov(180).onTrue(launcherPivot)
         controller.pov(90).onTrue(intakePivot)
