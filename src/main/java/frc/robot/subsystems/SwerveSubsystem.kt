@@ -61,12 +61,18 @@ object SwerveSubsystem : SubsystemBase() {
         }
 
         swerveDrive.setHeadingCorrection(false)
+//        swerveDrive.setCosineCompensator(false)
 
         setMotorBrake(true)
 
         configurePathPlanner()
 
         tab.addDouble("Heading") { getHeading().degrees }
+
+        tab.addDouble("Front Left Velocity") { Math.abs(swerveDrive.modules[0].driveMotor.velocity) }
+        tab.addDouble("Front Right Velocity") { Math.abs(swerveDrive.modules[1].driveMotor.velocity) }
+        tab.addDouble("Back Left Velocity") { Math.abs(swerveDrive.modules[2].driveMotor.velocity) }
+        tab.addDouble("Back Right Velocity") { Math.abs(swerveDrive.modules[3].driveMotor.velocity) }
     }
 
     /**

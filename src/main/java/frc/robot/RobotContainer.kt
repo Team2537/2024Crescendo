@@ -2,21 +2,15 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
-import edu.wpi.first.hal.simulation.RoboRioDataJNI
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
-import frc.robot.commands.climb.ManualClimbCommand
 import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
-import frc.robot.commands.pivot.ManualPivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
@@ -86,8 +80,6 @@ object RobotContainer {
 
 //    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
-    val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
-
 
 
 
@@ -125,8 +117,7 @@ object RobotContainer {
      */
     private fun configureBindings() {
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.leftBumper().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
-        controller.b().toggleOnTrue(manualClimb)
+        controller.y().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
         controller.pov(0).onTrue(ampPivot)
         controller.pov(180).onTrue(launcherPivot)
         controller.pov(90).onTrue(intakePivot)
