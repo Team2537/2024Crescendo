@@ -61,9 +61,9 @@ inline fun <reified T> Json.encodeToString(data: T): String {
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
-    return zoneTrigger(Zones[tag], position)
-}
+//inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
+//    return zoneTrigger(Zones[tag], position)
+//}
 
 /**
  * Returns a trigger that is `true` while the position is inside the zone, and
@@ -71,9 +71,9 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
-    return Trigger { Zones[position.invoke()] == zone }
-}
+//inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
+//    return Trigger { Zones[position.invoke()] == zone }
+//}
 
 fun Double.near(target: Double, error: Double): Boolean{
     return abs(this - target) < error
@@ -97,4 +97,9 @@ fun CANSparkBase.setPosition(pos: Double) {
 
 fun Translation2d.flip(): Translation2d {
     return Translation2d(16.54 - this.x, this.y)
+}
+
+fun CANSparkBase.setLoopRampRate(rate: Double){
+    this.setOpenLoopRampRate(rate)
+    this.setClosedLoopRampRate(rate)
 }
