@@ -1,13 +1,16 @@
 package frc.robot
 
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
 import lib.math.units.RotationVelocity
 import lib.math.units.rpm
+import lib.swerve.ModulePID
 import swervelib.math.Matter
 import swervelib.parser.PIDFConfig
 import java.io.File
+import lib.swerve.SwerveModule
 
 /*
  * The Constants file provides a convenient place for teams to hold robot-wide
@@ -40,6 +43,57 @@ object Constants {
     object Drivebase {
         // Hold time on motor brakes when disabled
         const val WHEEL_LOCK_TIME = 10.0 // seconds
+
+        // Swerve Module Constants
+        val MODULE_PID: ModulePID = ModulePID(
+            0.0020645, 0.0, 0.0, 0.0, 0.0,
+            0.01, 0.0, 0.0, 0.0, 0.0
+        )
+
+        val frontLeftModule: SwerveModule = SwerveModule(
+            1,
+            2,
+            3,
+            Translation2d(Units.inchesToMeters(9.804), Units.inchesToMeters(9.804)),
+            48.603515625,
+            true,
+            true,
+            MODULE_PID
+        )
+
+        val frontRightModule: SwerveModule = SwerveModule(
+            4,
+            5,
+            6,
+            Translation2d(Units.inchesToMeters(9.804), Units.inchesToMeters(-9.804)),
+            217.265625,
+            true,
+            true,
+            MODULE_PID
+        )
+
+        val backLeftModule: SwerveModule = SwerveModule(
+            7,
+            8,
+            9,
+            Translation2d(Units.inchesToMeters(-9.804), Units.inchesToMeters(9.804)),
+            319.658203125,
+            true,
+            true,
+            MODULE_PID
+        )
+
+        val backRightModule: SwerveModule = SwerveModule(
+            10,
+            11,
+            12,
+            Translation2d(Units.inchesToMeters(-9.804), Units.inchesToMeters(-9.804)),
+            90.17578125,
+            true,
+            true,
+            MODULE_PID
+        )
+
     }
 
     object IOConstants {

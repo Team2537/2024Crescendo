@@ -7,17 +7,15 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.RelativeEncoder
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.units.Units
-import lib.math.units.Rotation
 import lib.math.units.Span
 import lib.math.units.into
 import lib.setLoopRampRate
 import lib.setPosition
 import lib.setVelocity
 
-class Module {
+class SwerveModule {
     val driveMotor: CANSparkMax
     val angleMotor: CANSparkMax
     val angleEncoder: RelativeEncoder
@@ -146,6 +144,13 @@ class Module {
         val state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(getAngle()))
         driveMotor.setVelocity(state.speedMetersPerSecond)
         setAngle(state.angle.degrees)
+    }
+
+    fun getState(): SwerveModuleState {
+        return SwerveModuleState(
+            driveEncoder.velocity,
+            Rotation2d.fromDegrees(getAngle())
+        )
     }
 
 
