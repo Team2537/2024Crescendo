@@ -76,12 +76,18 @@ class Module {
         driveMotor.enableVoltageCompensation(12.0)
         angleMotor.enableVoltageCompensation(12.0)
 
-        driveMotor.burnFlash()
-        angleMotor.burnFlash()
+
 
         // Configure Encoders
         absoluteEncoder.setPosition(absoluteEncoder.absolutePosition.valueAsDouble - offset)
         angleEncoder.setPosition(getAbsolutePosition())
+
+        // Might need reciprocals? this stuff is funky
+        driveEncoder.positionConversionFactor = 0.047286787200699704
+        angleEncoder.positionConversionFactor = 16.8
+
+        driveMotor.burnFlash()
+        angleMotor.burnFlash()
     }
 
     constructor(
