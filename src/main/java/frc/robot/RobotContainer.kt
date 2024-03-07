@@ -2,6 +2,7 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -11,9 +12,12 @@ import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
+import frc.robot.commands.pivot.HoldPositionCommand
+import frc.robot.commands.pivot.ManualPivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.AbsoluteDriveCommand
 import frc.robot.commands.swerve.CornerSpinCommand
+import frc.robot.commands.swerve.DriftTestCommand
 import frc.robot.commands.swerve.TeleopDriveCommand
 import frc.robot.subsystems.IntakeSubsystem
 import frc.robot.subsystems.PivotSubsystem
@@ -46,9 +50,9 @@ object RobotContainer {
     //     No, uninverting both doesn't fix it :(
     val teleopDrive: TeleopDriveCommand =
         TeleopDriveCommand(
-            { -controller.leftY },
-            { -controller.leftX },
-            { -controller.rightX },
+            { MathUtil.applyDeadband(-controller.leftY, 0.1) },
+            { MathUtil.applyDeadband(-controller.leftX, 0.1) },
+            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
             { controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
@@ -78,7 +82,7 @@ object RobotContainer {
     val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
     val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
 
-//    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
+    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
 
 
@@ -121,8 +125,10 @@ object RobotContainer {
         controller.pov(0).onTrue(ampPivot)
         controller.pov(180).onTrue(launcherPivot)
         controller.pov(90).onTrue(intakePivot)
+        controller.pov(270).toggleOnTrue(HoldPositionCommand())
         controller.x().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
         controller.leftTrigger().onTrue(ReadyFireCommand())
+        controller.b().toggleOnTrue(manualPivot)
         stateBindings()
     }
 

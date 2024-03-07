@@ -55,6 +55,7 @@ object LauncherSubsystem : SubsystemBase() {
         tab.addBoolean("Note Detector") { noteDetector.asBoolean }
         tab.addString("State") { state.toString() }
         tab.addDouble("Timer") { noteTimer.get() }
+        tab.addBoolean("Fire") { fire }
     }
 
 

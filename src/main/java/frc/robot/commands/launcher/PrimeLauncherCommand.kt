@@ -17,6 +17,11 @@ class PrimeLauncherCommand : Command() {
     }
 
     override fun isFinished(): Boolean {
-        return false
+        return launcherSubsystem.state == LauncherSubsystem.State.AT_SPEED
+    }
+
+    override fun end(interrupted: Boolean)
+    {
+        println("Ending")
     }
 }
