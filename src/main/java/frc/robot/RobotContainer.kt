@@ -15,10 +15,7 @@ import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.HoldPositionCommand
 import frc.robot.commands.pivot.ManualPivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
-import frc.robot.commands.swerve.AbsoluteDriveCommand
-import frc.robot.commands.swerve.CornerSpinCommand
-import frc.robot.commands.swerve.DriftTestCommand
-import frc.robot.commands.swerve.TeleopDriveCommand
+import frc.robot.commands.swerve.*
 import frc.robot.subsystems.IntakeSubsystem
 import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
@@ -52,6 +49,15 @@ object RobotContainer {
         TeleopDriveCommand(
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
             { MathUtil.applyDeadband(-controller.leftX, 0.1) },
+            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
+            { controller.hid.leftBumper },
+            { controller.hid.rightBumper },
+        )
+
+    val correctedDrive: CorrectedDriveCommand =
+        CorrectedDriveCommand(
+            { MathUtil.applyDeadband(-controller.leftY, 0.1) },
+            { MathUtil.applyDeadband(-0.0, 0.1) },
             { MathUtil.applyDeadband(-controller.rightX, 0.1)},
             { controller.hid.leftBumper },
             { controller.hid.rightBumper },
@@ -121,6 +127,7 @@ object RobotContainer {
      */
     private fun configureBindings() {
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        controller.rightStick().toggleOnTrue(correctedDrive)
         controller.y().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
         controller.pov(0).onTrue(ampPivot)
         controller.pov(180).onTrue(launcherPivot)
@@ -128,7 +135,8 @@ object RobotContainer {
         controller.pov(270).toggleOnTrue(HoldPositionCommand())
         controller.x().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
         controller.leftTrigger().onTrue(ReadyFireCommand())
-        controller.b().toggleOnTrue(manualPivot)
+//        controller.b().toggleOnTrue(manualPivot)
+        controller.b().onTrue(DriftTestCommand(2.0, 1.0))
         stateBindings()
     }
 

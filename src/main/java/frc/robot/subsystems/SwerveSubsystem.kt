@@ -6,6 +6,7 @@ import com.pathplanner.lib.path.PathPlannerPath
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
+import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
@@ -46,6 +47,8 @@ object SwerveSubsystem : SubsystemBase() {
     var swerveStates: StructArrayPublisher<SwerveModuleState> = NetworkTableInstance.getDefault().
         getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
 
+    val HeadingPID: PIDController = PIDController(0.005, 0.01, 0.0)
+
 
 
     init {
@@ -60,7 +63,10 @@ object SwerveSubsystem : SubsystemBase() {
             throw RuntimeException("Error creating swerve drive", e)
         }
 
-        swerveDrive.setHeadingCorrection(false)
+        swerveDrive.setHeadingCorrection(true)
+        swerveDrive.modules.forEach {
+            it.setAntiJitter(false)
+        }
 //        swerveDrive.setCosineCompensator(false)
 
         setMotorBrake(true)
@@ -73,6 +79,11 @@ object SwerveSubsystem : SubsystemBase() {
         tab.addDouble("Front Right Velocity") { Math.abs(swerveDrive.modules[1].driveMotor.velocity) }
         tab.addDouble("Back Left Velocity") { Math.abs(swerveDrive.modules[2].driveMotor.velocity) }
         tab.addDouble("Back Right Velocity") { Math.abs(swerveDrive.modules[3].driveMotor.velocity) }
+
+        tab.addDouble("Front Left Voltage") { Math.abs(swerveDrive.modules[0].driveMotor.voltage) }
+        tab.addDouble("Front Right Voltage") { Math.abs(swerveDrive.modules[1].driveMotor.voltage) }
+        tab.addDouble("Back Left Voltage") { Math.abs(swerveDrive.modules[2].driveMotor.voltage) }
+        tab.addDouble("Back Right Voltage") { Math.abs(swerveDrive.modules[3].driveMotor.voltage)}
     }
 
     /**
@@ -103,6 +114,10 @@ object SwerveSubsystem : SubsystemBase() {
             this
 
         )
+    }
+
+    fun calculateHeadingPID(measurement: Double, setpoint: Double): Double {
+        return HeadingPID.calculate(measurement, setpoint)
     }
 
 
