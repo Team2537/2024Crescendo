@@ -77,7 +77,7 @@ object LauncherSubsystem : SubsystemBase() {
     private fun configurePID() {
         rollerPID.p = Constants.LauncherConstants.ROLLER_P
         rollerPID.i = Constants.LauncherConstants.ROLLER_I
-        rollerPID.d = 0.0
+        rollerPID.d = 0.01
 
         rollerPID.setSmartMotionAccelStrategy(SparkPIDController.AccelStrategy.kTrapezoidal, 0)
         rollerPID.setSmartMotionMaxVelocity(240.0, 0)
@@ -123,7 +123,7 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun intake(){
-        storePosition = getRollerPosition()
+        storePosition = getRollerPosition() // + 0.005
         rollerPID.setReference(storePosition, CANSparkBase.ControlType.kSmartMotion)
     }
 
