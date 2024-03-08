@@ -20,7 +20,7 @@ class IntakeCommand : Command() {
 
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(1.0)
+        return timer.hasElapsed(0.5)
     }
 
     override fun end(interrupted: Boolean) {

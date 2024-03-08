@@ -24,7 +24,7 @@ object LauncherSubsystem : SubsystemBase() {
 
     private val rollerPID: SparkPIDController = rollerMotor.pidController
 
-    private val noteDetector: Trigger
+    private var noteDetector: Trigger
 
     private val noteTimer: Timer = Timer()
     private val storedTimer: Timer = Timer()
@@ -123,7 +123,7 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun intake(){
-        storePosition = getRollerPosition() + 0.1
+        storePosition = getRollerPosition()
         rollerPID.setReference(storePosition, CANSparkBase.ControlType.kSmartMotion)
     }
 

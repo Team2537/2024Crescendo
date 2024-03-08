@@ -37,7 +37,7 @@ class QuickPivotCommand(target: Double) : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-//        val hold = HoldTargetCommand(target)
-//        hold.schedule()
+        val hold = HoldTargetCommand(target)
+        hold.schedule()
     }
 }

@@ -1,5 +1,7 @@
 package frc.robot
 
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
@@ -89,12 +91,13 @@ object Constants {
         const val kD = 0.0
 
         val distanceMap: HashMap<Double, Double> = hashMapOf(
-            1.0 to 54.0
+            0.0 to 85.0,
+            0.633 to 69.0,
         )
 
         const val SUBWOOFER_POSITION = 80.0
         const val AMP_POSITION = 0.5
-        const val INTAKE_POSITION = 69.0
+        const val INTAKE_POSITION = 66.0
     }
 
     object IntakeConstants {
@@ -110,5 +113,9 @@ object Constants {
         const val ARMS_UP_ENCODER_POSITION = 1.0
         const val ARMS_DOWN_ENCODER_POSITION = 0.0
         const val ARMS_ENCODER_TOLERANCE = 0.1
+    }
+
+    object FIELD_LOCATIONS {
+        val SUBWOOFER_POSE = Pose2d(1.38, 5.55, Rotation2d.fromDegrees(0.0))
     }
 }

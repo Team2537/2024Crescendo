@@ -2,7 +2,11 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
+import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -12,6 +16,7 @@ import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
+import frc.robot.commands.pivot.AutoAimCommand
 import frc.robot.commands.pivot.HoldPositionCommand
 import frc.robot.commands.pivot.ManualPivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
@@ -21,6 +26,7 @@ import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
+import lib.flip
 import lib.profiles.DriverProfile
 
 /**
@@ -50,7 +56,7 @@ object RobotContainer {
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
             { MathUtil.applyDeadband(-controller.leftX, 0.1) },
             { MathUtil.applyDeadband(-controller.rightX, 0.1)},
-            { controller.hid.leftBumper },
+            { !controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
 
@@ -87,6 +93,7 @@ object RobotContainer {
     val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION)
     val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
     val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
+    val testPivot: QuickPivotCommand = QuickPivotCommand(68.0)
 
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
@@ -127,7 +134,7 @@ object RobotContainer {
      */
     private fun configureBindings() {
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.rightStick().toggleOnTrue(correctedDrive)
+//        controller.rightStick().toggleOnTrue(correctedDrive)
         controller.y().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
         controller.pov(0).onTrue(ampPivot)
         controller.pov(180).onTrue(launcherPivot)
@@ -135,8 +142,19 @@ object RobotContainer {
         controller.pov(270).toggleOnTrue(HoldPositionCommand())
         controller.x().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
         controller.leftTrigger().onTrue(ReadyFireCommand())
-//        controller.b().toggleOnTrue(manualPivot)
-        controller.b().onTrue(DriftTestCommand(2.0, 1.0))
+        controller.a().toggleOnTrue(testPivot)
+        controller.b().toggleOnTrue(manualPivot)
+        controller.rightStick().onTrue(Commands.runOnce({
+            SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
+        }))
+        controller.rightTrigger().onTrue(AutoAimCommand())
+//        controller.a().onTrue(Commands.runOnce(
+//            {
+//                val pose = GeometryUtil.flipFieldPose(SwerveSubsystem.getPose())
+//                SwerveSubsystem.resetOdometry(pose)
+//            }
+//        ))
+//        controller.b().onTrue(DriftTestCommand(2.0, 1.0))
         stateBindings()
     }
 
