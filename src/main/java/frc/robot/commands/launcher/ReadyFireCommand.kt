@@ -12,9 +12,17 @@ class ReadyFireCommand : Command() {
         addRequirements(launcherSubsystem)
     }
 
+    override fun initialize()
+    {
+        launcherSubsystem.fire = true
+    }
+
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
-        launcherSubsystem.fire = true
-        return false
+        return true
+    }
+
+    override fun end(interrupted: Boolean) {
+        println("Firing the Launcher!")
     }
 }

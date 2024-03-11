@@ -4,6 +4,7 @@ import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
@@ -18,6 +19,7 @@ object PivotSubsystem : SubsystemBase() {
     val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(PivotConstants.ABSOLUTE_ENCODER_PORT)
     val relativeEncoder: RelativeEncoder = pivotMotor.encoder
     val pivotPID: SparkPIDController = pivotMotor.pidController
+    val homingSensor: DigitalInput = DigitalInput(PivotConstants.HOMING_SENSOR_PORT)
 
     val tab: ShuffleboardTab = Shuffleboard.getTab("Pivot")
 
@@ -47,6 +49,7 @@ object PivotSubsystem : SubsystemBase() {
         tab.addDouble("Absolute Position") { absoluteEncoder.absolutePosition }
         tab.addDouble("Relative Position") { getRelativePosition() }
         tab.addDouble("Voltage Sent") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
+        tab.addBoolean("Homing Sensor") { getHomingSensor() }
 
         zeroEncoder()
 
@@ -70,6 +73,8 @@ object PivotSubsystem : SubsystemBase() {
     fun syncRelative(){
         relativeEncoder.setPosition(getAbsolutePosition())
     }
+
+    fun getHomingSensor() = homingSensor.get()
 
     fun zeroEncoder() {
         relativeEncoder.setPosition(0.0)

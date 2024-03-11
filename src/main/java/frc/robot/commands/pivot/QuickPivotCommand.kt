@@ -3,16 +3,18 @@ package frc.robot.commands.pivot
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.PivotSubsystem
 
-class QuickPivotCommand(target: Double) : Command() {
+class QuickPivotCommand(target: Double, auto: Boolean) : Command() {
     private val pivotSubsystem = PivotSubsystem
     private val target: Double
     private var direction: Boolean = false
+    private val auto: Boolean
 
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(pivotSubsystem)
         this.target = target
+        this.auto = auto
     }
 
     override fun initialize() {
@@ -37,7 +39,11 @@ class QuickPivotCommand(target: Double) : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        val hold = HoldTargetCommand(target)
-        hold.schedule()
+        if (!this.auto) {
+            val hold = HoldTargetCommand(target)
+            hold.schedule()
+        } else {
+            pivotSubsystem.pivotMotor.set(0.0)
+        }
     }
 }

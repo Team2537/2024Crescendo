@@ -3,6 +3,7 @@ package frc.robot.subsystems
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
 import com.pathplanner.lib.path.PathPlannerPath
+import com.pathplanner.lib.util.GeometryUtil
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
@@ -23,12 +24,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
-import lib.flip
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
-import java.nio.file.Path
 import java.util.*
 
 /**
@@ -48,6 +47,9 @@ object SwerveSubsystem : SubsystemBase() {
         getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
 
     val HeadingPID: PIDController = PIDController(0.005, 0.01, 0.0)
+
+    /** True is field oriented driving */
+    var fieldOriented: Boolean = true
 
 
 
@@ -98,11 +100,14 @@ object SwerveSubsystem : SubsystemBase() {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             HolonomicPathFollowerConfig(
-                PIDConstants(10.0, 0.0, 0.0),
+                PIDConstants(5.0, 0.0, 1.0),
                 PIDConstants(10.0, 0.0, 0.0),
                 2.7,
                 swerveDrive.swerveDriveConfiguration.driveBaseRadiusMeters,
-                ReplanningConfig()
+                ReplanningConfig(
+                    true,
+                    true,
+                )
             ),
             {
                 if (DriverStation.getAlliance().isPresent){
@@ -131,15 +136,17 @@ object SwerveSubsystem : SubsystemBase() {
         autoName: String,
         setOdomAtStart: Boolean,
     ): Command {
-        var path: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
+        var startPosition: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
+        var pose: Pose2d = Pose2d(startPosition, getHeading())
+
 
         if(DriverStation.getAlliance() == Optional.of(Alliance.Red)){
-            path = path.flip()
+            pose = GeometryUtil.flipFieldPose(pose)
         }
 
         if (setOdomAtStart)
             {
-                resetOdometry(Pose2d(path, getHeading()))
+                resetOdometry(pose)
             }
 
         // TODO: Configure path planner's AutoBuilder
@@ -309,5 +316,9 @@ object SwerveSubsystem : SubsystemBase() {
 
     override fun periodic() {
         swerveStates.set(swerveDrive.states)
+    }
+
+    fun toggleFieldOriented() {
+        fieldOriented = !fieldOriented
     }
 }

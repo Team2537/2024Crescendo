@@ -19,7 +19,7 @@ import java.io.File
  */
 
 object Constants {
-    const val ROBOT_MASS = (148 - 20.3) * 0.453592 // 32lbs * kg per pound
+    val ROBOT_MASS = Units.lbsToKilograms(148.0)
     val CHASSIS = Matter(Translation3d(0.0, 0.0, Units.inchesToMeters(8.0)), ROBOT_MASS)
     const val LOOP_TIME = 0.13 // s, 20ms + 110ms spark max velocity lag
 
@@ -29,6 +29,9 @@ object Constants {
     object OperatorConstants {
         const val LEFT_X_DEADBAND = 0.01
         const val LEFT_Y_DEADBAND = 0.01
+
+        const val BACK_BUTTON = 7
+        const val START_BUTTON = 8
     }
 
     object Auto {
@@ -74,6 +77,7 @@ object Constants {
 
         const val ABSOLUTE_ENCODER_PORT = 1
         const val PIVOT_MOTOR_PORT = 16
+        const val HOMING_SENSOR_PORT = 2
 
 
 
@@ -108,11 +112,12 @@ object Constants {
     object ClimbConstants {
         const val MOTOR_SPEED_UP = 0.3
         const val MOTOR_SPEED_DOWN = -0.3
-        const val LEFT_CLIMB_PORT = 1 // placeholder value, replace with actual port
-        const val RIGHT_CLIMB_PORT = 5 // placeholder value, replace with actual port
-        const val ARMS_UP_ENCODER_POSITION = 1.0
+        const val LEFT_CLIMB_PORT = 18 // placeholder value, replace with actual port
+        const val RIGHT_CLIMB_PORT = 15 // placeholder value, replace with actual port
+        const val ARMS_UP_ENCODER_POSITION = 0.0
         const val ARMS_DOWN_ENCODER_POSITION = 0.0
         const val ARMS_ENCODER_TOLERANCE = 0.1
+        const val START_POSITION = 7
     }
 
     object FIELD_LOCATIONS {

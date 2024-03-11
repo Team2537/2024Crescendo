@@ -2,31 +2,29 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
-import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.MathUtil
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
+import frc.robot.commands.ClimbArmsUpCommand
+import frc.robot.commands.climb.ClimbToTargetCommand
+import frc.robot.commands.climb.ManualClimbCommand
 import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
-import frc.robot.commands.pivot.AutoAimCommand
-import frc.robot.commands.pivot.HoldPositionCommand
+import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.ManualPivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.swerve.*
+import frc.robot.subsystems.ClimbSubsystem
 import frc.robot.subsystems.IntakeSubsystem
 import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
-import lib.flip
 import lib.profiles.DriverProfile
 
 /**
@@ -56,8 +54,7 @@ object RobotContainer {
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
             { MathUtil.applyDeadband(-controller.leftX, 0.1) },
             { MathUtil.applyDeadband(-controller.rightX, 0.1)},
-            { !controller.hid.leftBumper },
-            { controller.hid.rightBumper },
+            { controller.rightTriggerAxis },
         )
 
     val correctedDrive: CorrectedDriveCommand =
@@ -90,12 +87,15 @@ object RobotContainer {
 
     val pullNoteCommand: PullNoteCommand = PullNoteCommand()
 
-    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION)
-    val launcherPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
-    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
-    val testPivot: QuickPivotCommand = QuickPivotCommand(68.0)
+    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false)
+    val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false)
+    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false)
+    val testPivot: QuickPivotCommand = QuickPivotCommand(68.0, false)
 
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
+
+    val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
+    val climbCommand: ClimbToTargetCommand = ClimbToTargetCommand(7.0)
 
 
 
@@ -121,6 +121,7 @@ object RobotContainer {
         PivotSubsystem
         LauncherSubsystem
         IntakeSubsystem
+        ClimbSubsystem
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -133,28 +134,21 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
+        controller.leftBumper().toggleOnTrue(ToggleIntakeCommand())
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-//        controller.rightStick().toggleOnTrue(correctedDrive)
-        controller.y().onTrue(InstantCommand(PivotSubsystem::zeroEncoder))
-        controller.pov(0).onTrue(ampPivot)
-        controller.pov(180).onTrue(launcherPivot)
-        controller.pov(90).onTrue(intakePivot)
-        controller.pov(270).toggleOnTrue(HoldPositionCommand())
-        controller.x().toggleOnTrue(ToggleIntakeCommand().alongWith(pullNoteCommand))
-        controller.leftTrigger().onTrue(ReadyFireCommand())
-        controller.a().toggleOnTrue(testPivot)
+        controller.povUp().onTrue(ampPivot)
+        controller.povRight().onTrue(intakePivot)
+        controller.povDown().onTrue(subwooferPivot)
+        controller.povLeft().onTrue(PrintCommand("Auto Aiming Someday")) // TODO: Implement auto-aiming
+        controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
-        controller.rightStick().onTrue(Commands.runOnce({
-            SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
-        }))
-        controller.rightTrigger().onTrue(AutoAimCommand())
-//        controller.a().onTrue(Commands.runOnce(
-//            {
-//                val pose = GeometryUtil.flipFieldPose(SwerveSubsystem.getPose())
-//                SwerveSubsystem.resetOdometry(pose)
-//            }
-//        ))
-//        controller.b().onTrue(DriftTestCommand(2.0, 1.0))
+        controller.x().onTrue(climbCommand)
+        controller.rightBumper().toggleOnTrue(manualClimb)
+        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
+        controller.button(Constants.OperatorConstants.BACK_BUTTON)
+            .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
+        controller.button(Constants.OperatorConstants.START_BUTTON)
+            .onTrue(IntakeCommand())
         stateBindings()
     }
 
@@ -166,10 +160,5 @@ object RobotContainer {
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.AT_SPEED)
             .and(controller.leftTrigger()).onTrue(ReadyFireCommand())
         LauncherSubsystem.triggerFactory(LauncherSubsystem.State.FIRING).whileTrue(FireCommand().alongWith(FeedLauncherCommand()))
-    }
-
-    private fun addNamedCommands() {
-        NamedCommands.registerCommand("Intake", PrintCommand("Intake"))
-        NamedCommands.registerCommand("Launch", PrintCommand("Launch"))
     }
 }

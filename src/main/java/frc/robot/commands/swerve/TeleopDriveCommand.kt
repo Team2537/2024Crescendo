@@ -24,14 +24,12 @@ class TeleopDriveCommand(
     vForward: DoubleSupplier,
     vStrafe: DoubleSupplier,
     omega: DoubleSupplier,
-    driveMode: BooleanSupplier,
-    slowMode: BooleanSupplier,
+    slowMode: DoubleSupplier
 ) : Command() {
     private val vForward: DoubleSupplier
     private val vStrafe: DoubleSupplier
     private val omega: DoubleSupplier
-    private val driveMode: BooleanSupplier
-    private val slowMode: BooleanSupplier
+    private val slowMode: DoubleSupplier
     private val controller: SwerveController
     private val swerve: SwerveSubsystem
 
@@ -40,7 +38,6 @@ class TeleopDriveCommand(
         this.vForward = vForward
         this.vStrafe = vStrafe
         this.omega = omega
-        this.driveMode = driveMode
         this.slowMode = slowMode
         controller = swerve.getSwerveController()
         // Use addRequirements() here to declare subsystem dependencies.
@@ -55,22 +52,23 @@ class TeleopDriveCommand(
         var forwardVelocity = vForward.asDouble
         var strafeVelocity = vStrafe.asDouble
         var angVelocity = omega.asDouble
-        val slowMode = slowMode.asBoolean
+        var slowMode = slowMode.asDouble
         SmartDashboard.putNumber("vX", forwardVelocity)
         SmartDashboard.putNumber("vY", strafeVelocity)
         SmartDashboard.putNumber("omega", angVelocity)
 
-        if (slowMode) {
-            forwardVelocity *= 0.3
-            strafeVelocity *= 0.3
-            angVelocity *= 0.3
-        }
+        var slowModeMultiplier: Double = (-0.8 * slowMode) + 1.0
+
+        forwardVelocity *= slowModeMultiplier
+        strafeVelocity *= slowModeMultiplier
+        angVelocity *= slowModeMultiplier
+
 
         // Drive using raw values.
         swerve.drive(
             Translation2d(forwardVelocity * swerve.maximumSpeed, strafeVelocity * swerve.maximumSpeed),
             angVelocity * controller.config.maxAngularVelocity,
-            driveMode.asBoolean,
+            swerve.fieldOriented,
         )
     }
 
