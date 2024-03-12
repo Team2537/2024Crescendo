@@ -58,16 +58,12 @@ object Constants {
     }
 
     object LauncherConstants {
-        const val LEFT_LAUNCHER_PORT = 22
-        const val RIGHT_LAUNCHER_PORT = 23
+        const val TOP_FLYWHEELS = 0
+        const val BOTTOM_FLYWHEELS = 0
+        const val ROLLER_MOTOR = 0
 
-        const val ROLLER_MOTOR_PORT = 14
-        const val ROLLER_P = 0.0001
-        const val ROLLER_I = 0.000001
-
-        const val INFRARED_SENSOR = 0
-
-        val MINIMUM_VELOCITY: RotationVelocity = 6000.0.rpm
+        const val LEFT_NOTE_DETECTOR = 0
+        const val RIGHT_NOTE_DETECTOR = 0
     }
 
     object PivotConstants {
