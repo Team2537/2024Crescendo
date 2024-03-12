@@ -85,9 +85,9 @@ object Constants {
         const val REL_ENCODER_CONVERSION = 360 / (GEARBOX_RATIO * PULLEY_RATIO)
         const val ABS_ENCODER_CONVERSION = 360 / PULLEY_RATIO
 
-        const val kG = 0.56
+        const val kG = 0.39
         const val kV = 1.56
-        const val kA = 0.01
+        const val kA = 0.02
         const val kS = 0.1
 
         const val kP = 0.5
