@@ -85,8 +85,6 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
-    val pullNoteCommand: PullNoteCommand = PullNoteCommand()
-
     val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false)
     val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false)
     val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false)
@@ -148,17 +146,9 @@ object RobotContainer {
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
             .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
         controller.button(Constants.OperatorConstants.START_BUTTON)
-            .onTrue(IntakeCommand())
-        stateBindings()
+            .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
+
     }
 
 
-    private fun stateBindings(){
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.EMPTY)
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.STORED).whileTrue(IntakeCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.PRIMED).whileTrue(PrimeLauncherCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.AT_SPEED)
-            .and(controller.leftTrigger()).onTrue(ReadyFireCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.FIRING).whileTrue(FireCommand().alongWith(FeedLauncherCommand()))
-    }
 }
