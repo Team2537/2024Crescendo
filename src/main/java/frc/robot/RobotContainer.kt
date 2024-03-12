@@ -57,13 +57,11 @@ object RobotContainer {
             { controller.rightTriggerAxis },
         )
 
-    val correctedDrive: CorrectedDriveCommand =
-        CorrectedDriveCommand(
+    val trackingDriveCommand: TrackingDriveCommand =
+        TrackingDriveCommand(
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
-            { MathUtil.applyDeadband(-0.0, 0.1) },
-            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
+            { MathUtil.applyDeadband(-controller.leftX, 0.1) },
+            { controller.rightTriggerAxis }
         )
 
     val cornerSpin: CornerSpinCommand =
@@ -146,9 +144,10 @@ object RobotContainer {
         controller.b().toggleOnTrue(manualPivot)
         controller.x().onTrue(climbCommand)
         controller.rightBumper().toggleOnTrue(manualClimb)
-        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(PrintCommand("Tracking Note")) // TODO: Note Tracking
+            .onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
+        controller.rightStick()
+            .toggleOnTrue(trackingDriveCommand) // TODO: Note Tracking
         controller.button(Constants.OperatorConstants.START_BUTTON)
             .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
         controller.rightBumper()

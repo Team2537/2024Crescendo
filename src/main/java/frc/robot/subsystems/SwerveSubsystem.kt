@@ -9,6 +9,7 @@ import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
+import lib.vision.Limelight
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.parser.SwerveParser
@@ -50,6 +52,7 @@ object SwerveSubsystem : SubsystemBase() {
 
     /** True is field oriented driving */
     var fieldOriented: Boolean = true
+    val gamepieceLimelight: Limelight = Limelight("limelight-intake", Pose3d())
 
 
 
@@ -124,6 +127,7 @@ object SwerveSubsystem : SubsystemBase() {
     fun calculateHeadingPID(measurement: Double, setpoint: Double): Double {
         return HeadingPID.calculate(measurement, setpoint)
     }
+
 
 
     /**

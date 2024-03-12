@@ -12,7 +12,7 @@ import lib.vision.Limelight
  */
 object LimelightSubsystem : SubsystemBase() {
     // TODO: get the actual position of the limelight
-    private val limelight: Limelight = Limelight(NetworkTableInstance.getDefault().getTable("limelight"), Pose3d())
+    private val limelight: Limelight = Limelight("limelight-odom", Pose3d())
 
 
     /**
