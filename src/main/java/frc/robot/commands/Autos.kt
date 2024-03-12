@@ -34,7 +34,7 @@ object Autos {
     }
 
     fun registerNamedCommands() {
-        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
+//        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
         NamedCommands.registerCommand("Intake", ToggleIntakeCommand())
     }
 
@@ -64,7 +64,7 @@ object Autos {
 
     private fun shootAndDrive(): Command {
         return SequentialCommandGroup(
-            Sequences.autoLaunch(),
+//            Sequences.autoLaunch(),
             SwerveSubsystem.getAutonomousCommand("Basic_Drive", true)
         )
     }
