@@ -97,6 +97,8 @@ object RobotContainer {
     val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
     val climbCommand: ClimbToTargetCommand = ClimbToTargetCommand(7.0)
 
+    val noteIntake: ToggleIntakeCommand = ToggleIntakeCommand()
+
 
 
 
@@ -146,9 +148,12 @@ object RobotContainer {
         controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
+            .onTrue(PrintCommand("Tracking Note")) // TODO: Note Tracking
         controller.button(Constants.OperatorConstants.START_BUTTON)
-            .onTrue(IntakeCommand())
+            .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
+        controller.rightBumper()
+            .onTrue(PrintCommand("Spinning Flywheels")) // TODO: Implement Spinning Flywheels
+
         stateBindings()
     }
 
