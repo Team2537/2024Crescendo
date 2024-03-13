@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
+import lib.evilGetHeading
 import lib.vision.Limelight
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
@@ -68,17 +69,18 @@ object SwerveSubsystem : SubsystemBase() {
             throw RuntimeException("Error creating swerve drive", e)
         }
 
-        swerveDrive.setHeadingCorrection(true)
+        swerveDrive.setHeadingCorrection(false)
         swerveDrive.modules.forEach {
             it.setAntiJitter(false)
         }
+
 //        swerveDrive.setCosineCompensator(false)
 
         setMotorBrake(true)
 
         configurePathPlanner()
 
-        tab.addDouble("Heading") { getHeading().degrees }
+        tab.addDouble("Heading") { getHeading().radians }
 
         tab.addDouble("Front Left Velocity") { Math.abs(swerveDrive.modules[0].driveMotor.velocity) }
         tab.addDouble("Front Right Velocity") { Math.abs(swerveDrive.modules[1].driveMotor.velocity) }
@@ -89,6 +91,8 @@ object SwerveSubsystem : SubsystemBase() {
         tab.addDouble("Front Right Voltage") { Math.abs(swerveDrive.modules[1].driveMotor.voltage) }
         tab.addDouble("Back Left Voltage") { Math.abs(swerveDrive.modules[2].driveMotor.voltage) }
         tab.addDouble("Back Right Voltage") { Math.abs(swerveDrive.modules[3].driveMotor.voltage)}
+
+        tab.addDouble("Evil heading") { swerveDrive.evilGetHeading() }
     }
 
     /**

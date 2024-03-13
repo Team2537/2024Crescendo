@@ -142,7 +142,7 @@ object LauncherSubsystem : SubsystemBase() {
                 if(noteDetector.asBoolean){
                     state = State.STORED
                 }
-                stop()
+//                stop()
             }
             State.STORED -> {
                 if(!noteDetector.asBoolean){

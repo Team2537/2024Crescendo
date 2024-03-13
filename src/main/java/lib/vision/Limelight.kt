@@ -55,12 +55,12 @@ class Limelight(hostname: String, mountPosition: Pose3d) : AutoCloseable {
         ts = table.getDoubleTopic("ts").subscribe(0.0)
         tv = table.getDoubleTopic("tv").subscribe(0.0)
 
-        botpose = table.getDoubleArrayTopic("botpose").subscribe(null)
+        botpose = table.getDoubleArrayTopic("botpose").subscribe(DoubleArray(6))
 
         visionTab = Shuffleboard.getTab("Vision")
 
-//        visionTab.addDouble("X Offset") { yawRaw }
-//        visionTab.addDouble("Y Offset") { pitchRaw }
+        visionTab.addDouble("X Offset") { yawRaw }
+        visionTab.addDouble("Y Offset") { pitchRaw }
         visionTab.add("Yaw Offset") { yawOffset }
         visionTab.add("Pitch Offset") { pitchOffset }
         visionTab.add("Roll") { roll }

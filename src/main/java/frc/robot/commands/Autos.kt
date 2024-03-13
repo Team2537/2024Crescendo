@@ -43,11 +43,19 @@ object Autos {
     fun registerNamedCommands() {
         NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
         NamedCommands.registerCommand("Intake", ToggleIntakeCommand())
+        NamedCommands.registerCommand("Test Print", PrintCommand("Testing Print Command"))
+        NamedCommands.registerCommand("Test Print 2", PrintCommand("Testing Again"))
+        NamedCommands.registerCommand("Test Print 3", PrintCommand("Testing A Third Time"))
+        NamedCommands.registerCommand("Debug Print", Sequences.debugPrintSequence())
     }
 
     private fun examplePath(): Command {
         // return SwerveSubsystem.getAutonomousCommand("examplePath", true)
         return PrintCommand("Example Path")
+    }
+
+    private fun testAndDrive(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Test_And_Drive", true)
     }
 
 
@@ -96,7 +104,8 @@ object Autos {
         EXAMPLE_PATH("Example Path", { examplePath() }),
         SHOOT_STILL("Shoot Still", { shootStill() }),
         TEST_AUTO("Test Auto", { testAuto() }),
-        SHOOT_DRIVE("Shoot & Drive", { shootAndDrive() })
+        SHOOT_DRIVE("Shoot & Drive", { shootAndDrive() }),
+        TEST_AND_DRIVE("Test & Drive", { testAndDrive() })
         ;
 
         companion object {

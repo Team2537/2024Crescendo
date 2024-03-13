@@ -18,12 +18,13 @@ class FireCommand : Command() {
 
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return false
+        return LauncherSubsystem.state != LauncherSubsystem.State.FIRING
     }
 
     override fun end(interrupted: Boolean) {
         launcherSubsystem.stop()
         launcherSubsystem.stopRollers()
+        println("Fire command ended: $interrupted")
     }
 
 }

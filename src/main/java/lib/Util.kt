@@ -13,6 +13,7 @@ import kotlinx.serialization.serializer
 import lib.zones.Zone
 import kotlinx.serialization.serializer
 import lib.zones.Zones
+import swervelib.SwerveDrive
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -97,4 +98,12 @@ fun CANSparkBase.setPosition(pos: Double) {
 
 fun Translation2d.flip(): Translation2d {
     return Translation2d(16.54 - this.x, this.y)
+}
+
+fun SwerveDrive.evilGetHeading(): Double {
+    return javaClass.getDeclaredField("lastHeadingRadians").let {
+        it.isAccessible = true
+        val value = it.getDouble(this)
+        return@let value
+    }
 }

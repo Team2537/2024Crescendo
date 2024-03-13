@@ -58,8 +58,8 @@ object Constants {
     }
 
     object LauncherConstants {
-        const val LEFT_LAUNCHER_PORT = 22
-        const val RIGHT_LAUNCHER_PORT = 23
+        const val TOP_FLYWHEELS = 23
+        const val BOTTOM_FLYWHEELS = 22
 
         const val ROLLER_MOTOR_PORT = 14
         const val ROLLER_P = 0.0001
