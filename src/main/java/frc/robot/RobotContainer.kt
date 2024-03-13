@@ -3,6 +3,7 @@ package frc.robot
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -43,6 +44,7 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
+    val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
 
 
 //    val trackTarget = TrackTargetCommand()
@@ -147,6 +149,8 @@ object RobotContainer {
             .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
         controller.button(Constants.OperatorConstants.START_BUTTON)
             .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
+
+        LauncherSubsystem.getNoteTrigger().and(launcherIsUsed).onTrue(PrintCommand("Priming")) // TODO: Implement Priming
 
     }
 
