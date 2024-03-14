@@ -22,27 +22,22 @@ class IntakeNoteCommand : Command() {
     }
 
     override fun execute() {
-        if(launcherSubsystem.noteTrigger.asBoolean
-            && timer.hasElapsed(0.2) // TODO: Tune this value
-            ) {
-            launcherSubsystem.setRollerPosition(
-                launcherSubsystem.getRollerPosition() + 1.5
-            )
-        } else {
-            launcherSubsystem.setRollerSpeed(-0.1)
-        }
+       launcherSubsystem.setRollerSpeed(-0.1)
         SmartDashboard.putNumber("Note Timer", timer.get())
+        if(!launcherSubsystem.noteTrigger.asBoolean){
+            timer.reset()
+        }
     }
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(1.0) && launcherSubsystem.noteTrigger.asBoolean
+        return timer.hasElapsed(0.15) && launcherSubsystem.noteTrigger.asBoolean
     }
 
     override fun end(interrupted: Boolean) {
         println("Intake note command stopped, Interrupted: $interrupted")
         timer.stop()
         launcherSubsystem.setRollerPosition(
-            launcherSubsystem.getRollerPosition()
+            launcherSubsystem.getRollerPosition() + 0.3
         )
     }
 }

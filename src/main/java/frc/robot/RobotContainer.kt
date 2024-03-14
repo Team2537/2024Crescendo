@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
@@ -19,10 +20,7 @@ import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
-import frc.robot.commands.pivot.HoldPositionCommand
-import frc.robot.commands.pivot.HomePivotCommand
-import frc.robot.commands.pivot.ManualPivotCommand
-import frc.robot.commands.pivot.QuickPivotCommand
+import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
 import frc.robot.subsystems.ClimbSubsystem
 import frc.robot.subsystems.IntakeSubsystem
@@ -91,10 +89,11 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
-    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false)
-    val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false)
-    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false)
-    val testPivot: QuickPivotCommand = QuickPivotCommand(68.0, false)
+    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
+    val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false)
+    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false, false)
+    val podiumPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.MID_POSITION, false, false)
+    val autoAim: QuickPivotCommand = QuickPivotCommand(0.0, false, true)
 
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
@@ -145,26 +144,32 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.leftBumper().onTrue(IntakeNoteCommand())
+        controller.leftBumper().toggleOnTrue(
+            ParallelDeadlineGroup(
+                IntakeNoteCommand(),
+                ToggleIntakeCommand()
+            )
+        )
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.povUp().onTrue(ampPivot)
         controller.povRight().onTrue(intakePivot)
         controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(HoldPositionCommand()) // TODO: Implement auto-aiming
+        controller.povLeft().onTrue(autoAim) // TODO: Implement auto-aiming
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
         controller.x().onTrue(climbCommand)
-        controller.a().onTrue(Commands.runOnce({
-            LauncherSubsystem.setRollerPosition(LauncherSubsystem.getRollerPosition() + 1.0)
-        }, LauncherSubsystem))
         controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
             .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
         controller.button(Constants.OperatorConstants.START_BUTTON)
-            .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
+            .onTrue(Commands.runOnce({
+                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
+            })) // TODO: Implement Intake Command Override
 
-//        LauncherSubsystem.noteTrigger.onTrue(launchCommand) // TODO: Implement Priming
+        LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
+
+
 
     }
 

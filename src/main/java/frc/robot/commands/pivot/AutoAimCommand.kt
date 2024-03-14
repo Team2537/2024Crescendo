@@ -2,25 +2,29 @@ package frc.robot.commands.pivot
 
 import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants
 import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
-import java.sql.Driver
+import lib.calculateAngle
+import lib.math.units.meters
 import java.util.*
 
-class AutoAimCommand : Command() {
+class AutoAimCommand(auto: Boolean) : Command() {
     private val pivotSubsystem = PivotSubsystem
     private var pose: Pose2d = Pose2d()
     private var xDistanceMeters: Double = 0.0
+    private val auto: Boolean
     var speakerPose: Pose2d = Constants.FIELD_LOCATIONS.SUBWOOFER_POSE
+
+    var targetAngle: Double = Constants.PivotConstants.INTAKE_POSITION
 
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(pivotSubsystem)
+        this.auto = auto
     }
 
     override fun initialize() {
@@ -31,10 +35,7 @@ class AutoAimCommand : Command() {
 
         xDistanceMeters = Math.abs(speakerPose.x - pose.x)
 
-        println(PivotSubsystem.getInterpolatedAngle(xDistanceMeters))
-
-
-        println("Absolute Value of ${speakerPose.x} - ${pose.x} = $xDistanceMeters")
+        targetAngle = calculateAngle(xDistanceMeters.meters)
     }
 
     override fun execute() {}

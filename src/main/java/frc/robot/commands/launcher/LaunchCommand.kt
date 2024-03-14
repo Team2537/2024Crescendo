@@ -8,22 +8,26 @@ import java.util.function.DoubleSupplier
 
 class LaunchCommand(
     speed: DoubleSupplier,
-    launch: BooleanSupplier
+    launch: BooleanSupplier,
+    minimumVelocity: Double = 1000.0
     ) : Command() {
     private val launcherSubsystem = LauncherSubsystem
     private val speed: DoubleSupplier
     private val timer: Timer = Timer()
     private val launch: BooleanSupplier
+    private val minimumVelocity: Double
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(launcherSubsystem)
         this.speed = speed
         this.launch = launch
+        this.minimumVelocity = minimumVelocity
     }
 
     override fun initialize() {
         timer.restart()
+        println("Starting Launch")
     }
 
     override fun execute() {
@@ -32,7 +36,9 @@ class LaunchCommand(
             timer.reset()
         }
 
-        if(launcherSubsystem.noteTrigger.asBoolean && launch.asBoolean){
+        if(launcherSubsystem.noteTrigger.asBoolean
+            && launch.asBoolean
+            && launcherSubsystem.topFlywheels.encoder.velocity > minimumVelocity){
             launcherSubsystem.setRollerSpeed(-1.0)
         }
     }
@@ -45,5 +51,6 @@ class LaunchCommand(
         timer.stop()
         launcherSubsystem.stopFlywheels()
         launcherSubsystem.stopRoller()
+        println("Launch Ending $interrupted")
     }
 }

@@ -26,6 +26,7 @@ object LauncherSubsystem : SubsystemBase() {
 //    val leftNoteDetector: DigitalInput = DigitalInput(Constants.LauncherConstants.LEFT_NOTE_DETECTOR)
     val rightNoteDetector: DigitalInput = DigitalInput(Constants.LauncherConstants.RIGHT_NOTE_DETECTOR)
 
+    var setPoint: Double = 0.0
 
     val tab = Shuffleboard.getTab("Launcher")
 
@@ -45,9 +46,9 @@ object LauncherSubsystem : SubsystemBase() {
         topFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
         bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
 
-        rollerMotor.pidController.p = 0.075
+        rollerMotor.pidController.p = 0.25
         rollerMotor.pidController.i = 0.0
-        rollerMotor.pidController.d = 0.01
+        rollerMotor.pidController.d = 0.0
 
         noteTrigger = Trigger() {
             !rightNoteDetector.get() && Robot.isEnabled
@@ -55,9 +56,12 @@ object LauncherSubsystem : SubsystemBase() {
 
         Shuffleboard.getTab("Launcher").addBoolean("Note Detected") { noteTrigger.asBoolean }
         Shuffleboard.getTab("Launcher").addDouble("Position") { getRollerPosition() }
+        Shuffleboard.getTab("Launcher").addDouble("Setpoint") { setPoint }
 
         topFlywheels.burnFlash()
         bottomFlywheels.burnFlash()
+
+        rollerMotor.encoder.setPosition(0.0)
     }
 
     fun setFlywheelSpeeds(rawSpeed: Double) {
@@ -80,6 +84,7 @@ object LauncherSubsystem : SubsystemBase() {
 
     fun setRollerPosition(position: Double) {
         rollerMotor.pidController.setReference(position, CANSparkBase.ControlType.kPosition)
+        setPoint = position
     }
 
 

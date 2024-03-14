@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.*
 import frc.robot.Constants
 import frc.robot.commands.intake.ToggleIntakeCommand
+import frc.robot.commands.launcher.LaunchCommand
+import frc.robot.commands.pivot.AutoAimCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.subsystems.SwerveSubsystem
@@ -36,6 +38,13 @@ object Autos {
     fun registerNamedCommands() {
 //        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
         NamedCommands.registerCommand("Intake", ToggleIntakeCommand())
+        NamedCommands.registerCommand("Auto Aim", QuickPivotCommand(10.0, true, true))
+        NamedCommands.registerCommand("Shoot", LaunchCommand(
+            { 1.0 },
+            { true },
+            6000.0
+        ))
+        NamedCommands.registerCommand("Home", HomePivotCommand())
     }
 
     private fun examplePath(): Command {
@@ -85,11 +94,8 @@ object Autos {
      */
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: () -> Command) {
-        MID_TO_TOPNOTE("Mid to Top Note", { midToTopNote() }),
         EXAMPLE_PATH("Example Path", { examplePath() }),
-//        SHOOT_STILL("Shoot Still", { shootStill() }),
-        TEST_AUTO("Test Auto", { testAuto() }),
-        SHOOT_DRIVE("Shoot & Drive", { shootAndDrive() })
+        TEST_AUTO("Test Auto", { testAuto() })
         ;
 
         companion object {

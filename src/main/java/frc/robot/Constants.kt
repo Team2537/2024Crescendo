@@ -90,14 +90,19 @@ object Constants {
         const val kI = 0.01
         const val kD = 0.0
 
-        val distanceMap: HashMap<Double, Double> = hashMapOf(
-            0.0 to 85.0,
-            0.633 to 69.0,
-        )
-
-        const val SUBWOOFER_POSITION = 80.0
+        const val SUBWOOFER_POSITION = 78.5
         const val AMP_POSITION = 0.5
-        const val INTAKE_POSITION = 66.0
+        const val INTAKE_POSITION = 71.5
+        const val PODIUM_POSITION = 57.0 // Ish
+        const val MID_POSITION = 63.2
+
+        const val slope = -0.33
+
+        val distanceMap: HashMap<Double, Double> = hashMapOf(
+            0.0 to SUBWOOFER_POSITION,
+            45.0 to MID_POSITION,
+            90.0 to PODIUM_POSITION
+        )
     }
 
     object IntakeConstants {
