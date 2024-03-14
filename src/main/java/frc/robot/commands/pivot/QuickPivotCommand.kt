@@ -1,13 +1,28 @@
 package frc.robot.commands.pivot
 
+import com.pathplanner.lib.util.GeometryUtil
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
+import frc.robot.Constants
 import frc.robot.subsystems.PivotSubsystem
+import frc.robot.subsystems.SwerveSubsystem
+import lib.calculateAngle
+import lib.math.units.meters
+import java.util.*
 
-class QuickPivotCommand(target: Double, auto: Boolean) : Command() {
+class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Command() {
     private val pivotSubsystem = PivotSubsystem
-    private val target: Double
+    private var target: Double
     private var direction: Boolean = false
     private val auto: Boolean
+    private val autoAim: Boolean
+    private var pose: Pose2d = Pose2d()
+    private var xDistanceMeters: Double = 0.0
+    var speakerPose: Pose2d = Constants.FIELD_LOCATIONS.SUBWOOFER_POSE
+
+    var targetAngle: Double = Constants.PivotConstants.INTAKE_POSITION
+
 
 
     init {
@@ -15,9 +30,22 @@ class QuickPivotCommand(target: Double, auto: Boolean) : Command() {
         addRequirements(pivotSubsystem)
         this.target = target
         this.auto = auto
+        this.autoAim = autoAim
     }
 
     override fun initialize() {
+
+        if(autoAim) {
+            pose = SwerveSubsystem.getPose()
+            if (DriverStation.getAlliance() == Optional.of(DriverStation.Alliance.Red)) {
+                speakerPose = GeometryUtil.flipFieldPose(speakerPose)
+            }
+
+            xDistanceMeters = Math.abs(speakerPose.x - pose.x)
+
+            target = calculateAngle(xDistanceMeters.meters)
+        }
+
         direction = pivotSubsystem.getRelativePosition() > target
     }
 
@@ -43,7 +71,8 @@ class QuickPivotCommand(target: Double, auto: Boolean) : Command() {
             val hold = HoldTargetCommand(target)
             hold.schedule()
         } else {
-            pivotSubsystem.pivotMotor.set(0.0)
+            pivotSubsystem.holdArm(target)
+            println("Auto Pivot Stopped")
         }
     }
 }

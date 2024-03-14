@@ -3,7 +3,12 @@ package frc.robot
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
@@ -15,9 +20,7 @@ import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
-import frc.robot.commands.pivot.HomePivotCommand
-import frc.robot.commands.pivot.ManualPivotCommand
-import frc.robot.commands.pivot.QuickPivotCommand
+import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
 import frc.robot.subsystems.ClimbSubsystem
 import frc.robot.subsystems.IntakeSubsystem
@@ -43,6 +46,7 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
+    val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
 
 
 //    val trackTarget = TrackTargetCommand()
@@ -57,11 +61,13 @@ object RobotContainer {
             { controller.rightTriggerAxis },
         )
 
-    val trackingDriveCommand: TrackingDriveCommand =
-        TrackingDriveCommand(
+    val correctedDrive: CorrectedDriveCommand =
+        CorrectedDriveCommand(
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
-            { MathUtil.applyDeadband(-controller.leftX, 0.1) },
-            { controller.rightTriggerAxis }
+            { MathUtil.applyDeadband(-0.0, 0.1) },
+            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
+            { controller.hid.leftBumper },
+            { controller.hid.rightBumper },
         )
 
     val cornerSpin: CornerSpinCommand =
@@ -83,19 +89,21 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
-    val pullNoteCommand: PullNoteCommand = PullNoteCommand()
-
-    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false)
-    val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false)
-    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false)
-    val testPivot: QuickPivotCommand = QuickPivotCommand(68.0, false)
+    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
+    val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false)
+    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false, false)
+    val podiumPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.MID_POSITION, false, false)
+    val autoAim: QuickPivotCommand = QuickPivotCommand(0.0, false, true)
 
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
     val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
     val climbCommand: ClimbToTargetCommand = ClimbToTargetCommand(7.0)
 
-    val noteIntake: ToggleIntakeCommand = ToggleIntakeCommand()
+    val launchCommand: LaunchCommand = LaunchCommand(
+        {1.0},
+        { controller.leftTrigger(0.75).asBoolean }
+    )
 
 
 
@@ -106,6 +114,8 @@ object RobotContainer {
         configureBindings()
 
         SwerveSubsystem.defaultCommand = teleopDrive
+
+        Shuffleboard.getTab("Scheduler").add("Scheduler", CommandScheduler.getInstance())
 
     }
 
@@ -134,35 +144,34 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.leftBumper().toggleOnTrue(ToggleIntakeCommand())
+        controller.leftBumper().toggleOnTrue(
+            ParallelDeadlineGroup(
+                IntakeNoteCommand(),
+                ToggleIntakeCommand()
+            )
+        )
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.povUp().onTrue(ampPivot)
         controller.povRight().onTrue(intakePivot)
         controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(PrintCommand("Auto Aiming Someday")) // TODO: Implement auto-aiming
+        controller.povLeft().onTrue(autoAim) // TODO: Implement auto-aiming
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
         controller.x().onTrue(climbCommand)
         controller.rightBumper().toggleOnTrue(manualClimb)
+        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
-        controller.rightStick()
-            .toggleOnTrue(trackingDriveCommand) // TODO: Note Tracking
+            .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
         controller.button(Constants.OperatorConstants.START_BUTTON)
-            .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
-        controller.rightBumper()
-            .onTrue(PrintCommand("Spinning Flywheels")) // TODO: Implement Spinning Flywheels
+            .onTrue(Commands.runOnce({
+                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
+            })) // TODO: Implement Intake Command Override
 
-        stateBindings()
+        LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
+
+
+
     }
 
 
-    private fun stateBindings(){
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.EMPTY)
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.STORED).whileTrue(IntakeCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.PRIMED).whileTrue(PrimeLauncherCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.AT_SPEED)
-            .and(controller.leftTrigger()).onTrue(ReadyFireCommand())
-        LauncherSubsystem.triggerFactory(LauncherSubsystem.State.FIRING).whileTrue(FireCommand().alongWith(FeedLauncherCommand()))
-    }
 }

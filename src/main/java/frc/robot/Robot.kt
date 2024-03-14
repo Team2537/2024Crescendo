@@ -31,6 +31,7 @@ object Robot : TimedRobot() {
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
         RobotContainer
+        enableLiveWindowInTest(true)
     }
 
     /**

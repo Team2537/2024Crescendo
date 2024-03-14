@@ -1,10 +1,12 @@
 package lib
 
+import com.pathplanner.lib.util.GeometryUtil
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.units.Units
 import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
@@ -12,6 +14,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import lib.zones.Zone
 import kotlinx.serialization.serializer
+import lib.math.units.Span
+import lib.math.units.into
 import lib.zones.Zones
 import swervelib.SwerveDrive
 import kotlin.math.abs
@@ -97,7 +101,7 @@ fun CANSparkBase.setPosition(pos: Double) {
 }
 
 fun Translation2d.flip(): Translation2d {
-    return Translation2d(16.54 - this.x, this.y)
+    return GeometryUtil.flipFieldPosition(this)
 }
 
 fun SwerveDrive.evilGetHeading(): Double {
@@ -107,3 +111,8 @@ fun SwerveDrive.evilGetHeading(): Double {
         return@let value
     }
 }
+fun calculateAngle(distance: Span): Double {
+    val gx = distance into Units.Inches
+    return (-0.33 * gx) + 78.5
+}
+
