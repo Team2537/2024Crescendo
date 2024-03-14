@@ -3,7 +3,10 @@ package frc.robot
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -16,6 +19,7 @@ import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
+import frc.robot.commands.pivot.HoldPositionCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.ManualPivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
@@ -97,6 +101,11 @@ object RobotContainer {
     val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
     val climbCommand: ClimbToTargetCommand = ClimbToTargetCommand(7.0)
 
+    val launchCommand: LaunchCommand = LaunchCommand(
+        {1.0},
+        { controller.leftTrigger(0.75).asBoolean }
+    )
+
 
 
 
@@ -106,6 +115,8 @@ object RobotContainer {
         configureBindings()
 
         SwerveSubsystem.defaultCommand = teleopDrive
+
+        Shuffleboard.getTab("Scheduler").add("Scheduler", CommandScheduler.getInstance())
 
     }
 
@@ -134,15 +145,18 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.leftBumper().toggleOnTrue(ToggleIntakeCommand())
+        controller.leftBumper().onTrue(IntakeNoteCommand())
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.povUp().onTrue(ampPivot)
         controller.povRight().onTrue(intakePivot)
         controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(PrintCommand("Auto Aiming Someday")) // TODO: Implement auto-aiming
+        controller.povLeft().onTrue(HoldPositionCommand()) // TODO: Implement auto-aiming
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
         controller.x().onTrue(climbCommand)
+        controller.a().onTrue(Commands.runOnce({
+            LauncherSubsystem.setRollerPosition(LauncherSubsystem.getRollerPosition() + 1.0)
+        }, LauncherSubsystem))
         controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
@@ -150,7 +164,7 @@ object RobotContainer {
         controller.button(Constants.OperatorConstants.START_BUTTON)
             .onTrue(PrintCommand("Override Intake Command")) // TODO: Implement Intake Command Override
 
-        LauncherSubsystem.getNoteTrigger().and(launcherIsUsed).onTrue(PrintCommand("Priming")) // TODO: Implement Priming
+//        LauncherSubsystem.noteTrigger.onTrue(launchCommand) // TODO: Implement Priming
 
     }
 

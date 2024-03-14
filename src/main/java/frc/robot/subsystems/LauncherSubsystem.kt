@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
+import frc.robot.Robot
 import lib.math.units.RotationVelocity
 import lib.math.units.rpm
 import lib.math.units.velocity
@@ -22,8 +23,9 @@ object LauncherSubsystem : SubsystemBase() {
     val rollerMotor: CANSparkMax = CANSparkMax(Constants.LauncherConstants.ROLLER_MOTOR,
         CANSparkLowLevel.MotorType.kBrushless)
 
-    val leftNoteDetector: DigitalInput = DigitalInput(Constants.LauncherConstants.LEFT_NOTE_DETECTOR)
+//    val leftNoteDetector: DigitalInput = DigitalInput(Constants.LauncherConstants.LEFT_NOTE_DETECTOR)
     val rightNoteDetector: DigitalInput = DigitalInput(Constants.LauncherConstants.RIGHT_NOTE_DETECTOR)
+
 
     val tab = Shuffleboard.getTab("Launcher")
 
@@ -34,21 +36,33 @@ object LauncherSubsystem : SubsystemBase() {
         bottomFlywheels.restoreFactoryDefaults()
         rollerMotor.restoreFactoryDefaults()
 
+        bottomFlywheels.inverted = true
+
         topFlywheels.setSmartCurrentLimit(40)
         bottomFlywheels.setSmartCurrentLimit(40)
         rollerMotor.setSmartCurrentLimit(40)
 
-        rollerMotor.pidController.p = 0.0001
-        rollerMotor.pidController.i = 0.000001
+        topFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
+        bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
+
+        rollerMotor.pidController.p = 0.075
+        rollerMotor.pidController.i = 0.0
         rollerMotor.pidController.d = 0.01
 
         noteTrigger = Trigger() {
-            !leftNoteDetector.get() && !rightNoteDetector.get()
-        }
+            !rightNoteDetector.get() && Robot.isEnabled
+        }.debounce(0.1)
+
+        Shuffleboard.getTab("Launcher").addBoolean("Note Detected") { noteTrigger.asBoolean }
+        Shuffleboard.getTab("Launcher").addDouble("Position") { getRollerPosition() }
+
+        topFlywheels.burnFlash()
+        bottomFlywheels.burnFlash()
     }
 
     fun setFlywheelSpeeds(rawSpeed: Double) {
         topFlywheels.set(rawSpeed)
+        bottomFlywheels.set(rawSpeed)
     }
 
     fun setRollerSpeed(rawSpeed: Double) {
@@ -68,11 +82,13 @@ object LauncherSubsystem : SubsystemBase() {
         rollerMotor.pidController.setReference(position, CANSparkBase.ControlType.kPosition)
     }
 
-    fun getNoteTrigger(): Trigger {
-        return noteTrigger
-    }
 
     fun getRollerPosition(): Double {
         return rollerMotor.encoder.position
+    }
+
+    // TODO: Add fancy logic
+    fun noteDetected(): Boolean {
+        return !rightNoteDetector.get()
     }
 }

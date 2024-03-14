@@ -58,12 +58,12 @@ object Constants {
     }
 
     object LauncherConstants {
-        const val TOP_FLYWHEELS = 0
-        const val BOTTOM_FLYWHEELS = 0
-        const val ROLLER_MOTOR = 0
+        const val TOP_FLYWHEELS = 23
+        const val BOTTOM_FLYWHEELS = 22
+        const val ROLLER_MOTOR = 14
 
         const val LEFT_NOTE_DETECTOR = 0
-        const val RIGHT_NOTE_DETECTOR = 0
+        const val RIGHT_NOTE_DETECTOR = 3
     }
 
     object PivotConstants {
