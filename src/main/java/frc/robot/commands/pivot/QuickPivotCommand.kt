@@ -34,14 +34,17 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
     }
 
     override fun initialize() {
-
         if(autoAim) {
             pose = SwerveSubsystem.getPose()
             if (DriverStation.getAlliance() == Optional.of(DriverStation.Alliance.Red)) {
-                speakerPose = GeometryUtil.flipFieldPose(speakerPose)
+                speakerPose = GeometryUtil.flipFieldPose(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
+            } else {
+                speakerPose = Constants.FIELD_LOCATIONS.SUBWOOFER_POSE
             }
 
             xDistanceMeters = Math.abs(speakerPose.x - pose.x)
+            println(xDistanceMeters)
+            println(target)
 
             target = calculateAngle(xDistanceMeters.meters)
         }
@@ -67,12 +70,7 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
     }
 
     override fun end(interrupted: Boolean) {
-        if (!this.auto) {
-            val hold = HoldTargetCommand(target)
-            hold.schedule()
-        } else {
-            pivotSubsystem.holdArm(target)
-            println("Auto Pivot Stopped")
-        }
+        pivotSubsystem.holdArm(target)
+        println("Auto Pivot Stopped")
     }
 }

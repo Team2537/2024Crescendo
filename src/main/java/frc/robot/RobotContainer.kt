@@ -2,6 +2,7 @@ package frc.robot
 
 import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
+import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
@@ -161,11 +162,16 @@ object RobotContainer {
         controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(PrintCommand("Toggle Between Absolute and Angular Velocity")) // TODO: Implement Toggle
+            .onTrue(Commands.runOnce(
+                {
+                    SwerveSubsystem.resetOdometry(GeometryUtil.flipFieldPose(SwerveSubsystem.getPose()))
+                }
+            )) // TODO: Implement Toggle
         controller.button(Constants.OperatorConstants.START_BUTTON)
             .onTrue(Commands.runOnce({
                 SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
             })) // TODO: Implement Intake Command Override
+
 
         LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
 
