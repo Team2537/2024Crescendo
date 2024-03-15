@@ -69,7 +69,7 @@ object SwerveSubsystem : SubsystemBase() {
             throw RuntimeException("Error creating swerve drive", e)
         }
 
-        swerveDrive.setHeadingCorrection(false)
+        swerveDrive.setHeadingCorrection(true)
         swerveDrive.modules.forEach {
             it.setAntiJitter(false)
         }
