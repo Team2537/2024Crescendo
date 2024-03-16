@@ -7,10 +7,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.*
 import frc.robot.Constants
 import frc.robot.commands.intake.ToggleIntakeCommand
+import frc.robot.commands.launcher.IntakeNoteCommand
 import frc.robot.commands.launcher.LaunchCommand
 import frc.robot.commands.pivot.AutoAimCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
+import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 
 object Autos {
@@ -39,12 +41,20 @@ object Autos {
 //        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
         NamedCommands.registerCommand("Intake", ToggleIntakeCommand())
         NamedCommands.registerCommand("Auto Aim", QuickPivotCommand(10.0, true, true))
+        NamedCommands.registerCommand("Aim Subwoofer", QuickPivotCommand(
+            Constants.PivotConstants.SUBWOOFER_POSITION, false, false
+        ))
         NamedCommands.registerCommand("Shoot", LaunchCommand(
             { 1.0 },
             { true },
-            6000.0
+            { PivotSubsystem.getRelativePosition() }
         ))
         NamedCommands.registerCommand("Home", HomePivotCommand())
+        NamedCommands.registerCommand("Aim Intake", QuickPivotCommand(
+            Constants.PivotConstants.INTAKE_POSITION, false, false
+        ))
+        NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
+        NamedCommands.registerCommand("Intake Note", ToggleIntakeCommand())
     }
 
     private fun examplePath(): Command {
@@ -71,15 +81,36 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("Basic_Drive", true)
     }
 
-    private fun shootAndDrive(): Command {
-        return SequentialCommandGroup(
-//            Sequences.autoLaunch(),
-            SwerveSubsystem.getAutonomousCommand("Basic_Drive", true)
-        )
+    private fun shootAndDriveCenter(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive", true)
+    }
+
+    private fun shootAndDriveLeft():Command {
+        return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive_Left", true)
+    }
+
+    private fun shootAndDriveRight(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive_Right", true)
     }
 
     private fun midToTopNote(): Command {
         return SwerveSubsystem.getAutonomousCommand("Mid_To_TopNote", true)
+    }
+
+    private fun onlyShoot(): Command {
+        return SequentialCommandGroup(
+            HomePivotCommand(),
+            QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false),
+            LaunchCommand(
+                { 1.0 },
+                { true },
+                { PivotSubsystem.getRelativePosition() }
+            ),
+        )
+    }
+
+    private fun twoNote(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Two_Note", true)
     }
 
 
@@ -95,7 +126,12 @@ object Autos {
     @Suppress("unused")
     private enum class AutoMode(val optionName: String, val command: () -> Command) {
         EXAMPLE_PATH("Example Path", { examplePath() }),
-        TEST_AUTO("Test Auto", { testAuto() })
+        TEST_AUTO("Test Auto", { testAuto() }),
+        SHOOT_DRIVE_MID("Shoot & Drive Mid", { shootAndDriveCenter() }),
+        SHOOT_DRIVE_RIGHT("Shoot & Drive Right", { shootAndDriveRight() }),
+        SHOOT_DRIVE_LEFT("Shoot & Drive Left", { shootAndDriveLeft() }),
+        BASIC_SHOOT("Basic Shoot", { onlyShoot() }),
+        TWO_NOTE("Two Note", {twoNote()})
         ;
 
         companion object {

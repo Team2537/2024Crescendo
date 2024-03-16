@@ -3,26 +3,28 @@ package frc.robot.commands.launcher
 import edu.wpi.first.wpilibj2.command.Command
 import LauncherSubsystem
 import edu.wpi.first.wpilibj.Timer
+import lib.math.units.velocity
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
 class LaunchCommand(
     speed: DoubleSupplier,
     launch: BooleanSupplier,
-    minimumVelocity: Double = 1000.0
+    pivotAngle: DoubleSupplier
     ) : Command() {
     private val launcherSubsystem = LauncherSubsystem
     private val speed: DoubleSupplier
     private val timer: Timer = Timer()
     private val launch: BooleanSupplier
-    private val minimumVelocity: Double
+    private val pivotAngle: DoubleSupplier
+    private var minVelocity: Double = 6000.0
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(launcherSubsystem)
         this.speed = speed
         this.launch = launch
-        this.minimumVelocity = minimumVelocity
+        this.pivotAngle = pivotAngle
     }
 
     override fun initialize() {
@@ -31,14 +33,21 @@ class LaunchCommand(
     }
 
     override fun execute() {
-        launcherSubsystem.setFlywheelSpeeds(speed.asDouble)
+        if(pivotAngle.asDouble < 10) {
+            launcherSubsystem.setFlywheelSpeeds(speed.asDouble / 4)
+            minVelocity = 1200.0
+        } else {
+            launcherSubsystem.setFlywheelSpeeds(speed.asDouble)
+            minVelocity = 6000.0
+
+        }
         if(launcherSubsystem.noteTrigger.asBoolean){
             timer.reset()
         }
 
         if(launcherSubsystem.noteTrigger.asBoolean
             && launch.asBoolean
-            && launcherSubsystem.topFlywheels.encoder.velocity > minimumVelocity){
+            && launcherSubsystem.topFlywheels.encoder.velocity > minVelocity){
             launcherSubsystem.setRollerSpeed(-1.0)
         }
     }

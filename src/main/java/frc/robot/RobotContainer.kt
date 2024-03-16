@@ -104,8 +104,11 @@ object RobotContainer {
 
     val launchCommand: LaunchCommand = LaunchCommand(
         {1.0},
-        { controller.leftTrigger(0.75).asBoolean }
+        { controller.leftTrigger(0.75).asBoolean },
+        { PivotSubsystem.getRelativePosition() }
     )
+
+
 
 
 
@@ -159,8 +162,8 @@ object RobotContainer {
         controller.povLeft().onTrue(autoAim) // TODO: Implement auto-aiming
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
-        controller.x().onTrue(climbCommand)
-        controller.rightBumper().toggleOnTrue(manualClimb)
+        controller.x().onTrue(manualClimb)
+//        controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
             .onTrue(UpdateOdometryCommand()) // TODO: Implement Toggle

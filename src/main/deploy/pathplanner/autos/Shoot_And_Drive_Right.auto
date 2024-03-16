@@ -26,13 +26,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Middle_Grab_Note"
+            "pathName": "Middle_Grab_TopNote"
           }
         }
       ]

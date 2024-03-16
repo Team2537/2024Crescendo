@@ -1,5 +1,6 @@
 package frc.robot.subsystems
 
+import com.revrobotics.CANSparkBase
 import frc.robot.Constants
 
 import com.revrobotics.CANSparkLowLevel
@@ -23,6 +24,12 @@ object ClimbSubsystem : SubsystemBase() {
 
         rightMotor.encoder.setPosition(0.0)
         leftMotor.encoder.setPosition(0.0)
+
+        leftMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+        rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
+
+        rightMotor.burnFlash()
+        leftMotor.burnFlash()
     }
 
     override fun periodic() {
