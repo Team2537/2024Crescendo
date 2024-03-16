@@ -6,6 +6,7 @@ import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import lib.vision.Limelight
+import lib.vision.VisionMeasurement
 
 /**
  * The subsystem that controls the limelight.
@@ -14,6 +15,8 @@ object LimelightSubsystem : SubsystemBase() {
     // TODO: get the actual position of the limelight
     private val limelight: Limelight = Limelight("limelight-odom", Pose3d())
 
+    val poseMeasurement: VisionMeasurement
+        get() = limelight.poseMeasurement
 
     /**
      * Get the position of the bot as estimated by the limelight

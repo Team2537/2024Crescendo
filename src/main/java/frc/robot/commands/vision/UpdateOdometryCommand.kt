@@ -21,9 +21,10 @@ class UpdateOdometryCommand : Command() {
     }
     
     override fun isFinished(): Boolean {
-        val position: Pose3d = LimelightSubsystem.botpose
-
-        SwerveSubsystem.addVisionMeasurement(VisionMeasurement(position))
+//        val position: Pose3d = LimelightSubsystem.botpose
+//
+//        SwerveSubsystem.addVisionMeasurement(VisionMeasurement(position))
+        SwerveSubsystem.addVisionMeasurement(LimelightSubsystem.poseMeasurement)
 
         return true
     }
