@@ -59,14 +59,14 @@ class Limelight(hostname: String, mountPosition: Pose3d) : AutoCloseable {
 
         visionTab = Shuffleboard.getTab("Vision")
 
-        visionTab.addDouble("X Offset") { yawRaw }
-        visionTab.addDouble("Y Offset") { pitchRaw }
-        visionTab.add("Yaw Offset") { yawOffset }
-        visionTab.add("Pitch Offset") { pitchOffset }
-        visionTab.add("Roll") { roll }
-        visionTab.add("Position") { position }
-        visionTab.addDouble("Area") { area }
-        visionTab.addBoolean("Target Visible") { targetVisible }
+//        visionTab.addDouble("X Offset") { yawRaw }
+//        visionTab.addDouble("Y Offset") { pitchRaw }
+//        visionTab.add("Yaw Offset") { yawOffset }
+//        visionTab.add("Pitch Offset") { pitchOffset }
+//        visionTab.add("Roll") { roll }
+//        visionTab.add("Position") { position }
+//        visionTab.addDouble("Area") { area }
+//        visionTab.addBoolean("Target Visible") { targetVisible }
 
         _mountPosition = mountPosition
         // FIXME - remove if possible
