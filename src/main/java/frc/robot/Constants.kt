@@ -123,5 +123,6 @@ object Constants {
 
     object FIELD_LOCATIONS {
         val SUBWOOFER_POSE = Pose2d(1.38, 5.55, Rotation2d.fromDegrees(0.0))
+        val SPEAKER_HOLE_POSE = Pose2d(0.0, 5.55, Rotation2d.fromDegrees(0.0))
     }
 }

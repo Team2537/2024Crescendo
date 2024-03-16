@@ -6,7 +6,11 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.units.Units.Degrees
+import edu.wpi.first.units.Units.Radians
 import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.SwerveSubsystem
@@ -20,6 +24,7 @@ import lib.zones.Zones
 import swervelib.SwerveDrive
 import kotlin.math.abs
 import kotlin.math.absoluteValue
+import kotlin.math.atan2
 import kotlin.math.pow
 
 /**
@@ -116,3 +121,9 @@ fun calculateAngle(distance: Span): Double {
     return (-0.33 * gx) + 78.5
 }
 
+fun Pose2d.getAngleTo(other: Pose2d): Measure<Angle> {
+    val relativePose = this.relativeTo(other)
+    val fieldOffset: Measure<Angle> = Degrees.of(180.0)
+    var angle: Measure<Angle> = Radians.of(atan2(relativePose.y, relativePose.x)).plus(fieldOffset)
+    return angle
+}

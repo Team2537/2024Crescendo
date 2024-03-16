@@ -17,8 +17,6 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
     private var direction: Boolean = false
     private val auto: Boolean
     private val autoAim: Boolean
-    private var pose: Pose2d = Pose2d()
-    private var xDistanceMeters: Double = 0.0
     var speakerPose: Pose2d = Constants.FIELD_LOCATIONS.SUBWOOFER_POSE
 
     var targetAngle: Double = Constants.PivotConstants.INTAKE_POSITION
@@ -35,18 +33,22 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
 
     override fun initialize() {
         if(autoAim) {
-            pose = SwerveSubsystem.getPose()
+            val pose = SwerveSubsystem.getPose()
             if (DriverStation.getAlliance() == Optional.of(DriverStation.Alliance.Red)) {
                 speakerPose = GeometryUtil.flipFieldPose(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
             } else {
                 speakerPose = Constants.FIELD_LOCATIONS.SUBWOOFER_POSE
             }
 
-            xDistanceMeters = Math.abs(speakerPose.x - pose.x)
-            println(xDistanceMeters)
-            println(target)
+            val relativePose = pose.relativeTo(speakerPose)
+            val distanceMeters = Math.hypot(relativePose.translation.x, relativePose.translation.y)
 
-            target = calculateAngle(xDistanceMeters.meters)
+
+
+            target = calculateAngle(distanceMeters.meters)
+
+            println("Auto Aim Target: $target")
+            println("Auto Aim Distance: $distanceMeters")
         }
 
         direction = pivotSubsystem.getRelativePosition() > target

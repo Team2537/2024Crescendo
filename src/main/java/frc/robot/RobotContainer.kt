@@ -4,6 +4,9 @@ import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.networktables.StructPublisher
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.CommandScheduler
@@ -108,7 +111,11 @@ object RobotContainer {
     )
 
 
+    val speakerBluePublisher: StructPublisher<Pose2d> = NetworkTableInstance.getDefault().getTable("SmartDashboard")
+        .getStructTopic("speakerBlue", Pose2d.struct).publish()
 
+    val speakerRedPublisher: StructPublisher<Pose2d> = NetworkTableInstance.getDefault().getTable("SmartDashboard")
+        .getStructTopic("speakerRed", Pose2d.struct).publish()
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
@@ -119,6 +126,8 @@ object RobotContainer {
 
         Shuffleboard.getTab("Scheduler").add("Scheduler", CommandScheduler.getInstance())
 
+        speakerBluePublisher.set(Constants.FIELD_LOCATIONS.SPEAKER_HOLE_POSE)
+        speakerRedPublisher.set(GeometryUtil.flipFieldPose(Constants.FIELD_LOCATIONS.SPEAKER_HOLE_POSE))
     }
 
     /**
@@ -164,6 +173,7 @@ object RobotContainer {
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
             .onTrue(UpdateOdometryCommand()) // TODO: Implement Toggle
+        controller.a().onTrue(AutoAlignCommand())
 //        controller.button(Constants.OperatorConstants.START_BUTTON)
 //            .onTrue(Commands.runOnce({
 //                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)

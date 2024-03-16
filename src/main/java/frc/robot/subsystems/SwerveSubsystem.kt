@@ -20,6 +20,7 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.networktables.StructArrayPublisher
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.DriverStation.Alliance
+import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
@@ -69,7 +70,9 @@ object SwerveSubsystem : SubsystemBase() {
             throw RuntimeException("Error creating swerve drive", e)
         }
 
-        swerveDrive.setHeadingCorrection(true)
+        if(RobotBase.isReal()) {
+            swerveDrive.setHeadingCorrection(true)
+        }
         swerveDrive.modules.forEach {
             it.setAntiJitter(false)
         }
