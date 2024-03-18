@@ -44,7 +44,7 @@ object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
 
     /** @suppress */
-    var maximumSpeed: Double = Units.feetToMeters(9.0)
+    var maximumSpeed: Double = Units.feetToMeters(14.5)
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")
     var swerveStates: StructArrayPublisher<SwerveModuleState> = NetworkTableInstance.getDefault().
         getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
