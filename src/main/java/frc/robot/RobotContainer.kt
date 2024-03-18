@@ -24,10 +24,7 @@ import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
 import frc.robot.commands.vision.UpdateOdometryCommand
-import frc.robot.subsystems.ClimbSubsystem
-import frc.robot.subsystems.IntakeSubsystem
-import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
+import frc.robot.subsystems.*
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
 import lib.profiles.DriverProfile
@@ -105,7 +102,8 @@ object RobotContainer {
     val launchCommand: LaunchCommand = LaunchCommand(
         {1.0},
         { controller.leftTrigger(0.75).asBoolean },
-        { PivotSubsystem.getRelativePosition() }
+        { PivotSubsystem.getRelativePosition() },
+        { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
     )
 
 
@@ -166,7 +164,9 @@ object RobotContainer {
 //        controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(UpdateOdometryCommand()) // TODO: Implement Toggle
+            .onTrue(Commands.runOnce({
+                SwerveSubsystem.lock()
+            })) // TODO: Implement Toggle
 //        controller.button(Constants.OperatorConstants.START_BUTTON)
 //            .onTrue(Commands.runOnce({
 //                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)

@@ -2,6 +2,7 @@ package frc.robot.commands.launcher
 
 import edu.wpi.first.wpilibj2.command.Command
 import LauncherSubsystem
+import com.revrobotics.CANSparkBase
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 
@@ -16,6 +17,7 @@ class IntakeNoteCommand : Command() {
     }
 
     override fun initialize() {
+        launcherSubsystem.rollerMotor.setIdleMode(CANSparkBase.IdleMode.kCoast)
         timer.restart()
         launcherSubsystem.setRollerSpeed(0.1)
         launcherSubsystem.stopFlywheels()

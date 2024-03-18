@@ -2,11 +2,11 @@ package frc.robot.subsystems
 
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
-import com.pathplanner.lib.path.PathPlannerPath
 import com.pathplanner.lib.util.GeometryUtil
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
+import edu.wpi.first.math.VecBuilder
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
@@ -320,6 +320,10 @@ object SwerveSubsystem : SubsystemBase() {
 
     fun addVisionMeasurement(measurement: VisionMeasurement) {
         swerveDrive.addVisionMeasurement(measurement.position.toPose2d(), measurement.timestamp)
+    }
+
+    fun setVisionMeasurementStdDevs(stdDevX: Double, stdDevY: Double, stdDevTheta: Double) {
+        swerveDrive.swerveDrivePoseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(stdDevX, stdDevY, stdDevTheta))
     }
 
     override fun periodic() {
