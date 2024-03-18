@@ -1,12 +1,21 @@
 import com.revrobotics.*
+import edu.wpi.first.math.controller.SimpleMotorFeedforward
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Units
+import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction
 import frc.robot.Constants
 import frc.robot.Robot
 import lib.math.units.RotationVelocity
+import lib.math.units.into
 import lib.math.units.rpm
 import lib.math.units.velocity
 import lib.near
@@ -30,14 +39,43 @@ object LauncherSubsystem : SubsystemBase() {
 
     val tab = Shuffleboard.getTab("Launcher")
 
+    val flywheelPIDController: SparkPIDController = topFlywheels.pidController
+    val flywheelFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(
+        0.0, 0.0, 0.0
+    ) // TODO: Get real values
+
+
     val noteTrigger: Trigger
+
+    val routine: SysIdRoutine = SysIdRoutine(
+        SysIdRoutine.Config(),
+        SysIdRoutine.Mechanism(
+            { volts: Measure<Voltage> ->
+                topFlywheels.setVoltage(volts.into(Units.Volts))
+                bottomFlywheels.setVoltage(volts.into(Units.Volts))
+            },
+            { log: SysIdRoutineLog ->
+                log.motor("topFlywheels")
+                    .voltage(Units.Volts.of(topFlywheels.appliedOutput * topFlywheels.busVoltage))
+                    .angularPosition(Units.Rotations.of(topFlywheels.encoder.position))
+                    .angularVelocity(Units.RPM.of(topFlywheels.encoder.velocity))
+                    .current(Units.Amps.of(topFlywheels.outputCurrent))
+                log.motor("bottomFlywheels")
+                    .voltage(Units.Volts.of(bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage))
+                    .angularPosition(Units.Rotations.of(bottomFlywheels.encoder.position))
+                    .angularVelocity(Units.RPM.of(bottomFlywheels.encoder.velocity))
+                    .current(Units.Amps.of(bottomFlywheels.outputCurrent))
+            },
+            this
+        )
+    )
 
     init {
         topFlywheels.restoreFactoryDefaults()
         bottomFlywheels.restoreFactoryDefaults()
         rollerMotor.restoreFactoryDefaults()
 
-        bottomFlywheels.inverted = true
+        bottomFlywheels.follow(topFlywheels, true)
 
         topFlywheels.setSmartCurrentLimit(40)
         bottomFlywheels.setSmartCurrentLimit(40)
@@ -45,6 +83,7 @@ object LauncherSubsystem : SubsystemBase() {
 
         topFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
         bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
+
 
         rollerMotor.pidController.p = 0.25
         rollerMotor.pidController.i = 0.0
@@ -87,7 +126,6 @@ object LauncherSubsystem : SubsystemBase() {
         setPoint = position
     }
 
-
     fun getRollerPosition(): Double {
         return rollerMotor.encoder.position
     }
@@ -95,5 +133,13 @@ object LauncherSubsystem : SubsystemBase() {
     // TODO: Add fancy logic
     fun noteDetected(): Boolean {
         return !rightNoteDetector.get()
+    }
+
+    fun dynamicSysIDRoutine(direction: Direction): Command? {
+        return routine.dynamic(direction)
+    }
+
+    fun quasiStaticSysIDRoutine(direction: Direction): Command? {
+        return routine.quasistatic(direction)
     }
 }
