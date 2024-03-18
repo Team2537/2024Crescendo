@@ -19,13 +19,20 @@ class UpdateOdometryCommand : Command() {
     init {
         addRequirements(LimelightSubsystem)
     }
+
+    override fun execute() {
+        val estimate = LimelightSubsystem.getPoseEsimate()
+        if(estimate.tagCount >= 2){
+            SwerveSubsystem.setVisionMeasurementStdDevs(.7, .7, 99999999.0)
+            SwerveSubsystem.addVisionMeasurement(
+                estimate.pose,
+                estimate.timestampSeconds - estimate.latency
+            )
+        }
+
+    }
     
     override fun isFinished(): Boolean {
-//        val position: Pose3d = LimelightSubsystem.botpose
-//
-//        SwerveSubsystem.addVisionMeasurement(VisionMeasurement(position))
-        SwerveSubsystem.addVisionMeasurement(LimelightSubsystem.poseMeasurement)
-
-        return true
+        return false
     }
 }

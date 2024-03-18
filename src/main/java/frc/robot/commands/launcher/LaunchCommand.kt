@@ -2,6 +2,7 @@ package frc.robot.commands.launcher
 
 import edu.wpi.first.wpilibj2.command.Command
 import LauncherSubsystem
+import com.revrobotics.CANSparkBase
 import edu.wpi.first.wpilibj.Timer
 import lib.math.units.velocity
 import java.util.function.BooleanSupplier
@@ -10,7 +11,8 @@ import java.util.function.DoubleSupplier
 class LaunchCommand(
     speed: DoubleSupplier,
     launch: BooleanSupplier,
-    pivotAngle: DoubleSupplier
+    pivotAngle: DoubleSupplier,
+    override: BooleanSupplier
     ) : Command() {
     private val launcherSubsystem = LauncherSubsystem
     private val speed: DoubleSupplier
@@ -18,6 +20,7 @@ class LaunchCommand(
     private val launch: BooleanSupplier
     private val pivotAngle: DoubleSupplier
     private var minVelocity: Double = 6000.0
+    private var override: BooleanSupplier
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
@@ -25,6 +28,7 @@ class LaunchCommand(
         this.speed = speed
         this.launch = launch
         this.pivotAngle = pivotAngle
+        this.override = override
     }
 
     override fun initialize() {
@@ -38,7 +42,7 @@ class LaunchCommand(
             minVelocity = 1200.0
         } else {
             launcherSubsystem.setFlywheelSpeeds(speed.asDouble)
-            minVelocity = 6000.0
+            minVelocity = 5500.0
 
         }
         if(launcherSubsystem.noteTrigger.asBoolean){
@@ -46,8 +50,8 @@ class LaunchCommand(
         }
 
         if(launcherSubsystem.noteTrigger.asBoolean
-            && launch.asBoolean
-            && launcherSubsystem.topFlywheels.encoder.velocity > minVelocity){
+            && ((launch.asBoolean
+            && launcherSubsystem.topFlywheels.encoder.velocity > minVelocity) || override.asBoolean)){
             launcherSubsystem.setRollerSpeed(-1.0)
         }
     }
@@ -59,6 +63,7 @@ class LaunchCommand(
     override fun end(interrupted: Boolean) {
         timer.stop()
         launcherSubsystem.stopFlywheels()
+        launcherSubsystem.rollerMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
         launcherSubsystem.stopRoller()
         println("Launch Ending $interrupted")
     }

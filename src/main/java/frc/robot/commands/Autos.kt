@@ -1,6 +1,5 @@
 package frc.robot.commands
 
-import LauncherSubsystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
@@ -9,7 +8,6 @@ import frc.robot.Constants
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.IntakeNoteCommand
 import frc.robot.commands.launcher.LaunchCommand
-import frc.robot.commands.pivot.AutoAimCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.subsystems.PivotSubsystem
@@ -47,7 +45,8 @@ object Autos {
         NamedCommands.registerCommand("Shoot", LaunchCommand(
             { 1.0 },
             { true },
-            { PivotSubsystem.getRelativePosition() }
+            { PivotSubsystem.getRelativePosition() },
+            { false }
         ))
         NamedCommands.registerCommand("Home", HomePivotCommand())
         NamedCommands.registerCommand("Aim Intake", QuickPivotCommand(
@@ -81,12 +80,9 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("Basic_Drive", true)
     }
 
-    private fun shootAndDriveCenter(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive", true)
-    }
 
-    private fun shootAndDriveLeft():Command {
-        return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive_Left", true)
+    private fun shootDriveSource():Command {
+        return SwerveSubsystem.getAutonomousCommand("Shoot_Drive_Source", true)
     }
 
     private fun shootAndDriveRight(): Command {
@@ -104,7 +100,8 @@ object Autos {
             LaunchCommand(
                 { 1.0 },
                 { true },
-                { PivotSubsystem.getRelativePosition() }
+                { PivotSubsystem.getRelativePosition() },
+                { false }
             ),
         )
     }
@@ -127,9 +124,9 @@ object Autos {
     private enum class AutoMode(val optionName: String, val command: () -> Command) {
         EXAMPLE_PATH("Example Path", { examplePath() }),
         TEST_AUTO("Test Auto", { testAuto() }),
-        SHOOT_DRIVE_MID("Shoot & Drive Mid", { shootAndDriveCenter() }),
+        SHOOT_DRIVE_MID("Shoot & Drive Source", { shootDriveSource() }),
         SHOOT_DRIVE_RIGHT("Shoot & Drive Right", { shootAndDriveRight() }),
-        SHOOT_DRIVE_LEFT("Shoot & Drive Left", { shootAndDriveLeft() }),
+        SHOOT_DRIVE_LEFT("Shoot & Drive Left", { shootDriveSource() }),
         BASIC_SHOOT("Basic Shoot", { onlyShoot() }),
         TWO_NOTE("Two Note", {twoNote()})
         ;

@@ -6,50 +6,40 @@ import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import lib.vision.Limelight
+import lib.vision.LimelightHelpers
 import lib.vision.VisionMeasurement
 
 /**
  * The subsystem that controls the limelight.
  */
 object LimelightSubsystem : SubsystemBase() {
-    // TODO: get the actual position of the limelight
-    private val limelight: Limelight = Limelight("limelight-odom", Pose3d())
+    private val hostname: String = "limelight-odom"
 
-    val poseMeasurement: VisionMeasurement
-        get() = limelight.poseMeasurement
+    init {
+        LimelightHelpers.setLEDMode_ForceOn(hostname)
+    }
 
-    /**
-     * Get the position of the bot as estimated by the limelight
-     */
-    val botpose: Pose3d
-        get() = limelight.position
-    
+    fun getResults(): LimelightHelpers.LimelightResults {
+        return LimelightHelpers.getLatestResults(hostname)
+    }
 
-    /**
-     * Gets the horizontal offset of the target from the crosshair.
-     */
-    val xOffset: Measure<Angle>
-        get() = limelight.yawOffset
+    fun getTX(): Double {
+        return LimelightHelpers.getTX(hostname)
+    }
 
-    /**
-     * Gets the vertical offset of the target from the crosshair.
-     */
-    val yOffset: Measure<Angle>
-        get() = limelight.pitchOffset
+    fun getTY(): Double {
+        return LimelightHelpers.getTY(hostname)
+    }
 
-    /**
-     * Gets the area of the camera's view that the target takes up.
-     */
-    val area: Double
-        get() = limelight.area
+    fun getTA(): Double {
+        return LimelightHelpers.getTA(hostname)
+    }
 
-    /** @suppress */
-    val skew: Measure<Angle>
-        get() = limelight.roll
+    fun getTV(): Boolean {
+        return LimelightHelpers.getTV(hostname)
+    }
 
-    /**
-     * Gets whether the limelight has a target in its view.
-     */
-    val targetVisible: Boolean
-        get() = limelight.targetVisible
+    fun getPoseEsimate(): LimelightHelpers.PoseEstimate {
+        return LimelightHelpers.getBotPoseEstimate_wpiBlue(hostname)
+    }
 }
