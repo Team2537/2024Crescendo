@@ -24,11 +24,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.Constants
 import lib.evilGetHeading
 import lib.vision.Limelight
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
+import swervelib.SwerveDriveTest
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.util.*
@@ -132,7 +134,25 @@ object SwerveSubsystem : SubsystemBase() {
         return HeadingPID.calculate(measurement, setpoint)
     }
 
+    fun sysIdDriveMotor(): Command? {
+        return SwerveDriveTest.generateSysIdCommand(
+            SwerveDriveTest.setDriveSysIdRoutine(
+                SysIdRoutine.Config(),
+                this,
+                swerveDrive, 12.0),
+            3.0, 5.0, 3.0
+            )
+    }
 
+    fun sysIdAngleMotorCommand(): Command {
+        return SwerveDriveTest.generateSysIdCommand(
+            SwerveDriveTest.setAngleSysIdRoutine(
+                SysIdRoutine.Config(),
+                this, swerveDrive
+            ),
+            3.0, 5.0, 3.0
+        )
+    }
 
     /**
      * Gets a command that follows a path created in PathPlanner.
