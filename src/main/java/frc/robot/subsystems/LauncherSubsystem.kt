@@ -51,26 +51,27 @@ object LauncherSubsystem : SubsystemBase() {
         SysIdRoutine.Config(),
         SysIdRoutine.Mechanism(
             { volts: Measure<Voltage> ->
-                topFlywheels.setVoltage(volts.into(Units.Volts))
-//                bottomFlywheels.setVoltage(volts.into(Units.Volts))
+//                topFlywheels.setVoltage(volts.into(Units.Volts))
+                bottomFlywheels.setVoltage(volts.into(Units.Volts))
             },
             { log: SysIdRoutineLog ->
-                log.motor("topFlywheels")
-                    .voltage(Units.Volts.of(topFlywheels.appliedOutput * topFlywheels.busVoltage))
-                    .angularPosition(Units.Rotations.of(topFlywheels.encoder.position))
-                    .angularVelocity(Units.RPM.of(topFlywheels.encoder.velocity))
-                    .current(Units.Amps.of(topFlywheels.outputCurrent))
-//                log.motor("bottomFlywheels")
-//                    .voltage(Units.Volts.of(bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage))
-//                    .angularPosition(Units.Rotations.of(bottomFlywheels.encoder.position))
-//                    .angularVelocity(Units.RPM.of(bottomFlywheels.encoder.velocity))
-//                    .current(Units.Amps.of(bottomFlywheels.outputCurrent))
+//                log.motor("topFlywheels")
+//                    .voltage(Units.Volts.of(topFlywheels.appliedOutput * topFlywheels.busVoltage))
+//                    .angularPosition(Units.Rotations.of(topFlywheels.encoder.position))
+//                    .angularVelocity(Units.RPM.of(topFlywheels.encoder.velocity))
+//                    .current(Units.Amps.of(topFlywheels.outputCurrent))
+                log.motor("bottomFlywheels")
+                    .voltage(Units.Volts.of(bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage))
+                    .angularPosition(Units.Rotations.of(bottomFlywheels.encoder.position))
+                    .angularVelocity(Units.RPM.of(bottomFlywheels.encoder.velocity))
+                    .current(Units.Amps.of(bottomFlywheels.outputCurrent))
             },
             this
         )
     )
 
     val topFlywheelFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(-0.20832, 0.11109, 0.024896)
+    val bottomFlywheelFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(0.035079, 0.10631, 0.0080339)
 
     init {
         topFlywheels.restoreFactoryDefaults()
@@ -130,7 +131,7 @@ object LauncherSubsystem : SubsystemBase() {
 
     fun setFlywheelVelocity(velocity: RotationVelocity){
         topFlywheels.setVoltage(topFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond));
-        bottomFlywheels.setVoltage(topFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond))
+        bottomFlywheels.setVoltage(bottomFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond))
     }
 
     fun setFlywheelVoltage(voltage: Double){
