@@ -52,7 +52,7 @@ object LauncherSubsystem : SubsystemBase() {
         SysIdRoutine.Mechanism(
             { volts: Measure<Voltage> ->
                 topFlywheels.setVoltage(volts.into(Units.Volts))
-                bottomFlywheels.setVoltage(volts.into(Units.Volts))
+//                bottomFlywheels.setVoltage(volts.into(Units.Volts))
             },
             { log: SysIdRoutineLog ->
                 log.motor("topFlywheels")
@@ -60,26 +60,33 @@ object LauncherSubsystem : SubsystemBase() {
                     .angularPosition(Units.Rotations.of(topFlywheels.encoder.position))
                     .angularVelocity(Units.RPM.of(topFlywheels.encoder.velocity))
                     .current(Units.Amps.of(topFlywheels.outputCurrent))
-                log.motor("bottomFlywheels")
-                    .voltage(Units.Volts.of(bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage))
-                    .angularPosition(Units.Rotations.of(bottomFlywheels.encoder.position))
-                    .angularVelocity(Units.RPM.of(bottomFlywheels.encoder.velocity))
-                    .current(Units.Amps.of(bottomFlywheels.outputCurrent))
+//                log.motor("bottomFlywheels")
+//                    .voltage(Units.Volts.of(bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage))
+//                    .angularPosition(Units.Rotations.of(bottomFlywheels.encoder.position))
+//                    .angularVelocity(Units.RPM.of(bottomFlywheels.encoder.velocity))
+//                    .current(Units.Amps.of(bottomFlywheels.outputCurrent))
             },
             this
         )
     )
+
+    val topFlywheelFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(-0.63336, 0.11226, 0.073357)
 
     init {
         topFlywheels.restoreFactoryDefaults()
         bottomFlywheels.restoreFactoryDefaults()
         rollerMotor.restoreFactoryDefaults()
 
-        bottomFlywheels.follow(topFlywheels, true)
+        bottomFlywheels.inverted = true
 
         topFlywheels.setSmartCurrentLimit(40)
         bottomFlywheels.setSmartCurrentLimit(40)
         rollerMotor.setSmartCurrentLimit(40)
+
+        topFlywheels.encoder.positionConversionFactor = 1.0
+        bottomFlywheels.encoder.positionConversionFactor = 1.0
+        topFlywheels.encoder.velocityConversionFactor = 1.0
+        bottomFlywheels.encoder.velocityConversionFactor = 1.0
 
         topFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
         bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
@@ -97,10 +104,19 @@ object LauncherSubsystem : SubsystemBase() {
         Shuffleboard.getTab("Launcher").addDouble("Position") { getRollerPosition() }
         Shuffleboard.getTab("Launcher").addDouble("Setpoint") { setPoint }
 
+        Shuffleboard.getTab("Launcher Sysid").addDouble("Top Flywheel Position") { topFlywheels.encoder.position }
+        Shuffleboard.getTab("Launcher Sysid").addDouble("Top Flywheel Velocity") { topFlywheels.encoder.velocity }
+        Shuffleboard.getTab("Launcher Sysid").addDouble("Bottom Flywheel Position") { bottomFlywheels.encoder.position }
+        Shuffleboard.getTab("Launcher Sysid").addDouble("Bottom Flywheel Velocity") { bottomFlywheels.encoder.velocity }
+        Shuffleboard.getTab("Launcher Sysid").addDouble("Top Flywheel Voltage") {topFlywheels.appliedOutput * topFlywheels.busVoltage }
+        Shuffleboard.getTab("Launcher Sysid").addDouble("Bottom Flywheel Voltage") {bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage }
+
         topFlywheels.burnFlash()
         bottomFlywheels.burnFlash()
 
         rollerMotor.encoder.setPosition(0.0)
+        topFlywheels.encoder.setPosition(0.0)
+        bottomFlywheels.encoder.setPosition(0.0)
     }
 
     fun setFlywheelSpeeds(rawSpeed: Double) {
@@ -110,6 +126,15 @@ object LauncherSubsystem : SubsystemBase() {
 
     fun setRollerSpeed(rawSpeed: Double) {
         rollerMotor.set(rawSpeed)
+    }
+
+    fun setFlywheelVelocity(velocity: RotationVelocity){
+        topFlywheels.setVoltage(topFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond));
+        bottomFlywheels.setVoltage(topFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond))
+    }
+
+    fun setFlywheelVoltage(voltage: Double){
+        topFlywheels.setVoltage(voltage)
     }
 
     fun stopFlywheels() {

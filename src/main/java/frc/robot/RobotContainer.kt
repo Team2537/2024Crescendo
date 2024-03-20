@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.PrintCommand
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
+import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.commands.Autos
 import frc.robot.commands.ClimbArmsUpCommand
 import frc.robot.commands.climb.ClimbToTargetCommand
@@ -106,6 +109,8 @@ object RobotContainer {
         { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
     )
 
+    val testFlywheelSpeedsCommand: TestFlywheelSpeedsCommand = TestFlywheelSpeedsCommand() { controller.rightTriggerAxis }
+
 
 
 
@@ -164,13 +169,17 @@ object RobotContainer {
 //        controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(Commands.runOnce({
-                SwerveSubsystem.lock()
-            })) // TODO: Implement Toggle
+            .onTrue(TestFlywheelFeedforwardCommand())
 //        controller.button(Constants.OperatorConstants.START_BUTTON)
-//            .onTrue(Commands.runOnce({
-//                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
-//            })) // TODO: Implement Intake Command Override
+//            .whileTrue(SequentialCommandGroup(
+//                LauncherSubsystem.dynamicSysIDRoutine(SysIdRoutine.Direction.kForward),
+//                WaitCommand(3.0),
+//                LauncherSubsystem.dynamicSysIDRoutine(SysIdRoutine.Direction.kReverse),
+//                WaitCommand(3.0),
+//                LauncherSubsystem.quasiStaticSysIDRoutine(SysIdRoutine.Direction.kForward),
+//                WaitCommand(3.0),
+//                LauncherSubsystem.quasiStaticSysIDRoutine(SysIdRoutine.Direction.kReverse)
+//            ))
 
 
         LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
