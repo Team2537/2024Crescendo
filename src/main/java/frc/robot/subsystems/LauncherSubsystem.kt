@@ -70,7 +70,7 @@ object LauncherSubsystem : SubsystemBase() {
         )
     )
 
-    val topFlywheelFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(-0.63336, 0.11226, 0.073357)
+    val topFlywheelFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(-0.20832, 0.11109, 0.024896)
 
     init {
         topFlywheels.restoreFactoryDefaults()
