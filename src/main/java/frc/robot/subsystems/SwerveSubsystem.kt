@@ -2,6 +2,7 @@ package frc.robot.subsystems
 
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
+import com.pathplanner.lib.path.PathPoint
 import com.pathplanner.lib.util.GeometryUtil
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
@@ -109,9 +110,9 @@ object SwerveSubsystem : SubsystemBase() {
             this::getRobotVelocity,
             this::setChassisSpeeds,
             HolonomicPathFollowerConfig(
-                PIDConstants(5.0, 0.0, 1.0),
-                PIDConstants(10.0, 0.0, 0.0),
-                2.7,
+                PIDConstants(1.0, 0.0, 1.0),
+                PIDConstants(1.0, 0.0, 0.0),
+                3.5,
                 swerveDrive.swerveDriveConfiguration.driveBaseRadiusMeters,
                 ReplanningConfig(
                     true,
@@ -128,6 +129,12 @@ object SwerveSubsystem : SubsystemBase() {
             this
 
         )
+    }
+
+    fun setRawMotorVoltage(volts: Double){
+        swerveDrive.modules.forEach {
+            it.driveMotor.voltage = volts
+        }
     }
 
     fun calculateHeadingPID(measurement: Double, setpoint: Double): Double {
@@ -164,17 +171,22 @@ object SwerveSubsystem : SubsystemBase() {
         autoName: String,
         setOdomAtStart: Boolean,
     ): Command {
-        var startPosition: Translation2d = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].getPoint(0).position
-        var pose: Pose2d = Pose2d(startPosition, getHeading())
-
+        var startPosition: Pose2d = Pose2d()
+        if(PathPlannerAuto.getStaringPoseFromAutoFile(autoName) == null) {
+            startPosition = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].startingDifferentialPose
+        } else {
+            startPosition = PathPlannerAuto.getStaringPoseFromAutoFile(autoName)
+        }
 
         if(DriverStation.getAlliance() == Optional.of(Alliance.Red)){
-            pose = GeometryUtil.flipFieldPose(pose)
+            startPosition = GeometryUtil.flipFieldPose(startPosition)
         }
 
         if (setOdomAtStart)
             {
-                resetOdometry(pose)
+                if (startPosition != null) {
+                    resetOdometry(startPosition)
+                }
             }
 
         // TODO: Configure path planner's AutoBuilder

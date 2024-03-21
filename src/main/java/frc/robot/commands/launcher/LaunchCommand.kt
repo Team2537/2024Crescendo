@@ -42,8 +42,8 @@ class LaunchCommand(
             launcherSubsystem.setFlywheelSpeeds(speed.asDouble / 4)
             minVelocity = 1200.0
         } else {
-            launcherSubsystem.setFlywheelVelocity(5000.0.rpm)
-            minVelocity = 4500.0
+            launcherSubsystem.setFlywheelVelocity(6000.0.rpm)
+            minVelocity = 5500.0
 
         }
         if(launcherSubsystem.noteTrigger.asBoolean){
@@ -58,7 +58,7 @@ class LaunchCommand(
     }
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(0.25)
+        return timer.hasElapsed(0.5)
     }
 
     override fun end(interrupted: Boolean) {

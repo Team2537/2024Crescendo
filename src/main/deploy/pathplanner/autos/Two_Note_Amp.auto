@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.35,
-      "y": 5.52811290895741
+      "x": 0.8604402957024457,
+      "y": 6.629835587462149
     },
-    "rotation": 0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -30,9 +30,53 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Grab_Amp_Note"
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Pull Note"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake Note"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Aim Intake"
+            "name": "Auto Aim"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
@@ -40,15 +84,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Middle_Grab_Note"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Aim Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Grab_CNote_ANote"
                 }
               },
               {
@@ -88,6 +132,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp Side Autos",
   "choreoAuto": false
 }

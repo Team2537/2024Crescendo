@@ -10,6 +10,7 @@ import frc.robot.commands.launcher.IntakeNoteCommand
 import frc.robot.commands.launcher.LaunchCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
+import frc.robot.commands.pivot.SetKnownPosition
 import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 
@@ -54,6 +55,7 @@ object Autos {
         ))
         NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
         NamedCommands.registerCommand("Intake Note", ToggleIntakeCommand())
+        NamedCommands.registerCommand("Set Down", SetKnownPosition(90.1))
     }
 
     private fun examplePath(): Command {
@@ -95,7 +97,7 @@ object Autos {
 
     private fun onlyShoot(): Command {
         return SequentialCommandGroup(
-            HomePivotCommand(),
+            SetKnownPosition(90.1),
             QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false),
             LaunchCommand(
                 { 1.0 },
@@ -108,6 +110,18 @@ object Autos {
 
     private fun twoNote(): Command {
         return SwerveSubsystem.getAutonomousCommand("Two_Note", true)
+    }
+
+    private fun threeNote(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Three_Note", true)
+    }
+
+    private fun intakeTest(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Two_Note_Intake", true)
+    }
+
+    private fun twoNoteAmp(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Two_Note_Amp", true)
     }
 
 
@@ -128,7 +142,10 @@ object Autos {
         SHOOT_DRIVE_RIGHT("Shoot & Drive Right", { shootAndDriveRight() }),
         SHOOT_DRIVE_LEFT("Shoot & Drive Left", { shootDriveSource() }),
         BASIC_SHOOT("Basic Shoot", { onlyShoot() }),
-        TWO_NOTE("Two Note", {twoNote()})
+        TWO_NOTE("Two Note", {twoNote()}),
+        INTAKE_TEST("Intake Test", { intakeTest() }),
+        THREE_NOTE("Three Note", {threeNote()}),
+        TWO_NOTE_AMP("Two Note Amp", {twoNoteAmp()})
         ;
 
         companion object {

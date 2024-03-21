@@ -89,8 +89,8 @@ object LauncherSubsystem : SubsystemBase() {
         topFlywheels.encoder.velocityConversionFactor = 1.0
         bottomFlywheels.encoder.velocityConversionFactor = 1.0
 
-        topFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
-        bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
+        topFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)
+        bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)
 
 
         rollerMotor.pidController.p = 0.25

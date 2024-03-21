@@ -3,10 +3,12 @@
   "robotLength": 0.84,
   "holonomicMode": true,
   "pathFolders": [
-    "Drift Test Paths"
+    "Drift Test Paths",
+    "Amp Two Note"
   ],
   "autoFolders": [
-    "Drift Tests"
+    "Drift Tests",
+    "Amp Side Autos"
   ],
   "defaultMaxVel": 2.7,
   "defaultMaxAccel": 2.0,
