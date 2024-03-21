@@ -2,7 +2,6 @@ package frc.robot.subsystems
 
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
-import com.pathplanner.lib.path.PathPoint
 import com.pathplanner.lib.util.GeometryUtil
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
@@ -10,28 +9,34 @@ import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.math.VecBuilder
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.trajectory.Trajectory
-import edu.wpi.first.math.util.Units
+import edu.wpi.first.math.util.Units as OldUnits
+import edu.wpi.first.units.Units
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.networktables.StructArrayPublisher
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.DriverStation.Alliance
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.Constants
 import lib.evilGetHeading
-import lib.vision.Limelight
+import lib.math.units.into
 import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.SwerveDriveTest
+import swervelib.SwerveModule
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.util.*
@@ -47,7 +52,7 @@ object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
 
     /** @suppress */
-    var maximumSpeed: Double = Units.feetToMeters(14.5)
+    var maximumSpeed: Double = OldUnits.feetToMeters(14.5)
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")
     var swerveStates: StructArrayPublisher<SwerveModuleState> = NetworkTableInstance.getDefault().
         getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
@@ -56,7 +61,7 @@ object SwerveSubsystem : SubsystemBase() {
 
     /** True is field oriented driving */
     var fieldOriented: Boolean = true
-    val gamepieceLimelight: Limelight = Limelight("limelight-intake", Pose3d())
+//    val gamepieceLimelight: Limelight = Limelight("limelight-intake")
 
 
 
@@ -96,6 +101,7 @@ object SwerveSubsystem : SubsystemBase() {
         tab.addDouble("Back Right Voltage") { Math.abs(swerveDrive.modules[3].driveMotor.voltage)}
 
         tab.addDouble("Evil heading") { swerveDrive.evilGetHeading() }
+
     }
 
     /**
@@ -135,6 +141,44 @@ object SwerveSubsystem : SubsystemBase() {
         swerveDrive.modules.forEach {
             it.driveMotor.voltage = volts
         }
+    }
+
+    fun getDriveSysIDRoutine(): SysIdRoutine {
+        return SysIdRoutine(
+            SysIdRoutine.Config(),
+            SysIdRoutine.Mechanism(
+                { volts: Measure<Voltage> ->
+                    swerveDrive.modules.forEach {
+                        it.driveMotor.voltage = volts into Units.Volt
+                    }
+                },
+                { log: SysIdRoutineLog ->
+                    swerveDrive.modules.forEach {
+                        logDriveMotor(it, log)
+                    }
+                },
+                this
+            )
+        )
+    }
+
+    fun getDriveSysIDCommand(): Command {
+        return SequentialCommandGroup(
+            getDriveSysIDRoutine().dynamic(SysIdRoutine.Direction.kForward),
+            WaitCommand(1.0),
+            getDriveSysIDRoutine().dynamic(SysIdRoutine.Direction.kReverse),
+            WaitCommand(1.0),
+            getDriveSysIDRoutine().quasistatic(SysIdRoutine.Direction.kForward),
+            WaitCommand(1.0),
+            getDriveSysIDRoutine().quasistatic(SysIdRoutine.Direction.kReverse)
+        )
+    }
+
+    private fun logDriveMotor(module: SwerveModule, log: SysIdRoutineLog){
+        log.motor(module.configuration.name)
+            .voltage(Units.Volt.of(module.driveMotor.voltage))
+            .linearPosition(Units.Meters.of(module.driveMotor.position))
+            .linearVelocity(Units.MetersPerSecond.of(module.driveMotor.velocity))
     }
 
     fun calculateHeadingPID(measurement: Double, setpoint: Double): Double {

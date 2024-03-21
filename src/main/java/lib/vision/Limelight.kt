@@ -6,7 +6,7 @@ import lib.vision.LimelightHelpers.PoseEstimate
 class Limelight(private val hostname: String) {
 
     val results: LimelightResults
-        get() = getResults()
+        get() = getLLResults()
 
     /**
      * Horizontal angle to the target
@@ -33,13 +33,13 @@ class Limelight(private val hostname: String) {
         get() = getTV()
 
     val poseEstimate: PoseEstimate
-        get() = getPoseEstimate()
+        get() = getLLPoseEstimate()
 
     init {
         LimelightHelpers.setLEDMode_ForceOn(hostname)
     }
 
-    private fun getResults(): LimelightResults {
+    private fun getLLResults(): LimelightResults {
         return LimelightHelpers.getLatestResults(hostname)
     }
 
@@ -59,7 +59,7 @@ class Limelight(private val hostname: String) {
         return LimelightHelpers.getTV(hostname)
     }
 
-    private fun getPoseEstimate(): PoseEstimate {
+    private fun getLLPoseEstimate(): PoseEstimate {
         return LimelightHelpers.getBotPoseEstimate_wpiBlue(hostname)
     }
 
