@@ -1,11 +1,7 @@
 package lib.vision
 
 import edu.wpi.first.math.geometry.Translation3d
-import edu.wpi.first.units.Units.Radians
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import lib.math.units.degrees
-import lib.math.units.into
-import lib.math.units.pitch
 import lib.vision.LimelightHelpers.LimelightResults
 import lib.vision.LimelightHelpers.PoseEstimate
 
@@ -82,7 +78,7 @@ class Limelight(private val hostname: String) {
     private fun getTD(): Double {
         val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
 
-        // Target distance from origin (should be robot location)
+        // Distance of target from origin (should be robot location)
         return targetPose.translation.getDistance(Translation3d())
     }
 
