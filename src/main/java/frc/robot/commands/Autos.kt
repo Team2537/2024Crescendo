@@ -39,7 +39,7 @@ object Autos {
     fun registerNamedCommands() {
 //        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
         NamedCommands.registerCommand("Intake", ToggleIntakeCommand())
-        NamedCommands.registerCommand("Auto Aim", QuickPivotCommand(10.0, true, true))
+        NamedCommands.registerCommand("Auto Aim", QuickPivotCommand(0.0, true, true))
         NamedCommands.registerCommand("Aim Subwoofer", QuickPivotCommand(
             Constants.PivotConstants.SUBWOOFER_POSITION, false, false
         ))
@@ -56,6 +56,14 @@ object Autos {
         NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
         NamedCommands.registerCommand("Intake Note", ToggleIntakeCommand())
         NamedCommands.registerCommand("Set Down", SetKnownPosition(90.1))
+        NamedCommands.registerCommand("Intake Sequence",
+            ParallelDeadlineGroup(
+                IntakeNoteCommand(),
+                ToggleIntakeCommand().alongWith(
+                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
+                )
+            )
+        )
     }
 
     private fun examplePath(): Command {
