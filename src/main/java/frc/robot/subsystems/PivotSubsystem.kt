@@ -3,6 +3,7 @@ package frc.robot.subsystems
 import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
