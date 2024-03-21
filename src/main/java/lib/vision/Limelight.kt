@@ -1,14 +1,20 @@
 package lib.vision
 
 import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import lib.math.units.Rotation
+import lib.math.units.into
+import lib.math.units.radians
 import lib.vision.LimelightHelpers.LimelightResults
 import lib.vision.LimelightHelpers.PoseEstimate
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
 class Limelight(private val hostname: String) {
 
     val results: LimelightResults
-        get() = getResults()
+        get() = getLimelightResults()
 
     /**
      * Horizontal angle to the target
@@ -34,6 +40,12 @@ class Limelight(private val hostname: String) {
     val td: Double
         get() = getTD()
 
+    val distance2d: Double
+        get() = getDist2D()
+
+    val absoluteTX: Rotation
+        get() = targetAngleAbsolute()
+
     /**
      * Whether a target is visible
      */
@@ -41,7 +53,7 @@ class Limelight(private val hostname: String) {
         get() = getTV()
 
     val poseEstimate: PoseEstimate
-        get() = getPoseEstimate()
+        get() = getBotPose()
 
     init {
         LimelightHelpers.setLEDMode_ForceOn(hostname)
@@ -52,10 +64,12 @@ class Limelight(private val hostname: String) {
         tab.addNumber("$hostname TY") { ty }
         tab.addNumber("$hostname TA") { ta }
         tab.addNumber("$hostname TD") { td }
+        tab.addNumber("$hostname TD2D") { distance2d }
+        tab.addNumber("$hostname bot TX") { absoluteTX into Degrees }
         tab.addBoolean("$hostname TV") { tv }
     }
 
-    private fun getResults(): LimelightResults {
+    private fun getLimelightResults(): LimelightResults {
         return LimelightHelpers.getLatestResults(hostname)
     }
 
@@ -75,6 +89,11 @@ class Limelight(private val hostname: String) {
         return LimelightHelpers.getTV(hostname)
     }
 
+    private fun targetAngleAbsolute(): Rotation {
+        val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
+        return atan2(targetPose.x, targetPose.z).radians
+    }
+
     private fun getTD(): Double {
         val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
 
@@ -82,7 +101,13 @@ class Limelight(private val hostname: String) {
         return targetPose.translation.getDistance(Translation3d())
     }
 
-    private fun getPoseEstimate(): PoseEstimate {
+    private fun getDist2D(): Double {
+        val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
+
+        return sqrt(targetPose.x * targetPose.x + targetPose.z * targetPose.z)
+    }
+
+    private fun getBotPose(): PoseEstimate {
         return LimelightHelpers.getBotPoseEstimate_wpiBlue(hostname)
     }
 

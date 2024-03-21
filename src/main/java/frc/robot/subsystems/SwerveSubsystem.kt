@@ -55,7 +55,7 @@ object SwerveSubsystem : SubsystemBase() {
 
     /** True is field oriented driving */
     var fieldOriented: Boolean = true
-    val gamepieceLimelight: Limelight = Limelight("limelight-intake", Pose3d())
+    val gamepieceLimelight: Limelight = LimelightSubsystem.intakeLimelight
 
 
 

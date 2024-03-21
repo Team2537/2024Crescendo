@@ -6,12 +6,11 @@ package frc.robot.commands.swerve
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.SwerveSubsystem
+import lib.math.units.degrees
 import lib.math.units.into
 import swervelib.SwerveController
-import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
 /**
@@ -59,7 +58,7 @@ class TrackingDriveCommand(
         var strafeVelocity = vStrafe.asDouble
         var slowMode = slowMode.asDouble
 
-        var offset = swerve.gamepieceLimelight.yawOffset into Units.Degrees
+        var offset = swerve.gamepieceLimelight.tx.degrees into Units.Degrees
 
         var angVelocity = alignmentPID.calculate(offset, 0.0)
 

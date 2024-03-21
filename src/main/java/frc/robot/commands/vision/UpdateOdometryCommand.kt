@@ -21,7 +21,7 @@ class UpdateOdometryCommand : Command() {
     }
 
     override fun execute() {
-        val estimate = LimelightSubsystem.getPoseEsimate()
+        val estimate = LimelightSubsystem.odometryLimelight.poseEstimate
         if(estimate.tagCount >= 2){
             SwerveSubsystem.setVisionMeasurementStdDevs(.7, .7, 99999999.0)
             SwerveSubsystem.addVisionMeasurement(

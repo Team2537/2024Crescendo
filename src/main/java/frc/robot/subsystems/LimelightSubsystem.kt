@@ -9,4 +9,8 @@ import lib.vision.Limelight
 object LimelightSubsystem : SubsystemBase() {
     val odometryLimelight: Limelight = Limelight("limelight-odom")
     val intakeLimelight: Limelight = Limelight("limelight-intake")
+
+    init {
+        odometryLimelight.setTargetTag(7)
+    }
 }

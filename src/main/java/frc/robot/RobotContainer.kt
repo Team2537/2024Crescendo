@@ -1,29 +1,24 @@
 package frc.robot
 
 import LauncherSubsystem
-import com.pathplanner.lib.auto.NamedCommands
-import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
-import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
-import frc.robot.commands.ClimbArmsUpCommand
 import frc.robot.commands.climb.ClimbToTargetCommand
 import frc.robot.commands.climb.ManualClimbCommand
-import frc.robot.commands.intake.FeedLauncherCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
-import frc.robot.commands.vision.UpdateOdometryCommand
+import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.*
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
@@ -88,6 +83,11 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
+    val trackSpeakerCommand = ParallelCommandGroup(
+        RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight),
+        QuickPivotCommand(0.0, false, true)
+    )
+
     val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
     val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false)
     val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false, false)
@@ -115,7 +115,6 @@ object RobotContainer {
         // TODO: comment stuff in this function cause I'm lazy (:
         initializeObjects()
         configureBindings()
-
         SwerveSubsystem.defaultCommand = teleopDrive
 
         Shuffleboard.getTab("Scheduler").add("Scheduler", CommandScheduler.getInstance())
@@ -150,9 +149,24 @@ object RobotContainer {
         controller.leftBumper().toggleOnTrue(
             ParallelDeadlineGroup(
                 IntakeNoteCommand(),
-                ToggleIntakeCommand()
+                ToggleIntakeCommand().alongWith(
+                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
+                )
             )
         )
+
+        controller.rightBumper().onTrue(
+            Commands.runOnce({
+                if (teleopDrive.isScheduled) {
+                    teleopDrive.cancel()
+                    trackSpeakerCommand.schedule()
+                } else {
+                    trackSpeakerCommand.cancel()
+                    teleopDrive.schedule()
+                }
+            })
+        )
+
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.povUp().onTrue(ampPivot)
         controller.povRight().onTrue(intakePivot)
