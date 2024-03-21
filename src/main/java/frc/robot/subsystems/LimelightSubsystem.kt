@@ -13,33 +13,7 @@ import lib.vision.VisionMeasurement
  * The subsystem that controls the limelight.
  */
 object LimelightSubsystem : SubsystemBase() {
-    private val hostname: String = "limelight-odom"
 
-    init {
-        LimelightHelpers.setLEDMode_ForceOn(hostname)
-    }
-
-    fun getResults(): LimelightHelpers.LimelightResults {
-        return LimelightHelpers.getLatestResults(hostname)
-    }
-
-    fun getTX(): Double {
-        return LimelightHelpers.getTX(hostname)
-    }
-
-    fun getTY(): Double {
-        return LimelightHelpers.getTY(hostname)
-    }
-
-    fun getTA(): Double {
-        return LimelightHelpers.getTA(hostname)
-    }
-
-    fun getTV(): Boolean {
-        return LimelightHelpers.getTV(hostname)
-    }
-
-    fun getPoseEsimate(): LimelightHelpers.PoseEstimate {
-        return LimelightHelpers.getBotPoseEstimate_wpiBlue(hostname)
-    }
+    val odometryLimelight: Limelight = Limelight("limelight-odom") // FIXME
+    val pieceLimelight: Limelight = Limelight("limelight-TODO") // FIXME
 }

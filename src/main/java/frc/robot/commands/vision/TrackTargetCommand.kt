@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
+import lib.vision.Limelight
 import kotlin.math.abs
 
 /**
@@ -14,7 +15,7 @@ import kotlin.math.abs
  * @see SwerveSubsystem
  * @see LimelightSubsystem
  */
-class TrackTargetCommand : Command() {
+class TrackTargetCommand(private val limelight: Limelight, targetId: Int) : Command() {
     private val limelightSubsystem = LimelightSubsystem
     private val drivebase = SwerveSubsystem
     private val pidController: PIDController
@@ -26,6 +27,7 @@ class TrackTargetCommand : Command() {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(limelightSubsystem, drivebase)
         pidController = PIDController(0.1, 0.0, 0.0)
+        limelight.setTargetTag(targetId)
     }
 
     /** @suppress */
@@ -33,13 +35,14 @@ class TrackTargetCommand : Command() {
 
     /** @suppress */
     override fun execute() {
-        rotation = pidController.calculate(limelightSubsystem.getTX(), 0.0)
+        rotation = pidController.calculate(limelight.tx, 0.0)
 
-        if ((abs(limelightSubsystem.getTX()) < 2 && limelightSubsystem.getTA() < 3.5) && limelightSubsystem.getTV()) {
-            translation = Translation2d(0.3, -SingletonXboxController.leftX)
-        } else {
-            translation = Translation2d(0.0, -SingletonXboxController.leftX)
-        }
+        translation =
+            if ((abs(limelight.tx) < 2 && limelight.ta < 3.5) && limelight.tv) {
+                Translation2d(0.3, -SingletonXboxController.leftX)
+            } else {
+                Translation2d(0.0, -SingletonXboxController.leftX)
+            }
         drivebase.drive(translation, rotation, false)
     }
 
