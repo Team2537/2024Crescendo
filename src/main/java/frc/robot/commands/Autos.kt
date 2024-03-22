@@ -11,6 +11,8 @@ import frc.robot.commands.launcher.LaunchCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.pivot.SetKnownPosition
+import frc.robot.commands.vision.RotateTowardsTargetCommand
+import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 
@@ -63,6 +65,10 @@ object Autos {
                     QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
                 )
             )
+        )
+        NamedCommands.registerCommand(
+            "Rotate Towards Target",
+            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
         )
     }
 
@@ -124,6 +130,10 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("Three_Note", true)
     }
 
+    private fun threeNoteAutoAim(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Three_Note_Auto_Aim", true)
+    }
+
     private fun intakeTest(): Command {
         return SwerveSubsystem.getAutonomousCommand("Two_Note_Intake", true)
     }
@@ -153,7 +163,8 @@ object Autos {
         TWO_NOTE("Two Note", {twoNote()}),
         INTAKE_TEST("Intake Test", { intakeTest() }),
         THREE_NOTE("Three Note", {threeNote()}),
-        TWO_NOTE_AMP("Two Note Amp", {twoNoteAmp()})
+        TWO_NOTE_AMP("Two Note Amp", {twoNoteAmp()}),
+        THREE_NOTE_AUTO_AIM("Three Note Auto Aim", {threeNoteAutoAim()}),
         ;
 
         companion object {

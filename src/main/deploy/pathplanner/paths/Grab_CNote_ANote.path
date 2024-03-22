@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.78,
-        "y": 6.86
+        "x": 2.8,
+        "y": 6.91
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.757418051653207,
-        "y": 6.756582444281278
+        "x": 0.9384383614373201,
+        "y": 5.801106139032617
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 5.52811290895741
       },
       "prevControl": {
-        "x": 1.8006421808568094,
-        "y": 5.52811290895741
+        "x": 1.757418051653207,
+        "y": 5.333117744620287
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Amp Two Note",
   "previewStartingState": {
-    "rotation": 29.450320721872735,
+    "rotation": 26.57,
     "velocity": 0
   },
   "useDefaultConstraints": true
