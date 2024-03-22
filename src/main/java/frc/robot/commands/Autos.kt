@@ -57,7 +57,7 @@ object Autos {
         ))
         NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
         NamedCommands.registerCommand("Intake Note", ToggleIntakeCommand())
-        NamedCommands.registerCommand("Set Down", SetKnownPosition(90.1))
+        NamedCommands.registerCommand("Set Down", SetKnownPosition(91.28))
         NamedCommands.registerCommand("Intake Sequence",
             ParallelDeadlineGroup(
                 IntakeNoteCommand(),

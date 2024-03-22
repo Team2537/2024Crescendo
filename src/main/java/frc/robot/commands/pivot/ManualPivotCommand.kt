@@ -27,6 +27,6 @@ class ManualPivotCommand(voltage: DoubleSupplier) : Command() {
     }
 
     override fun end(interrupted: Boolean) {
-        QuickPivotCommand(pivotSubsystem.getRelativePosition(), false, false).schedule()
+//        QuickPivotCommand(pivotSubsystem.getRelativePosition(), false, false).schedule()
     }
 }

@@ -99,10 +99,10 @@ object Constants {
         const val slope = -0.33
 
         val distanceMap: HashMap<Double, Double> = hashMapOf(
-            Pair(0.0 + 48.5, 81.5),
-            Pair(25.5 + 48.5, 69.1),
-            Pair(69.0 + 48.5, 61.7),
-            Pair(94.0 + 48.5, 57.0),
+            Pair(0.0 + 54.17, 81.5),
+            Pair(78.75, 72.75),
+            Pair(104.33, 65.78),
+            Pair(187.4, 60.5)
         )
     }
 

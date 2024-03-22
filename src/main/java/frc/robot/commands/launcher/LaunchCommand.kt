@@ -33,6 +33,7 @@ class LaunchCommand(
     }
 
     override fun initialize() {
+        launcherSubsystem.setFlywheelBrake(false)
         timer.restart()
         println("Starting Launch")
     }
@@ -42,7 +43,7 @@ class LaunchCommand(
             launcherSubsystem.setFlywheelSpeeds(speed.asDouble / 4)
             minVelocity = 1200.0
         } else {
-            launcherSubsystem.setFlywheelVelocity(6000.0.rpm)
+            launcherSubsystem.setFlywheelVelocity(5800.0.rpm)
             minVelocity = 5500.0
 
         }
@@ -66,6 +67,7 @@ class LaunchCommand(
         launcherSubsystem.stopFlywheels()
         launcherSubsystem.rollerMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
         launcherSubsystem.stopRoller()
+        launcherSubsystem.setFlywheelBrake(true)
         println("Launch Ending $interrupted")
     }
 }

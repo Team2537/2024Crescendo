@@ -4,7 +4,6 @@ import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DigitalInput
-import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog
 import edu.wpi.first.wpilibj2.command.Command
@@ -16,10 +15,7 @@ import frc.robot.Constants
 import frc.robot.Robot
 import lib.math.units.RotationVelocity
 import lib.math.units.into
-import lib.math.units.rpm
-import lib.math.units.velocity
-import lib.near
-import lib.zoneTrigger
+import kotlin.math.min
 
 object LauncherSubsystem : SubsystemBase() {
     // TODO: Get the actual IDs
@@ -120,6 +116,16 @@ object LauncherSubsystem : SubsystemBase() {
         bottomFlywheels.encoder.setPosition(0.0)
     }
 
+    fun setFlywheelBrake(brake: Boolean){
+        if(brake){
+            topFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)
+            bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)
+        } else {
+            topFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
+            bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kCoast)
+        }
+    }
+
     fun setFlywheelSpeeds(rawSpeed: Double) {
         topFlywheels.set(rawSpeed)
         bottomFlywheels.set(rawSpeed)
@@ -130,8 +136,12 @@ object LauncherSubsystem : SubsystemBase() {
     }
 
     fun setFlywheelVelocity(velocity: RotationVelocity){
-        topFlywheels.setVoltage(topFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond));
-        bottomFlywheels.setVoltage(bottomFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond))
+        val currentV = min(topFlywheels.encoder.velocity, bottomFlywheels.encoder.velocity)
+        val error = velocity.into(Units.RPM) - currentV
+        val extraVoltage = error * 0.002
+
+        topFlywheels.setVoltage(topFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond) + extraVoltage);
+        bottomFlywheels.setVoltage(bottomFlywheelFeedforward.calculate(velocity into Units.RotationsPerSecond) + extraVoltage)
     }
 
     fun setFlywheelVoltage(voltage: Double){

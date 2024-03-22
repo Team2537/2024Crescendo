@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
@@ -83,10 +84,10 @@ object RobotContainer {
         { controller.leftTriggerAxis }
     )
 
-    val trackSpeakerCommand = ParallelCommandGroup(
-        RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight),
-        QuickPivotCommand(0.0, false, true)
-    )
+//    val trackSpeakerCommand = ParallelCommandGroup(
+//        RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight),
+//        QuickPivotCommand(0.0, false, true)
+//    )
 
     val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
     val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false)
@@ -155,23 +156,29 @@ object RobotContainer {
             )
         )
 
-        controller.rightBumper().onTrue(
-            Commands.runOnce({
-                if (teleopDrive.isScheduled) {
-                    teleopDrive.cancel()
-                    trackSpeakerCommand.schedule()
-                } else {
-                    trackSpeakerCommand.cancel()
-                    teleopDrive.schedule()
-                }
-            })
-        )
+//        controller.rightBumper().onTrue(
+//            Commands.runOnce({
+//                if (teleopDrive.isScheduled) {
+//                    teleopDrive.cancel()
+//                    trackSpeakerCommand.schedule()
+//                } else {
+//                    trackSpeakerCommand.cancel()
+//                    teleopDrive.schedule()
+//                }
+//            })
+//        )
 
         controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
         controller.povUp().onTrue(ampPivot)
         controller.povRight().onTrue(intakePivot)
         controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(autoAim) // TODO: Implement auto-aiming
+        controller.povLeft().onTrue(
+            autoAim
+        ) // TODO: Implement auto-aiming
+        controller.rightBumper().toggleOnTrue(
+            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
+        )
+
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
         controller.x().onTrue(manualClimb)
