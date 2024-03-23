@@ -126,21 +126,25 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("Two_Note", true)
     }
 
-    private fun threeNote(): Command {
+    private fun threeNoteCenter(): Command {
         return SwerveSubsystem.getAutonomousCommand("Three_Note", true)
     }
 
-    private fun threeNoteAutoAim(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Three_Note_Auto_Aim", true)
+    private fun threeNoteAmp(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Three_Note_Amp", true)
     }
 
-    private fun intakeTest(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Two_Note_Intake", true)
+    private fun threeNoteSource(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Source_ThreeNote", true)
     }
 
-    private fun twoNoteAmp(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Two_Note_Amp", true)
-    }
+//    private fun intakeTest(): Command {
+//        return SwerveSubsystem.getAutonomousCommand("Two_Note_Intake", true)
+//    }
+//
+//    private fun twoNoteAmp(): Command {
+//        return SwerveSubsystem.getAutonomousCommand("Two_Note_Amp", true)
+//    }
 
 
 
@@ -157,14 +161,12 @@ object Autos {
         EXAMPLE_PATH("Example Path", { examplePath() }),
         TEST_AUTO("Test Auto", { testAuto() }),
         SHOOT_DRIVE_MID("Shoot & Drive Source", { shootDriveSource() }),
-        SHOOT_DRIVE_RIGHT("Shoot & Drive Right", { shootAndDriveRight() }),
-        SHOOT_DRIVE_LEFT("Shoot & Drive Left", { shootDriveSource() }),
+        SHOOT_DRIVE_RIGHT("Shoot & Drive Amp", { shootAndDriveRight() }),
         BASIC_SHOOT("Basic Shoot", { onlyShoot() }),
         TWO_NOTE("Two Note", {twoNote()}),
-        INTAKE_TEST("Intake Test", { intakeTest() }),
-        THREE_NOTE("Three Note", {threeNote()}),
-        TWO_NOTE_AMP("Two Note Amp", {twoNoteAmp()}),
-        THREE_NOTE_AUTO_AIM("Three Note Auto Aim", {threeNoteAutoAim()}),
+        THREE_NOTE_CENTER("Three Note Center", {threeNoteCenter()}),
+        THREE_NOTE_AMP("Three Note Amp", {threeNoteAmp()}),
+        THREE_NOTE_SOURCE("Three Note Source", {threeNoteSource()}),
         ;
 
         companion object {
