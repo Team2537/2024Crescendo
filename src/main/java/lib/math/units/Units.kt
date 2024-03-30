@@ -28,6 +28,33 @@ import edu.wpi.first.units.*
 import edu.wpi.first.units.Unit
 import edu.wpi.first.units.Units.*
 
+
+// TODO: (I will) document all this later; I'm kinda lazy right now
+infix fun <U : Unit<U>, D : Unit<D>> Unit<U>.per(denominator: D): Per<U, D> {
+    @Suppress("UNCHECKED_CAST")
+    return Per.combine(this as U, denominator)
+}
+
+infix fun <U : Unit<U>> Measure<U>.per(period: Measure<Time>): Measure<Velocity<U>> {
+    return unit() per period.unit() outof (this.magnitude / period.magnitude)
+}
+
+infix fun <U : Unit<U>> Measure<U>.per(period: Time): Measure<Velocity<U>> {
+    return unit() per period outof this.magnitude
+}
+
+infix fun <U : Unit<U>> Unit<U>.per(period: Time): Velocity<U> {
+    return this.per(period)
+}
+
+operator fun <U : Unit<U>, V : Unit<V>> Measure<U>.div(measure: Measure<V>): Measure<Per<U, V>> {
+    return unit per measure.unit outof (this.magnitude / measure.magnitude)
+}
+
+infix fun <U : Unit<U>, V : Unit<V>> Measure<U>.per(unit: V): Measure<Per<U, V>> {
+    return this.per(unit)
+}
+
 /**
  * Converts a measure into a given unit, return the value as a double.
  *
@@ -39,6 +66,52 @@ import edu.wpi.first.units.Units.*
 infix fun <U : Unit<U>> Measure<U>.into(unit: U): Double {
     return this.`in`(unit)
 }
+
+/**
+ * Gets the measure out of a unit and magnitude.
+ *
+ * @return A measure of the unit with given magnitude.
+ * @see Unit.of
+ *
+ * @since 2024-03-29
+ */
+@Suppress("SpellCheckingInspection")
+infix fun <U : Unit<U>> Unit<U>.outof(magnitude: Double): Measure<U> {
+    return this.of(magnitude)
+}
+
+/**
+ * The unit of the measure.
+ *
+ * @return The unit of this measure
+ * @see Measure.unit
+ *
+ * @since 2024-03-29
+ */
+inline val <U : Unit<U>> Measure<U>.unit: U
+    get() = this.unit()
+
+/**
+ * The magnitude of the measure.
+ *
+ * @return The magnitude of this measure
+ * @see Measure.magnitude
+ *
+ * @since 2024-03-29
+ */
+inline val Measure<*>.magnitude: Double
+    get() = this.magnitude()
+
+/**
+ * The base unit magnitude of the measure.
+ *
+ * @return The magnitude of this measure in its  base unit
+ * @see Measure.baseUnitMagnitude
+ *
+ * @since 2024-03-29
+ */
+inline val Measure<*>.baseUnitMagnitude: Double
+    get() = this.baseUnitMagnitude()
 
 /**
  * Negates a [Measure] through its [Measure.negate] method
