@@ -43,8 +43,8 @@ class LaunchCommand(
             launcherSubsystem.setFlywheelSpeeds(speed.asDouble / 4)
             minVelocity = 1200.0
         } else {
-            launcherSubsystem.setFlywheelVelocity(5800.0.rpm)
-            minVelocity = 5500.0
+            launcherSubsystem.setFlywheelVelocity(6100.0.rpm)
+            minVelocity = 6000.0
 
         }
         if(launcherSubsystem.noteTrigger.asBoolean){

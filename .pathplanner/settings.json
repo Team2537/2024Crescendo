@@ -5,6 +5,7 @@
   "pathFolders": [
     "Amp Two Note",
     "Drift Test Paths",
+    "Thievery",
     "Source Three Note"
   ],
   "autoFolders": [
@@ -12,9 +13,9 @@
     "Drift Tests",
     "Source Side Autos"
   ],
-  "defaultMaxVel": 2.7,
+  "defaultMaxVel": 4.0,
   "defaultMaxAccel": 2.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "maxModuleSpeed": 2.7
+  "maxModuleSpeed": 4.0
 }

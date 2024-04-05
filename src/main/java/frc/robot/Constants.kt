@@ -92,7 +92,7 @@ object Constants {
 
         const val SUBWOOFER_POSITION = 81.0
         const val AMP_POSITION = 0.5
-        const val INTAKE_POSITION = 71.5
+        const val INTAKE_POSITION = 73.5
         const val PODIUM_POSITION = 57.0 // Ish
         const val MID_POSITION = 63.2
 

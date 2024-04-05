@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.9,
-      "y": 4.42
+      "x": 0.8701900539193015,
+      "y": 6.698083894980142
     },
-    "rotation": -52.0
+    "rotation": 54.079069006292684
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Home"
+            "name": "Set Down"
           }
         },
         {
@@ -32,13 +32,26 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 1.0
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Bottom_Head4_Source"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Steal_MidAmp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Sequence"
+                }
+              }
+            ]
           }
         }
       ]

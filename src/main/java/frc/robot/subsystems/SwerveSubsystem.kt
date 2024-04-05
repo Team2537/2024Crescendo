@@ -118,7 +118,7 @@ object SwerveSubsystem : SubsystemBase() {
             HolonomicPathFollowerConfig(
                 PIDConstants(1.0, 0.0, 1.0),
                 PIDConstants(1.0, 0.0, 0.0),
-                3.5,
+                4.0,
                 swerveDrive.swerveDriveConfiguration.driveBaseRadiusMeters,
                 ReplanningConfig(
                     true,

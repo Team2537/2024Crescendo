@@ -105,6 +105,10 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive_Right", true)
     }
 
+    private fun shootAndSteal(): Command {
+        return SwerveSubsystem.getAutonomousCommand("Steal_MidAmp", true)
+    }
+
     private fun midToTopNote(): Command {
         return SwerveSubsystem.getAutonomousCommand("Mid_To_TopNote", true)
     }
@@ -167,6 +171,7 @@ object Autos {
         THREE_NOTE_CENTER("Three Note Center", {threeNoteCenter()}),
         THREE_NOTE_AMP("Three Note Amp", {threeNoteAmp()}),
         THREE_NOTE_SOURCE("Three Note Source", {threeNoteSource()}),
+        SHOOT_STEAL("Shoot & Steal", {shootAndSteal()})
         ;
 
         companion object {

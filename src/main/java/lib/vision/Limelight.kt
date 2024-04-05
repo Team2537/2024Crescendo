@@ -56,7 +56,7 @@ class Limelight(private val hostname: String) {
         get() = getBotPose()
 
     init {
-        LimelightHelpers.setLEDMode_ForceOn(hostname)
+        setLEDs(true)
 
         val tab = Shuffleboard.getTab("Vision")
 
@@ -71,6 +71,14 @@ class Limelight(private val hostname: String) {
 
     private fun getLimelightResults(): LimelightResults {
         return LimelightHelpers.getLatestResults(hostname)
+    }
+
+    fun setLEDs(on: Boolean) {
+        if(on){
+            LimelightHelpers.setLEDMode_ForceOn(hostname)
+        } else {
+            LimelightHelpers.setLEDMode_ForceOff(hostname)
+        }
     }
 
     private fun getTX(): Double {

@@ -15,6 +15,7 @@ import frc.robot.commands.Autos
 import frc.robot.commands.climb.ClimbToTargetCommand
 import frc.robot.commands.climb.ManualClimbCommand
 import frc.robot.commands.intake.ManualIntakeCommand
+import frc.robot.commands.intake.TestTransfer
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.*
@@ -185,9 +186,7 @@ object RobotContainer {
 //        controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .onTrue(Commands.runOnce({
-                SwerveSubsystem.lock()
-            })) // TODO: Implement Toggle
+            .toggleOnTrue(TestTransfer()) // TODO: Implement Toggle
 //        controller.button(Constants.OperatorConstants.START_BUTTON)
 //            .onTrue(Commands.runOnce({
 //                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)

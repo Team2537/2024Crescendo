@@ -10,14 +10,15 @@ import java.sql.Driver
  */
 object LimelightSubsystem : SubsystemBase() {
     val odometryLimelight: Limelight = Limelight("limelight-odom")
-    val intakeLimelight: Limelight = Limelight("limelight-intake")
+    //val intakeLimelight: Limelight = Limelight("limelight-intake")
 
     init {
         odometryLimelight.setTargetTag(7)
-    }
+        //intakeLimelight.setLEDs(false)
+        odometryLimelight.setLEDs(true)
 
-    override fun periodic() {
         if(DriverStation.getAlliance().isPresent){
+            println("Limelight target set, alliance: ${DriverStation.getAlliance()}")
             if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
                 odometryLimelight.setTargetTag(4)
             } else {
