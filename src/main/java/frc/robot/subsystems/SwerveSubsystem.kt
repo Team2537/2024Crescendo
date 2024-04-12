@@ -82,7 +82,13 @@ object SwerveSubsystem : SubsystemBase() {
             it.setAntiJitter(false)
         }
 
-//        swerveDrive.setCosineCompensator(false)
+        if (SwerveDriveTelemetry.isSimulation) 
+        {
+            swerveDrive.setCosineCompensator(false)
+        }
+        else {
+            swerveDrive.setCosineCompensator(true)
+        }
 
         setMotorBrake(true)
 
