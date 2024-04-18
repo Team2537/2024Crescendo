@@ -15,18 +15,20 @@ import lib.toTrigger
  * as well as the transfer conveyor(?) to the launcher.
  */
 object IntakeSubsystem : SubsystemBase() {
-    /**
-     * [REV Neo 550](https://www.revrobotics.com/rev-21-1651/) that controls the under-bumper intake.
-     */
+    /** The motor for the intake */
     val intakeMotor : CANSparkMax = CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless)
+    /** The motor for the transfer */
     val transferMotor: CANSparkMax = CANSparkMax(IntakeConstants.TRANSFER_MOTOR_ID, MotorType.kBrushless)
 
+    /** Shuffleboard tab for the Intake subsystem */
     private val tab = Shuffleboard.getTab("Intake")
 
     init {
+        // Logging for Shuffleboard, just velocity of the motors
         tab.addDouble("Intake Velocity") { intakeMotor.encoder.velocity }
         tab.addDouble("Transfer Velocity") { transferMotor.encoder.velocity }
 
+        // Set current limits so that the motors don't burn out
         intakeMotor.setSmartCurrentLimit(40)
         transferMotor.setSmartCurrentLimit(30)
     }
