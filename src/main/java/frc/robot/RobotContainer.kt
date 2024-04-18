@@ -4,15 +4,11 @@ import LauncherSubsystem
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.Autos
-import frc.robot.commands.climb.ClimbToTargetCommand
 import frc.robot.commands.climb.ManualClimbCommand
 import frc.robot.commands.intake.ManualIntakeCommand
 import frc.robot.commands.intake.TestTransfer
@@ -99,7 +95,6 @@ object RobotContainer {
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
     val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
-    val climbCommand: ClimbToTargetCommand = ClimbToTargetCommand(7.0)
 
     val launchCommand: LaunchCommand = LaunchCommand(
         {1.0},
