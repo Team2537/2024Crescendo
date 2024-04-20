@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>LauncherSubsystem</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../../images/logo-icon.svg">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            2024Crescendo
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dokkaHtml/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="2024Crescendo::/LauncherSubsystem///PointingToDeclaration//769193423">
+  <div class="breadcrumbs"><a href="../../../index.html">2024Crescendo</a><span class="delimiter">/</span><a href="../index.html">[root]</a><span class="delimiter">/</span><span class="current">LauncherSubsystem</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Launcher</span><wbr></wbr><span><span>Subsystem</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">LauncherSubsystem</a> : <span data-unresolved-link="edu.wpi.first.wpilibj2.command/SubsystemBase///PointingToDeclaration/">SubsystemBase</span></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-408443624%2FProperties%2F769193423" anchor-label="bottomFlywheelFeedforward" id="-408443624%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="bottom-flywheel-feedforward.html"><span>bottom</span><wbr></wbr><span>Flywheel</span><wbr></wbr><span><span>Feedforward</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-408443624%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bottom-flywheel-feedforward.html">bottomFlywheelFeedforward</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.math.controller/SimpleMotorFeedforward///PointingToDeclaration/">SimpleMotorFeedforward</span></div><div class="brief "><p class="paragraph">Feedforward controller for the bottom flywheel</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1864392724%2FProperties%2F769193423" anchor-label="bottomFlywheels" id="-1864392724%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="bottom-flywheels.html"><span>bottom</span><wbr></wbr><span><span>Flywheels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1864392724%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bottom-flywheels.html">bottomFlywheels</a><span class="token operator">: </span><span data-unresolved-link="com.revrobotics/CANSparkFlex///PointingToDeclaration/">CANSparkFlex</span></div><div class="brief "><p class="paragraph">Motor for the bottom flywheels</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1131570547%2FProperties%2F769193423" anchor-label="flywheelFeedforward" id="-1131570547%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="flywheel-feedforward.html"><span>flywheel</span><wbr></wbr><span><span>Feedforward</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1131570547%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="flywheel-feedforward.html">flywheelFeedforward</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.math.controller/SimpleMotorFeedforward///PointingToDeclaration/">SimpleMotorFeedforward</span></div><div class="brief "><p class="paragraph">Feedforward controller for the flywheel</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1481979731%2FProperties%2F769193423" anchor-label="flywheelPIDController" id="-1481979731%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="flywheel-p-i-d-controller.html"><span>flywheel</span><wbr></wbr><span><span>PIDController</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1481979731%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="flywheel-p-i-d-controller.html">flywheelPIDController</a><span class="token operator">: </span><span data-unresolved-link="com.revrobotics/SparkPIDController///PointingToDeclaration/">SparkPIDController</span></div><div class="brief "><p class="paragraph">PID Controller for the flywheel</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1708446330%2FProperties%2F769193423" anchor-label="noteTrigger" id="-1708446330%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="note-trigger.html"><span>note</span><wbr></wbr><span><span>Trigger</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1708446330%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="note-trigger.html">noteTrigger</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj2.command.button/Trigger///PointingToDeclaration/">Trigger</span></div><div class="brief "><p class="paragraph">Trigger for when the note is detected</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1919958696%2FProperties%2F769193423" anchor-label="rightNoteDetector" id="-1919958696%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="right-note-detector.html"><span>right</span><wbr></wbr><span>Note</span><wbr></wbr><span><span>Detector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1919958696%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="right-note-detector.html">rightNoteDetector</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj/DigitalInput///PointingToDeclaration/">DigitalInput</span></div><div class="brief "><p class="paragraph">Sensor placed on the right side of the launcher to detect the note</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1381452319%2FProperties%2F769193423" anchor-label="rollerMotor" id="-1381452319%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="roller-motor.html"><span>roller</span><wbr></wbr><span><span>Motor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1381452319%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="roller-motor.html">rollerMotor</a><span class="token operator">: </span><span data-unresolved-link="com.revrobotics/CANSparkMax///PointingToDeclaration/">CANSparkMax</span></div><div class="brief "><p class="paragraph">Motor for the roller that feeds the launcher</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="728468328%2FProperties%2F769193423" anchor-label="routine" id="728468328%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="routine.html"><span><span>routine</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="728468328%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="routine.html">routine</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj2.command.sysid/SysIdRoutine///PointingToDeclaration/">SysIdRoutine</span></div><div class="brief "><p class="paragraph">The system identification routine for the launcher subsystem.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-408782048%2FProperties%2F769193423" anchor-label="setPoint" id="-408782048%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-point.html"><span>set</span><wbr></wbr><span><span>Point</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-408782048%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="set-point.html">setPoint</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></div><div class="brief "><p class="paragraph">The current stored setpoint for the roller</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="432609591%2FProperties%2F769193423" anchor-label="tab" id="432609591%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="tab.html"><span><span>tab</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="432609591%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="tab.html">tab</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj.shuffleboard/ShuffleboardTab///PointingToDeclaration/">ShuffleboardTab</span></div><div class="brief "><p class="paragraph">Shuffleboard tab for the Launcher subsystem</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1194012484%2FProperties%2F769193423" anchor-label="topFlywheelFeedforward" id="1194012484%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="top-flywheel-feedforward.html"><span>top</span><wbr></wbr><span>Flywheel</span><wbr></wbr><span><span>Feedforward</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1194012484%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="top-flywheel-feedforward.html">topFlywheelFeedforward</a><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.math.controller/SimpleMotorFeedforward///PointingToDeclaration/">SimpleMotorFeedforward</span></div><div class="brief "><p class="paragraph">Feedforward controller for the top flywheel</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2092282136%2FProperties%2F769193423" anchor-label="topFlywheels" id="2092282136%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="top-flywheels.html"><span>top</span><wbr></wbr><span><span>Flywheels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2092282136%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="top-flywheels.html">topFlywheels</a><span class="token operator">: </span><span data-unresolved-link="com.revrobotics/CANSparkFlex///PointingToDeclaration/">CANSparkFlex</span></div><div class="brief "><p class="paragraph">Motor for the top flywheels</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-169467170%2FFunctions%2F769193423" anchor-label="dynamicSysIDRoutine" id="-169467170%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="dynamic-sys-i-d-routine.html"><span>dynamic</span><wbr></wbr><span>Sys</span><wbr></wbr><span><span>IDRoutine</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-169467170%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="dynamic-sys-i-d-routine.html"><span class="token function">dynamicSysIDRoutine</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">direction<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj2.command.sysid/SysIdRoutine.Direction///PointingToDeclaration/">SysIdRoutine.Direction</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj2.command/Command///PointingToDeclaration/">Command</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Creates a command to run a dynamic system identification routine</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-770287901%2FFunctions%2F769193423" anchor-label="getRollerPosition" id="-770287901%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-roller-position.html"><span>get</span><wbr></wbr><span>Roller</span><wbr></wbr><span><span>Position</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-770287901%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-roller-position.html"><span class="token function">getRollerPosition</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></div><div class="brief "><p class="paragraph">Get the current position of the roller</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1754000614%2FFunctions%2F769193423" anchor-label="noteDetected" id="-1754000614%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="note-detected.html"><span>note</span><wbr></wbr><span><span>Detected</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1754000614%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="note-detected.html"><span class="token function">noteDetected</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns whether the note is being detected</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="32015424%2FFunctions%2F769193423" anchor-label="quasiStaticSysIDRoutine" id="32015424%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="quasi-static-sys-i-d-routine.html"><span>quasi</span><wbr></wbr><span>Static</span><wbr></wbr><span>Sys</span><wbr></wbr><span><span>IDRoutine</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="32015424%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="quasi-static-sys-i-d-routine.html"><span class="token function">quasiStaticSysIDRoutine</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">direction<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj2.command.sysid/SysIdRoutine.Direction///PointingToDeclaration/">SysIdRoutine.Direction</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.wpilibj2.command/Command///PointingToDeclaration/">Command</span><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Creates a command to run a quasi-static system identification routine</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1888424018%2FFunctions%2F769193423" anchor-label="setFlywheelBrake" id="1888424018%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-flywheel-brake.html"><span>set</span><wbr></wbr><span>Flywheel</span><wbr></wbr><span><span>Brake</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1888424018%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-flywheel-brake.html"><span class="token function">setFlywheelBrake</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">brake<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the brake mode for the flywheels</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1918516814%2FFunctions%2F769193423" anchor-label="setFlywheelSpeeds" id="1918516814%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-flywheel-speeds.html"><span>set</span><wbr></wbr><span>Flywheel</span><wbr></wbr><span><span>Speeds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1918516814%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-flywheel-speeds.html"><span class="token function">setFlywheelSpeeds</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawSpeed<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the flywheel speeds to a raw duty cycle value</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2145019136%2FFunctions%2F769193423" anchor-label="setFlywheelVelocity" id="-2145019136%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-flywheel-velocity.html"><span>set</span><wbr></wbr><span>Flywheel</span><wbr></wbr><span><span>Velocity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2145019136%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-flywheel-velocity.html"><span class="token function">setFlywheelVelocity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">velocity<span class="token operator">: </span><a href="../../lib.math.units/-rotation-velocity/index.html">RotationVelocity</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the flywheel speeds to a velocity</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="993420106%2FFunctions%2F769193423" anchor-label="setFlywheelVoltage" id="993420106%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-flywheel-voltage.html"><span>set</span><wbr></wbr><span>Flywheel</span><wbr></wbr><span><span>Voltage</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="993420106%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-flywheel-voltage.html"><span class="token function">setFlywheelVoltage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">voltage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the flywheel speeds to a voltage</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1862668723%2FFunctions%2F769193423" anchor-label="setRollerPosition" id="-1862668723%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-roller-position.html"><span>set</span><wbr></wbr><span>Roller</span><wbr></wbr><span><span>Position</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1862668723%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-roller-position.html"><span class="token function">setRollerPosition</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">position<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the roller target position to a setpoint</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="998330769%2FFunctions%2F769193423" anchor-label="setRollerSpeed" id="998330769%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-roller-speed.html"><span>set</span><wbr></wbr><span>Roller</span><wbr></wbr><span><span>Speed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="998330769%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-roller-speed.html"><span class="token function">setRollerSpeed</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rawSpeed<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the roller speed to a raw duty cycle value</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1844426813%2FFunctions%2F769193423" anchor-label="stopFlywheels" id="-1844426813%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stop-flywheels.html"><span>stop</span><wbr></wbr><span><span>Flywheels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1844426813%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="stop-flywheels.html"><span class="token function">stopFlywheels</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the roller speed to a velocity</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="37744226%2FFunctions%2F769193423" anchor-label="stopRoller" id="37744226%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stop-roller.html"><span>stop</span><wbr></wbr><span><span>Roller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="37744226%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="stop-roller.html"><span class="token function">stopRoller</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Set the roller speed to a velocity</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

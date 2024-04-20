@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>lib.math.units</title>
+    <link href="../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../styles/style.css" rel="Stylesheet">
+<link href="../../styles/main.css" rel="Stylesheet">
+<link href="../../styles/prism.css" rel="Stylesheet">
+<link href="../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<link href="../../images/logo-icon.svg">
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../index.html">
+                            2024Crescendo
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":dokkaHtml/main">jvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="package" id="content" pageIds="2024Crescendo::lib.math.units////PointingToDeclaration//769193423">
+  <div class="breadcrumbs"><a href="../../index.html">2024Crescendo</a><span class="delimiter">/</span><span class="current">lib.math.units</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button><button class="section-tab" data-togglable="PROPERTY,EXTENSION_PROPERTY">Properties</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1026325397%2FClasslikes%2F769193423" anchor-label="ClosedMeasureProgression" id="-1026325397%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-closed-measure-progression/index.html"><span>Closed</span><wbr></wbr><span>Measure</span><wbr></wbr><span><span>Progression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1026325397%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-closed-measure-progression/index.html">ClosedMeasureProgression</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-progression/index.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-progression/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>start<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-progression/index.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>endInclusive<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-progression/index.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>step<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-progression/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1687511063%2FClasslikes%2F769193423" anchor-label="ClosedMeasureRange" id="-1687511063%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-closed-measure-range/index.html"><span>Closed</span><wbr></wbr><span>Measure</span><wbr></wbr><span><span>Range</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1687511063%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-closed-measure-range/index.html">ClosedMeasureRange</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-range/index.html">M</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-range/index.html">U</a><span class="token operator">&gt;</span>, <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-range/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="-closed-measure-range/index.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-range/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>start<span class="token operator">: </span><a href="-closed-measure-range/index.html">M</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>endInclusive<span class="token operator">: </span><a href="-closed-measure-range/index.html">M</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-closed-floating-point-range/index.html">ClosedFloatingPointRange</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-closed-measure-range/index.html">M</a><span class="token operator">&gt; </span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="824210398%2FClasslikes%2F769193423" anchor-label="OpenEndMeasureRange" id="824210398%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-open-end-measure-range/index.html"><span>Open</span><wbr></wbr><span>End</span><wbr></wbr><span>Measure</span><wbr></wbr><span><span>Range</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="824210398%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-open-end-measure-range/index.html">OpenEndMeasureRange</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-open-end-measure-range/index.html">M</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-open-end-measure-range/index.html">U</a><span class="token operator">&gt;</span>, <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-open-end-measure-range/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="-open-end-measure-range/index.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-open-end-measure-range/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>start<span class="token operator">: </span><a href="-open-end-measure-range/index.html">M</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>endExclusive<span class="token operator">: </span><a href="-open-end-measure-range/index.html">M</a></span></span><span class="token punctuation">)</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-open-end-range/index.html">OpenEndRange</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-open-end-measure-range/index.html">M</a><span class="token operator">&gt; </span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1678894698%2FClasslikes%2F769193423" anchor-label="Rotation" id="-1678894698%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-rotation/index.html"><span><span>Rotation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1678894698%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-rotation/index.html">Rotation</a><span class="token operator"> = </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Angle///PointingToDeclaration/">Angle</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1059416633%2FClasslikes%2F769193423" anchor-label="RotationVelocity" id="1059416633%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-rotation-velocity/index.html"><span>Rotation</span><wbr></wbr><span><span>Velocity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1059416633%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-rotation-velocity/index.html">RotationVelocity</a><span class="token operator"> = </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Velocity///PointingToDeclaration/">Velocity</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Angle///PointingToDeclaration/">Angle</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="685856970%2FClasslikes%2F769193423" anchor-label="Span" id="685856970%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-span/index.html"><span><span>Span</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="685856970%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-span/index.html">Span</a><span class="token operator"> = </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Distance///PointingToDeclaration/">Distance</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="508573037%2FClasslikes%2F769193423" anchor-label="SpanVelocity" id="508573037%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-span-velocity/index.html"><span>Span</span><wbr></wbr><span><span>Velocity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="508573037%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-span-velocity/index.html">SpanVelocity</a><span class="token operator"> = </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Velocity///PointingToDeclaration/">Velocity</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Distance///PointingToDeclaration/">Distance</span><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1843223161%2FClasslikes%2F769193423" anchor-label="Speed" id="-1843223161%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-speed/index.html"><span><span>Speed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1843223161%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-speed/index.html">Speed</a><span class="token operator"> = </span><a href="-span-velocity/index.html">SpanVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-154330243%2FClasslikes%2F769193423" anchor-label="TimeSpan" id="-154330243%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-time-span/index.html"><span>Time</span><wbr></wbr><span><span>Span</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-154330243%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-time-span/index.html">TimeSpan</a><span class="token operator"> = </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Time///PointingToDeclaration/">Time</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1137032185%2FClasslikes%2F769193423" anchor-label="UnSteppedMeasureProgression" id="-1137032185%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-un-stepped-measure-progression/index.html"><span>Un</span><wbr></wbr><span>Stepped</span><wbr></wbr><span>Measure</span><wbr></wbr><span><span>Progression</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1137032185%2FClasslikes%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-un-stepped-measure-progression/index.html">UnSteppedMeasureProgression</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-un-stepped-measure-progression/index.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-un-stepped-measure-progression/index.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>start<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-un-stepped-measure-progression/index.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>endInclusive<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-un-stepped-measure-progression/index.html">U</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="EXTENSION_PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1046695562%2FProperties%2F769193423" anchor-label="backwards" id="1046695562%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="backwards.html"><span><span>backwards</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1046695562%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose2d///PointingToDeclaration/">Pose2d</span><span class="token punctuation">.</span><a href="backwards.html">backwards</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="backwards.html">backwards</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the backwards span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation2d///PointingToDeclaration/">Translation2d</span><span class="token punctuation">.</span><a href="backwards.html">backwards</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation3d///PointingToDeclaration/">Translation3d</span><span class="token punctuation">.</span><a href="backwards.html">backwards</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the backwards span of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="706364138%2FProperties%2F769193423" anchor-label="centimeters" id="706364138%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="centimeters.html"><span><span>centimeters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="706364138%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="centimeters.html">centimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-232752362%2FProperties%2F769193423" anchor-label="degrees" id="-232752362%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="degrees.html"><span><span>degrees</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-232752362%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="degrees.html">degrees</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1276093615%2FProperties%2F769193423" anchor-label="degreesPerSecond" id="1276093615%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="degrees-per-second.html"><span>degrees</span><wbr></wbr><span>Per</span><wbr></wbr><span><span>Second</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1276093615%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="degrees-per-second.html">degreesPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1724935380%2FProperties%2F769193423" anchor-label="down" id="1724935380%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="down.html"><span><span>down</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1724935380%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="down.html">down</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the downward span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation3d///PointingToDeclaration/">Translation3d</span><span class="token punctuation">.</span><a href="down.html">down</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the downwards span of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="381560187%2FProperties%2F769193423" anchor-label="feet" id="381560187%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="feet.html"><span><span>feet</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="381560187%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="feet.html">feet</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="604288610%2FProperties%2F769193423" anchor-label="feetPerSecond" id="604288610%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="feet-per-second.html"><span>feet</span><wbr></wbr><span>Per</span><wbr></wbr><span><span>Second</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="604288610%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="feet-per-second.html">feetPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1523280256%2FProperties%2F769193423" anchor-label="forward" id="1523280256%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="forward.html"><span><span>forward</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1523280256%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose2d///PointingToDeclaration/">Pose2d</span><span class="token punctuation">.</span><a href="forward.html">forward</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="forward.html">forward</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the forward span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation2d///PointingToDeclaration/">Translation2d</span><span class="token punctuation">.</span><a href="forward.html">forward</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation3d///PointingToDeclaration/">Translation3d</span><span class="token punctuation">.</span><a href="forward.html">forward</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the forward span of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="245085504%2FProperties%2F769193423" anchor-label="inchesPerSecond" id="245085504%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inches-per-second.html"><span>inches</span><wbr></wbr><span>Per</span><wbr></wbr><span><span>Second</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="245085504%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="inches-per-second.html">inchesPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1613222068%2FProperties%2F769193423" anchor-label="left" id="1613222068%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="left.html"><span><span>left</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1613222068%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose2d///PointingToDeclaration/">Pose2d</span><span class="token punctuation">.</span><a href="left.html">left</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="left.html">left</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the leftwards span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation2d///PointingToDeclaration/">Translation2d</span><span class="token punctuation">.</span><a href="left.html">left</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation3d///PointingToDeclaration/">Translation3d</span><span class="token punctuation">.</span><a href="left.html">left</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the leftwards span of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-209810773%2FProperties%2F769193423" anchor-label="measure" id="-209810773%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="measure.html"><span><span>measure</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-209810773%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Rotation2d///PointingToDeclaration/">Rotation2d</span><span class="token punctuation">.</span><a href="measure.html">measure</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the measure of this rotation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1243016977%2FProperties%2F769193423" anchor-label="meters" id="-1243016977%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="meters.html"><span><span>meters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1243016977%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="meters.html">meters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1786290550%2FProperties%2F769193423" anchor-label="metersPerSecond" id="1786290550%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="meters-per-second.html"><span>meters</span><wbr></wbr><span>Per</span><wbr></wbr><span><span>Second</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1786290550%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="meters-per-second.html">metersPerSecond</a><span class="token operator">: </span><a href="-span-velocity/index.html">SpanVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2014575174%2FProperties%2F769193423" anchor-label="millimeters" id="2014575174%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="millimeters.html"><span><span>millimeters</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2014575174%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="millimeters.html">millimeters</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="16218759%2FProperties%2F769193423" anchor-label="milliseconds" id="16218759%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="milliseconds.html"><span><span>milliseconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="16218759%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="milliseconds.html">milliseconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1902866%2FProperties%2F769193423" anchor-label="minutes" id="-1902866%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="minutes.html"><span><span>minutes</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1902866%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="minutes.html">minutes</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="204935767%2FProperties%2F769193423" anchor-label="pitch" id="204935767%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="pitch.html"><span><span>pitch</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="204935767%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="pitch.html">pitch</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the pitch rotation of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Rotation3d///PointingToDeclaration/">Rotation3d</span><span class="token punctuation">.</span><a href="pitch.html">pitch</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the pitch rotation of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1123838165%2FProperties%2F769193423" anchor-label="radians" id="1123838165%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="radians.html"><span><span>radians</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1123838165%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="radians.html">radians</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="152423238%2FProperties%2F769193423" anchor-label="radiansPerSecond" id="152423238%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="radians-per-second.html"><span>radians</span><wbr></wbr><span>Per</span><wbr></wbr><span><span>Second</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="152423238%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="radians-per-second.html">radiansPerSecond</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1938380851%2FProperties%2F769193423" anchor-label="revolutions" id="-1938380851%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="revolutions.html"><span><span>revolutions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1938380851%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="revolutions.html">revolutions</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1684241486%2FProperties%2F769193423" anchor-label="right" id="-1684241486%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="right.html"><span><span>right</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1684241486%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose2d///PointingToDeclaration/">Pose2d</span><span class="token punctuation">.</span><a href="right.html">right</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the rightwards span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="right.html">right</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the rightward span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation2d///PointingToDeclaration/">Translation2d</span><span class="token punctuation">.</span><a href="right.html">right</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the rightward span of this translation</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation3d///PointingToDeclaration/">Translation3d</span><span class="token punctuation">.</span><a href="right.html">right</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the rightwards span of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1512914439%2FProperties%2F769193423" anchor-label="roll" id="-1512914439%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="roll.html"><span><span>roll</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1512914439%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="roll.html">roll</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the roll rotation of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Rotation3d///PointingToDeclaration/">Rotation3d</span><span class="token punctuation">.</span><a href="roll.html">roll</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the roll rotation of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="211951660%2FProperties%2F769193423" anchor-label="rotations" id="211951660%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="rotations.html"><span><span>rotations</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="211951660%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="rotations.html">rotations</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-295498306%2FProperties%2F769193423" anchor-label="rpm" id="-295498306%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="rpm.html"><span><span>rpm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-295498306%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="rpm.html">rpm</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1789584882%2FProperties%2F769193423" anchor-label="seconds" id="-1789584882%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="seconds.html"><span><span>seconds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1789584882%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte/index.html">Byte</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-short/index.html">Short</a><span class="token punctuation">.</span><a href="seconds.html">seconds</a><span class="token operator">: </span><a href="-time-span/index.html">TimeSpan</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1158540682%2FProperties%2F769193423" anchor-label="spin" id="-1158540682%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="spin.html"><span><span>spin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1158540682%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose2d///PointingToDeclaration/">Pose2d</span><span class="token punctuation">.</span><a href="spin.html">spin</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the angle of rotation of this pose</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2022723084%2FProperties%2F769193423" anchor-label="up" id="-2022723084%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="up.html"><span><span>up</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2022723084%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="up.html">up</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the upward span of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Translation3d///PointingToDeclaration/">Translation3d</span><span class="token punctuation">.</span><a href="up.html">up</a><span class="token operator">: </span><a href="-span/index.html">Span</a></div><div class="brief "><p class="paragraph">Gets the upwards span of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2038071947%2FProperties%2F769193423" anchor-label="velocity" id="-2038071947%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="velocity.html"><span><span>velocity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2038071947%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><span data-unresolved-link="com.revrobotics/CANSparkBase///PointingToDeclaration/">CANSparkBase</span><span class="token punctuation">.</span><a href="velocity.html">velocity</a><span class="token operator">: </span><a href="-rotation-velocity/index.html">RotationVelocity</a></div><div class="brief "><p class="paragraph">The velocity that the motor is rotating at. The velocity is measured by this motor's <span data-unresolved-link="com.revrobotics/RelativeEncoder///PointingToDeclaration/">com.revrobotics.RelativeEncoder</span>, and controlled by its <span data-unresolved-link="com.revrobotics/SparkPIDController///PointingToDeclaration/">com.revrobotics.SparkPIDController</span>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-698007815%2FProperties%2F769193423" anchor-label="yaw" id="-698007815%2FProperties%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_PROPERTY" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="yaw.html"><span><span>yaw</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-698007815%2FProperties%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Pose3d///PointingToDeclaration/">Pose3d</span><span class="token punctuation">.</span><a href="yaw.html">yaw</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the yaw rotation of this pose</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><span data-unresolved-link="edu.wpi.first.math.geometry/Rotation3d///PointingToDeclaration/">Rotation3d</span><span class="token punctuation">.</span><a href="yaw.html">yaw</a><span class="token operator">: </span><a href="-rotation/index.html">Rotation</a></div><div class="brief "><p class="paragraph">Gets the yaw rotation of this translation</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="EXTENSION_FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-39874898%2FFunctions%2F769193423" anchor-label="downTo" id="-39874898%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="down-to.html"><span>down</span><wbr></wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-39874898%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">infix </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="down-to.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="down-to.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="down-to.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="down-to.html"><span class="token function">downTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">endInclusive<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="down-to.html">U</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-un-stepped-measure-progression/index.html">UnSteppedMeasureProgression</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="down-to.html">U</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2142262314%2FFunctions%2F769193423" anchor-label="into" id="2142262314%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="into.html"><span><span>into</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2142262314%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">infix </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="into.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="into.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="into.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="into.html"><span class="token function">into</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">unit<span class="token operator">: </span><a href="into.html">U</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a></div><div class="brief "><p class="paragraph">Converts a measure into a given unit, return the value as a double.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1171765417%2FFunctions%2F769193423" anchor-label="rangeTo" id="-1171765417%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="range-to.html"><span>range</span><wbr></wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1171765417%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">operator </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-to.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-to.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-to.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="range-to.html"><span class="token function">rangeTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">endInclusive<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-to.html">U</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-closed-measure-range/index.html">ClosedMeasureRange</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-to.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="range-to.html">U</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="197097162%2FFunctions%2F769193423" anchor-label="rangeUntil" id="197097162%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="range-until.html"><span>range</span><wbr></wbr><span><span>Until</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="197097162%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">operator </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-until.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-until.html">U</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-until.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="range-until.html"><span class="token function">rangeUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">endExclusive<span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-until.html">U</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-open-end-measure-range/index.html">OpenEndMeasureRange</a><span class="token operator">&lt;</span><span class="token keyword"></span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="range-until.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">, </span><span class="token keyword"></span><a href="range-until.html">U</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2066469073%2FFunctions%2F769193423" anchor-label="unaryMinus" id="-2066469073%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unary-minus.html"><span>unary</span><wbr></wbr><span><span>Minus</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2066469073%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">operator </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-minus.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-minus.html">U</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token operator">&gt; </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-minus.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="unary-minus.html"><span class="token function">unaryMinus</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-minus.html">U</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Negates a <span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span> through its <span data-unresolved-link="edu.wpi.first.units/Measure/negate/#/PointingToDeclaration/">Measure.negate</span> method</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-640401677%2FFunctions%2F769193423" anchor-label="unaryPlus" id="-640401677%2FFunctions%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unary-plus.html"><span>unary</span><wbr></wbr><span><span>Plus</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-640401677%2FFunctions%2F769193423"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">operator </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-plus.html">U</a><span class="token operator"> : </span><span data-unresolved-link="edu.wpi.first.units/Unit///PointingToDeclaration/">Unit</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-plus.html">U</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token operator">&gt; </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-plus.html">U</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="unary-plus.html"><span class="token function">unaryPlus</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="edu.wpi.first.units/Measure///PointingToDeclaration/">Measure</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="unary-plus.html">U</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Does nothing to a measure. If this measure was mutable, it will return a mutable copy</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
