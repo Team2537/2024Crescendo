@@ -1,154 +1,128 @@
 package lib.vision
 
-import edu.wpi.first.math.geometry.Pose3d
-import edu.wpi.first.math.geometry.Rotation3d
-import edu.wpi.first.networktables.DoubleArraySubscriber
-import edu.wpi.first.networktables.DoubleSubscriber
-import edu.wpi.first.networktables.NetworkTable
-import edu.wpi.first.units.Angle
-import edu.wpi.first.units.Measure
+import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import lib.math.units.Rotation
+import lib.math.units.into
+import lib.math.units.radians
+import lib.vision.LimelightHelpers.LimelightResults
+import lib.vision.LimelightHelpers.PoseEstimate
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
-/**
- * Represents a single limelight unit (vision).
- *
- * The limelight gets its data from a [NetworkTable].
- * [This class][Limelight] allows simple access to
- * various tables through more descriptive name and
- * properties rather than raw [NetworkTable.getEntry].
- * It also manages its own [ShuffleboardTab] to
- * display information about the limelight unit.
- *
- * @author Matthew Clark
- */
-class Limelight(table: NetworkTable) : AutoCloseable {
-    // NetworkTableEntry objects for getting data from the Limelight
-    private val tx: DoubleSubscriber
-    private val ty: DoubleSubscriber
-    private val ta: DoubleSubscriber
-    private val ts: DoubleSubscriber
-    private val tv: DoubleSubscriber
+class Limelight(private val hostname: String) {
 
-    private val botpose: DoubleArraySubscriber
+    val results: LimelightResults
+        get() = getLimelightResults()
 
-    private val visionTab: ShuffleboardTab
+    /**
+     * Horizontal angle to the target
+     */
+    val tx: Double
+        get() = getTX()
+
+    /**
+     * Vertical angle to the target
+     */
+    val ty: Double
+        get() = getTY()
+
+    /**
+     * Percent of screen area taken up by the target
+     */
+    val ta: Double
+        get() = getTA()
+
+    /**
+     * Distance from the limelight to the target
+     */
+    val td: Double
+        get() = getTD()
+
+    val distance2d: Double
+        get() = getDist2D()
+
+    val absoluteTX: Rotation
+        get() = targetAngleAbsolute()
+
+    /**
+     * Whether a target is visible
+     */
+    val tv: Boolean
+        get() = getTV()
+
+    val poseEstimate: PoseEstimate
+        get() = getBotPose()
 
     init {
-        // Get the NetworkTableEntry objects for the Limelight
-        tx = table.getDoubleTopic("tx").subscribe(0.0)
-        ty = table.getDoubleTopic("ty").subscribe(0.0)
-        ta = table.getDoubleTopic("ta").subscribe(0.0)
-        ts = table.getDoubleTopic("ts").subscribe(0.0)
-        tv = table.getDoubleTopic("tv").subscribe(0.0)
+        setLEDs(true)
 
-        botpose = table.getDoubleArrayTopic("botpose").subscribe(null)
+        val tab = Shuffleboard.getTab("Vision")
 
-        visionTab = Shuffleboard.getTab("Vision")
+        tab.addNumber("$hostname TX") { tx }
+        tab.addNumber("$hostname TY") { ty }
+        tab.addNumber("$hostname TA") { ta }
+        tab.addNumber("$hostname TD") { td }
+        tab.addNumber("$hostname TD2D") { distance2d }
+        tab.addNumber("$hostname bot TX") { absoluteTX into Degrees }
+        tab.addBoolean("$hostname TV") { tv }
+    }
 
-//        visionTab.addDouble("X Offset") { yawRaw }
-//        visionTab.addDouble("Y Offset") { pitchRaw }
-        visionTab.add("Yaw Offset") { yawOffset }
-        visionTab.add("Pitch Offset") { pitchOffset }
-        visionTab.add("Roll") { roll }
-        visionTab.add("Position") { position }
-        visionTab.addDouble("Area") { area }
-        visionTab.addBoolean("Target Visible") { targetVisible }
+    private fun getLimelightResults(): LimelightResults {
+        return LimelightHelpers.getLatestResults(hostname)
+    }
 
+    fun setLEDs(on: Boolean) {
+        if(on){
+            LimelightHelpers.setLEDMode_ForceOn(hostname)
+        } else {
+            LimelightHelpers.setLEDMode_ForceOff(hostname)
+        }
+    }
 
-        // FIXME - remove if possible
-        // Create a Shuffleboard tab for the Limelight
-        val visionTab: ShuffleboardTab = Shuffleboard.getTab("Vision")
+    private fun getTX(): Double {
+        return LimelightHelpers.getTX(hostname)
+    }
+
+    private fun getTY(): Double {
+        return LimelightHelpers.getTY(hostname)
+    }
+
+    private fun getTA(): Double {
+        return LimelightHelpers.getTA(hostname)
+    }
+
+    private fun getTV(): Boolean {
+        return LimelightHelpers.getTV(hostname)
+    }
+
+    private fun targetAngleAbsolute(): Rotation {
+        val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
+        return atan2(targetPose.x, targetPose.z).radians
+    }
+
+    private fun getTD(): Double {
+        val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
+
+        // Distance of target from origin (should be robot location)
+        return targetPose.translation.getDistance(Translation3d())
+    }
+
+    private fun getDist2D(): Double {
+        val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
+
+        return sqrt(targetPose.x * targetPose.x + targetPose.z * targetPose.z)
+    }
+
+    private fun getBotPose(): PoseEstimate {
+        return LimelightHelpers.getBotPoseEstimate_wpiBlue(hostname)
     }
 
     /**
-     * Gets the current position of the limelight estimated by
-     * the april tags.
-     *
-     * @return the estimated position of the limelight
-     * @see Pose3d
+     * Prioritizes a specific april tag by the tag's ID
      */
-     val position: Pose3d
-        get() {
-            val results: DoubleArray = botpose.get()
-
-            return Pose3d(
-                results[0],
-                results[1],
-                results[2],
-                Rotation3d(
-                    results[3],
-                    results[4],
-                    results[5],
-                )
-            )
-        }
-
-    /**
-     * Gets the offset of the cross-hair to the target on the x-axis.
-     * Right is positive
-     *
-     * @return the x offset
-     */
-    private val yawRaw: Double
-        get() = tx.get()
-
-    /**
-     * Gets the angle
-     */
-    val yawOffset: Measure<Angle>
-        get() = Degrees.of(yawRaw)
-
-    /**
-     * Gets the offset of the cross-hair to the target on the y-axis.
-     * Up is positive
-     *
-     * @return the y offset
-     */
-    private val pitchRaw: Double
-        get() = ty.get()
-
-    val pitchOffset: Measure<Angle>
-        get() = Degrees.of(pitchRaw)
-
-    // TODO 0.0-1.0 or 0.0-100.0 ??
-    /**
-     * Gets the percentage of the camera field of view that the target is visible
-     *
-     * @return how much of the screen can see the target
-     */
-    val area: Double
-        get() = ta.get()
-
-    /**
-     * Returns the skew of the bounding box from 0 to 90 degrees, essentially how 'crooked'
-     * it is.
-     *
-     * @return the skew/roll of the bounding box from 0 to 90 degrees
-     */
-    private val skewRaw: Double
-        get() = ts.get()
-
-    val roll: Measure<Angle>
-        get() = Degrees.of(skewRaw)
-
-    /**
-     * Checks whether the target object is visible to the limelight camera
-     *
-     * @return `true` if the target object is visible to the limelight camera,
-     * `false` otherwise.
-     */
-    val targetVisible: Boolean
-        get() = tv.get() == 1.0
-
-    override fun close() {
-        // Not entirely necessary, as most limelights will have the same lifespan as the robot, but still
-        // worth considering before someone forgets that this is even a thing you have to do.
-        tx.close()
-        ty.close()
-        ta.close()
-        ts.close()
-        tv.close()
+    fun setTargetTag(id: Int) {
+        LimelightHelpers.setPriorityTagID(hostname, id)
     }
 }

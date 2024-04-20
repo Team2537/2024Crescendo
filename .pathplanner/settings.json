@@ -1,0 +1,21 @@
+{
+  "robotWidth": 0.7239,
+  "robotLength": 0.9271,
+  "holonomicMode": true,
+  "pathFolders": [
+    "Amp Two Note",
+    "Drift Test Paths",
+    "Thievery",
+    "Source Three Note"
+  ],
+  "autoFolders": [
+    "Amp Side Autos",
+    "Drift Tests",
+    "Source Side Autos"
+  ],
+  "defaultMaxVel": 4.0,
+  "defaultMaxAccel": 2.0,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
+  "maxModuleSpeed": 4.0
+}
