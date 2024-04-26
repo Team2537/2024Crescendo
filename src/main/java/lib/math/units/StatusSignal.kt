@@ -48,7 +48,9 @@ private var unitsToSearch: ArrayList<Unit<*>>? = null
  */
 val BaseStatusSignal.measure: Measure<*>
     get() {
-        val unit = this.units // FIXME: No idea what sanitation this is gonna need
+        // Capitalization does not matter, as we ignore it on comparison anyway
+        val unit = this.units // FIXME: Add additional sanitation as necessary
+            .replace(" ", "") // Remove spaces
 
         // Populate the list of units to search once
         // using a list to make it possible to add units in the future
@@ -61,10 +63,53 @@ val BaseStatusSignal.measure: Measure<*>
             }
         } else {
             unitsToSearch!!.forEach {
-                if(unit == it.name()){
+                if(it.name().equals(unit, true)){
                     return it.of(this.valueAsDouble)
                 }
             }
+        }
+
+        // I'm sure this can be optimized
+        if(unit.contains("per", true)){
+            val num = unit.substringBefore("per")
+            val den = unit.substringAfter("per")
+
+            var numUnit : Unit<*>? = null
+            var denUnit : Unit<*>? = null
+
+            unitsToSearch!!.forEach {
+                if(it.name().equals(num, true)){
+                    numUnit = it
+                    if(denUnit != null){
+                        return@forEach
+                    }
+                }
+                if(it.name().equals(den, true)){
+                    denUnit = it
+                    if(numUnit != null){
+                        return@forEach
+                    }
+                }
+            }
+            // FIXME what the fuck is this
+            // Type mismatch.
+            //  Required:
+            //      CapturedType(*)!
+            //  Found:
+            //      Unit<*>?
+            //  Type mismatch.
+            //
+            //  Required:
+            //      Unit<in Nothing?>!
+            //  Found:
+            //      Unit<*>?
+            //
+            // Just, what the hell?
+//            return Per.combine(numUnit, denUnit).of(this.valueAsDouble)
+
+            // valve and an italian restaurant should hire me with this spaghetti
+            // FIXME: NOT THIS, PLEASE
+            return DumbGenericsHackSolutionSoThatThisCompiles.makePer(numUnit!!::class.java, denUnit!!::class.java, numUnit, denUnit).of(this.valueAsDouble)
         }
 
 
