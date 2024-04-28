@@ -24,16 +24,16 @@ class DriftTestCommand(directionTime: Double, speed: Double) : Command() {
     }
 
     override fun execute() {
-        if(!timer.hasElapsed(directionTime)){
+        if (!timer.hasElapsed(directionTime)) {
             swerveSubsystem.drive(Translation2d(speed, 0.0), 0.0, false)
-        } else if (timer.hasElapsed(directionTime) && !timer.hasElapsed(directionTime*2)){
+        } else if (timer.hasElapsed(directionTime) && !timer.hasElapsed(directionTime * 2)) {
             swerveSubsystem.drive(Translation2d(-speed, 0.0), 0.0, false)
         }
     }
 
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return timer.hasElapsed(directionTime*2)
+        return timer.hasElapsed(directionTime * 2)
     }
 
     override fun end(interrupted: Boolean) {}

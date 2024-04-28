@@ -30,6 +30,9 @@ inline val Double.meters: Span
 inline val Double.feet: Span
     get() = Units.Feet.of(this)
 
+inline val Double.inches: Span
+    get() = Units.Inches.of(this)
+
 inline val Double.centimeters: Span
     get() = Units.Centimeters.of(this)
 

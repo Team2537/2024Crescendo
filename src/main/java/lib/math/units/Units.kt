@@ -60,7 +60,7 @@ operator fun <U : Unit<U>?> Measure<U>.unaryMinus(): Measure<U> {
  * @since 2024-02-08
  */
 operator fun <U : Unit<U>?> Measure<U>.unaryPlus(): Measure<U> {
-    return if(this is ImmutableMeasure) this else mutableCopy()
+    return if (this is ImmutableMeasure) this else mutableCopy()
 }
 
 /**
@@ -419,15 +419,14 @@ infix fun <U : Unit<U>> Measure<U>.downTo(endInclusive: Measure<U>): UnSteppedMe
     return UnSteppedMeasureProgression(this, endInclusive)
 }
 
-class UnSteppedMeasureProgression<U : Unit<U>> (val start: Measure<U>, val endInclusive: Measure<U>) {
+class UnSteppedMeasureProgression<U : Unit<U>>(val start: Measure<U>, val endInclusive: Measure<U>) {
     infix fun step(step: Double): ClosedMeasureProgression<U> {
         return ClosedMeasureProgression(start, endInclusive, step)
     }
 }
 
 class ClosedMeasureRange<M, U>(override val start: M, override val endInclusive: M) : ClosedFloatingPointRange<M>
-    where M : Measure<U>, M : Comparable<Measure<U>>, U : Unit<U>
-{
+        where M : Measure<U>, M : Comparable<Measure<U>>, U : Unit<U> {
     override fun lessThanOrEquals(a: M, b: M): Boolean = a <= b
 
     @Suppress("ConvertTwoComparisonsToRangeCheck")
@@ -462,8 +461,11 @@ class ClosedMeasureRange<M, U>(override val start: M, override val endInclusive:
 
 }
 
-open class ClosedMeasureProgression<U : Unit<U>>(val start: Measure<U>, val endInclusive: Measure<U>, val step: Double)
-    : Iterable<Measure<U>> {
+open class ClosedMeasureProgression<U : Unit<U>>(
+    val start: Measure<U>,
+    val endInclusive: Measure<U>,
+    val step: Double
+) : Iterable<Measure<U>> {
     /**
      * Returns an iterator over the elements of this object.
      */
@@ -489,8 +491,7 @@ open class ClosedMeasureProgression<U : Unit<U>>(val start: Measure<U>, val endI
 }
 
 class OpenEndMeasureRange<M, U>(override val start: M, override val endExclusive: M) : OpenEndRange<M>
-    where M : Measure<U>, M : Comparable<Measure<U>>, U : Unit<U>
-{
+        where M : Measure<U>, M : Comparable<Measure<U>>, U : Unit<U> {
     @Suppress("ConvertTwoComparisonsToRangeCheck")
     override fun contains(value: M): Boolean = start <= value && value < endExclusive
 

@@ -4,8 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.Constants
 import frc.robot.subsystems.SwerveSubsystem
 import swervelib.SwerveController
@@ -51,10 +49,11 @@ class AbsoluteDriveCommand(
 
     /** @suppress */
     override fun execute() {
-        var desiredSpeeds: ChassisSpeeds = swerveSubsystem.getTargetSpeeds(vForwards.asDouble, vStrafe.asDouble, headingX.asDouble, headingY.asDouble)
+        var desiredSpeeds: ChassisSpeeds =
+            swerveSubsystem.getTargetSpeeds(vForwards.asDouble, vStrafe.asDouble, headingX.asDouble, headingY.asDouble)
 
-        if(initRotation){
-            if(headingX.asDouble == 0.0 && headingY.asDouble == 0.0){
+        if (initRotation) {
+            if (headingX.asDouble == 0.0 && headingY.asDouble == 0.0) {
                 var firstLoopHeading: Rotation2d = swerveSubsystem.getHeading()
                 desiredSpeeds = swerveSubsystem.getTargetSpeeds(0.0, 0.0, firstLoopHeading.sin, firstLoopHeading.cos)
             }
@@ -63,7 +62,8 @@ class AbsoluteDriveCommand(
         }
 
         var translation: Translation2d = SwerveController.getTranslation2d(desiredSpeeds)
-        translation = SwerveMath.limitVelocity(translation, swerveSubsystem.getFieldVelocity(),
+        translation = SwerveMath.limitVelocity(
+            translation, swerveSubsystem.getFieldVelocity(),
             swerveSubsystem.getPose(),
             Constants.LOOP_TIME,
             Constants.ROBOT_MASS,

@@ -34,7 +34,8 @@ interface FloatingPointProgression<T : Comparable<T>> : Iterable<T> {
 }
 
 // TODO: This for floats
-class DoubleProgression(override val start: Double, override val end: Double, override val step: Double) : FloatingPointProgression<Double> {
+class DoubleProgression(override val start: Double, override val end: Double, override val step: Double) :
+    FloatingPointProgression<Double> {
     override val isAscending: Boolean = step > 0.0
 
     override fun iterator(): DoubleIterator {
@@ -75,5 +76,5 @@ class DoubleProgression(override val start: Double, override val end: Double, ov
     }
 }
 
-infix fun ClosedFloatingPointRange<Double>.step(step: Double): DoubleProgression
-    = DoubleProgression(this.start, this.endInclusive, step)
+infix fun ClosedFloatingPointRange<Double>.step(step: Double): DoubleProgression =
+    DoubleProgression(this.start, this.endInclusive, step)

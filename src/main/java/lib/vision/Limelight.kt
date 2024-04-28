@@ -74,7 +74,7 @@ class Limelight(private val hostname: String) {
     }
 
     fun setLEDs(on: Boolean) {
-        if(on){
+        if (on) {
             LimelightHelpers.setLEDMode_ForceOn(hostname)
         } else {
             LimelightHelpers.setLEDMode_ForceOff(hostname)

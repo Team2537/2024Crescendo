@@ -3,7 +3,6 @@ package frc.robot.subsystems
 import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
@@ -16,8 +15,10 @@ import lib.putMap
 object PivotSubsystem : SubsystemBase() {
 
     /** The motor for the pivot */
-    val pivotMotor: CANSparkMax = CANSparkMax(PivotConstants.PIVOT_MOTOR_PORT,
-        CANSparkLowLevel.MotorType.kBrushless)
+    val pivotMotor: CANSparkMax = CANSparkMax(
+        PivotConstants.PIVOT_MOTOR_PORT,
+        CANSparkLowLevel.MotorType.kBrushless
+    )
 
     /** The absolute encoder for the pivot */
     val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(PivotConstants.ABSOLUTE_ENCODER_PORT)
@@ -110,7 +111,7 @@ object PivotSubsystem : SubsystemBase() {
     /**
      * Sync the relative encoder to the absolute encoder
      */
-    fun syncRelative(){
+    fun syncRelative() {
         relativeEncoder.setPosition(getAbsolutePosition())
     }
 
@@ -131,7 +132,7 @@ object PivotSubsystem : SubsystemBase() {
      * Set the speed of the pivot
      * @param speed The speed to set the pivot to
      */
-    fun setRawSpeed(speed: Double){
+    fun setRawSpeed(speed: Double) {
         pivotMotor.set(speed)
     }
 
@@ -161,8 +162,9 @@ object PivotSubsystem : SubsystemBase() {
      * Set the position of the pivot using PID with feedforward specialized to hold it in place
      * @param position The position to set the pivot to
      */
-    fun holdArm(position: Double){
-        pivotPID.setReference(position,
+    fun holdArm(position: Double) {
+        pivotPID.setReference(
+            position,
             CANSparkBase.ControlType.kPosition,
             0,
             feedforward.calculate(Units.degreesToRadians(position), 0.0)

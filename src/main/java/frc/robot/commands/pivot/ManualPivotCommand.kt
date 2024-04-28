@@ -12,6 +12,7 @@ import java.util.function.DoubleSupplier
 class ManualPivotCommand(voltage: DoubleSupplier) : Command() {
     /** The subsystem that this command runs on. */
     private val pivotSubsystem = PivotSubsystem
+
     /** The supplier that returns the desired voltage of the pivot motor. */
     private val voltage: DoubleSupplier
 

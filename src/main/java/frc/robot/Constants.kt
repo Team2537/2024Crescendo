@@ -5,8 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
-import lib.math.units.RotationVelocity
-import lib.math.units.rpm
 import swervelib.math.Matter
 import swervelib.parser.PIDFConfig
 import java.io.File
@@ -24,7 +22,7 @@ object Constants {
     const val LOOP_TIME = 0.13 // s, 20ms + 110ms spark max velocity lag
 
     const val GEARBOX_RATIO = 36.0
-    const val PULLEY_RATIO = 40.0/18.0
+    const val PULLEY_RATIO = 40.0 / 18.0
 
     object OperatorConstants {
         const val LEFT_X_DEADBAND = 0.01
@@ -68,13 +66,12 @@ object Constants {
 
     object PivotConstants {
 
-        const val GEARBOX_RATIO: Double = 36.0/1.0
-        const val PULLEY_RATIO: Double = 40.0/18.0
+        const val GEARBOX_RATIO: Double = 36.0 / 1.0
+        const val PULLEY_RATIO: Double = 40.0 / 18.0
 
         const val ABSOLUTE_ENCODER_PORT = 1
         const val PIVOT_MOTOR_PORT = 16
         const val HOMING_SENSOR_PORT = 2
-
 
 
         const val ABSOLUTE_OFFSET = 0.320913258022831

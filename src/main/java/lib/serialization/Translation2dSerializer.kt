@@ -28,24 +28,24 @@ class Translation2dSerializer : KSerializer<Translation2d> {
     override val descriptor: SerialDescriptor
         get() = buildClassSerialDescriptor(
             "Translation2d",
-        ){
+        ) {
             element<Double>("x")
             element<Double>("y")
         }
 
     override fun deserialize(decoder: Decoder): Translation2d =
-        decoder.decodeStructure(descriptor){
+        decoder.decodeStructure(descriptor) {
             var x: Double = 0.0
             var y: Double = 0.0
 
             do {
-                when(val index = decodeElementIndex(descriptor)){
+                when (val index = decodeElementIndex(descriptor)) {
                     0 -> x = decodeDoubleElement(descriptor, index)
                     1 -> y = decodeDoubleElement(descriptor, index)
                     CompositeDecoder.DECODE_DONE -> break
                     else -> throw SerializationException("Unexpected index: $index")
                 }
-            } while(true)
+            } while (true)
 
             return@decodeStructure Translation2d(x, y)
         }
@@ -100,9 +100,9 @@ class Translation2dSerializer : KSerializer<Translation2d> {
      * @see KSerializer for additional information about general contracts and exception specifics
      */
     override fun serialize(encoder: Encoder, value: Translation2d) {
-        encoder.encodeStructure(descriptor){
-            encodeDoubleElement(descriptor, 0,  value.x)
-            encodeDoubleElement(descriptor, 1,  value.y)
+        encoder.encodeStructure(descriptor) {
+            encodeDoubleElement(descriptor, 0, value.x)
+            encodeDoubleElement(descriptor, 1, value.y)
         }
     }
 

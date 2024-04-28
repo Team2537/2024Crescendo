@@ -1,11 +1,12 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.Autos
 import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
+import org.littletonrobotics.junction.LoggedRobot
+import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -17,7 +18,7 @@ import frc.robot.subsystems.SwerveSubsystem
  * the `Main.kt` file in the project. (If you use the IDE's Rename or Move refactorings when renaming the
  * object or package, it will get changed everywhere.)
  */
-object Robot : TimedRobot() {
+object Robot : LoggedRobot() {
 
     /**
      * The autonomous command to run. While a default value is set here,
@@ -29,6 +30,21 @@ object Robot : TimedRobot() {
      * initialization code.
      */
     override fun robotInit() {
+        Logger.recordMetadata("ProjectName", "2024Crescendo")
+
+        if (isReal()) {
+            Logger.addDataReceiver(WPILOGWriter())
+            Logger.addDataReceiver(NT4Publisher())
+        } else {
+//            setUseTiming(false)
+//            val logPath: String = LogFileUtil.findReplayLog()
+//            Logger.setReplaySource(WPILOGReader(logPath))
+//            Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
+            Logger.addDataReceiver(NT4Publisher())
+        }
+
+        Logger.start()
+
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
         RobotContainer

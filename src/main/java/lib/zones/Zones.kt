@@ -40,18 +40,18 @@ object Zones : List<Zone> {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun loadZones(stream: InputStream, doClose: Boolean = true){
+    fun loadZones(stream: InputStream, doClose: Boolean = true) {
         zoneList.clear()
 
         val zones = Json.decodeFromStream<Array<Zone>>(stream)
 
         zoneList.addAll(zones)
 
-        if(doClose)
+        if (doClose)
             stream.close()
     }
 
-    fun loadZones(resource: URL, doClose: Boolean = true){
+    fun loadZones(resource: URL, doClose: Boolean = true) {
         loadZones(resource.openStream(), doClose)
     }
 
@@ -64,7 +64,7 @@ object Zones : List<Zone> {
      * @return A non-null zone with given tag
      */
     operator fun get(tag: String, default: Zone = defaultZone): Zone {
-        return zoneList.find { it.tag == tag} ?: default
+        return zoneList.find { it.tag == tag } ?: default
     }
 
     /**

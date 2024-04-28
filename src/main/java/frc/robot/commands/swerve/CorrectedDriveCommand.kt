@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.SwerveSubsystem
 import swervelib.SwerveController
-import swervelib.parser.Cache
 import java.util.*
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
@@ -37,6 +36,7 @@ class CorrectedDriveCommand(
     private val controller: SwerveController
     private val swerve: SwerveSubsystem
     private val headingCache: Stack<Double> = Stack<Double>()
+
     init {
         this.swerve = SwerveSubsystem
         this.vForward = vForward
@@ -66,7 +66,7 @@ class CorrectedDriveCommand(
         SmartDashboard.putNumber("vY", strafeVelocity)
         SmartDashboard.putNumber("omega", angVelocity)
 
-        if(angVelocity != 0.0) {
+        if (angVelocity != 0.0) {
             headingCache.push(swerve.getHeading().degrees)
         } else {
             angVelocity = swerve.calculateHeadingPID(swerve.getHeading().degrees, headingCache.peek())

@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.*
 import frc.robot.Constants
-import frc.robot.commands.intake.ToggleIntakeCommand
-import frc.robot.commands.launcher.IntakeNoteCommand
-import frc.robot.commands.launcher.LaunchCommand
 import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.commands.pivot.SetKnownPosition
@@ -40,11 +37,12 @@ object Autos {
 
     fun registerNamedCommands() {
 //        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
-        NamedCommands.registerCommand("Intake", ToggleIntakeCommand())
         NamedCommands.registerCommand("Auto Aim", QuickPivotCommand(0.0, true, true))
-        NamedCommands.registerCommand("Aim Subwoofer", QuickPivotCommand(
-            Constants.PivotConstants.SUBWOOFER_POSITION, false, false
-        ))
+        NamedCommands.registerCommand(
+            "Aim Subwoofer", QuickPivotCommand(
+                Constants.PivotConstants.SUBWOOFER_POSITION, false, false
+            )
+        )
         NamedCommands.registerCommand("Shoot", LaunchCommand(
             { 1.0 },
             { true },
@@ -52,20 +50,13 @@ object Autos {
             { false }
         ))
         NamedCommands.registerCommand("Home", HomePivotCommand())
-        NamedCommands.registerCommand("Aim Intake", QuickPivotCommand(
-            Constants.PivotConstants.INTAKE_POSITION, false, false
-        ))
-        NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
-        NamedCommands.registerCommand("Intake Note", ToggleIntakeCommand())
-        NamedCommands.registerCommand("Set Down", SetKnownPosition(91.28))
-        NamedCommands.registerCommand("Intake Sequence",
-            ParallelDeadlineGroup(
-                IntakeNoteCommand(),
-                ToggleIntakeCommand().alongWith(
-                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
-                )
+        NamedCommands.registerCommand(
+            "Aim Intake", QuickPivotCommand(
+                Constants.PivotConstants.INTAKE_POSITION, false, false
             )
         )
+        NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
+        NamedCommands.registerCommand("Set Down", SetKnownPosition(91.28))
         NamedCommands.registerCommand(
             "Rotate Towards Target",
             RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
@@ -97,7 +88,7 @@ object Autos {
     }
 
 
-    private fun shootDriveSource():Command {
+    private fun shootDriveSource(): Command {
         return SwerveSubsystem.getAutonomousCommand("Shoot_Drive_Source", true)
     }
 
@@ -151,7 +142,6 @@ object Autos {
 //    }
 
 
-
     /**
      * An enumeration of the available autonomous modes. It provides an easy
      * way to manage all our autonomous modes. The [autoModeChooser] iterates
@@ -167,11 +157,11 @@ object Autos {
         SHOOT_DRIVE_MID("Shoot & Drive Source", { shootDriveSource() }),
         SHOOT_DRIVE_RIGHT("Shoot & Drive Amp", { shootAndDriveRight() }),
         BASIC_SHOOT("Basic Shoot", { onlyShoot() }),
-        TWO_NOTE("Two Note", {twoNote()}),
-        THREE_NOTE_CENTER("Three Note Center", {threeNoteCenter()}),
-        THREE_NOTE_AMP("Three Note Amp", {threeNoteAmp()}),
-        THREE_NOTE_SOURCE("Three Note Source", {threeNoteSource()}),
-        SHOOT_STEAL("Shoot & Steal", {shootAndSteal()})
+        TWO_NOTE("Two Note", { twoNote() }),
+        THREE_NOTE_CENTER("Three Note Center", { threeNoteCenter() }),
+        THREE_NOTE_AMP("Three Note Amp", { threeNoteAmp() }),
+        THREE_NOTE_SOURCE("Three Note Source", { threeNoteSource() }),
+        SHOOT_STEAL("Shoot & Steal", { shootAndSteal() })
         ;
 
         companion object {

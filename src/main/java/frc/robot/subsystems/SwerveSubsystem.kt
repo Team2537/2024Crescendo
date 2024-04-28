@@ -14,11 +14,10 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.trajectory.Trajectory
-import edu.wpi.first.math.util.Units as OldUnits
-import edu.wpi.first.units.Units
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.networktables.StructArrayPublisher
 import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Units
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.DriverStation.Alliance
@@ -40,6 +39,7 @@ import swervelib.SwerveModule
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.util.*
+import edu.wpi.first.math.util.Units as OldUnits
 
 /**
  * The subsystem that controls the swerve drive.
@@ -60,8 +60,9 @@ object SwerveSubsystem : SubsystemBase() {
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")
 
     /** SwerveModuleStates publisher for swerve display */
-    var swerveStates: StructArrayPublisher<SwerveModuleState> = NetworkTableInstance.getDefault().
-        getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct).publish()
+    var swerveStates: StructArrayPublisher<SwerveModuleState> =
+        NetworkTableInstance.getDefault().getStructArrayTopic("SwerveStates/swerveStates", SwerveModuleState.struct)
+            .publish()
 
     /**
      * PID Controller for the heading of the robot.
@@ -75,7 +76,6 @@ object SwerveSubsystem : SubsystemBase() {
      * @see drive
      */
     var fieldOriented: Boolean = true
-
 
 
     init {
@@ -122,7 +122,7 @@ object SwerveSubsystem : SubsystemBase() {
         tab.addDouble("Front Left Voltage") { Math.abs(swerveDrive.modules[0].driveMotor.voltage) }
         tab.addDouble("Front Right Voltage") { Math.abs(swerveDrive.modules[1].driveMotor.voltage) }
         tab.addDouble("Back Left Voltage") { Math.abs(swerveDrive.modules[2].driveMotor.voltage) }
-        tab.addDouble("Back Right Voltage") { Math.abs(swerveDrive.modules[3].driveMotor.voltage)}
+        tab.addDouble("Back Right Voltage") { Math.abs(swerveDrive.modules[3].driveMotor.voltage) }
         tab.addDouble("Evil heading") { swerveDrive.evilGetHeading() }
 
     }
@@ -131,7 +131,7 @@ object SwerveSubsystem : SubsystemBase() {
      * Configures PathPlanner's AutoBuilder.
      * @see AutoBuilder
      */
-    fun configurePathPlanner()  {
+    fun configurePathPlanner() {
         // TODO: Configure path planner's AutoBuilder
         AutoBuilder.configureHolonomic(
             this::getPose,
@@ -149,7 +149,7 @@ object SwerveSubsystem : SubsystemBase() {
                 )
             ),
             {
-                if (DriverStation.getAlliance().isPresent){
+                if (DriverStation.getAlliance().isPresent) {
                     DriverStation.getAlliance().get() == DriverStation.Alliance.Red
                 } else {
                     false
@@ -164,7 +164,7 @@ object SwerveSubsystem : SubsystemBase() {
      * Directly send voltage to the drive motors.
      * @param volts The voltage to send to the motors.
      */
-    fun setRawMotorVoltage(volts: Double){
+    fun setRawMotorVoltage(volts: Double) {
         swerveDrive.modules.forEach {
             it.driveMotor.voltage = volts
         }
@@ -216,7 +216,7 @@ object SwerveSubsystem : SubsystemBase() {
      * @param module The module to log.
      * @param log The SysIdRoutineLog to log to.
      */
-    private fun logDriveMotor(module: SwerveModule, log: SysIdRoutineLog){
+    private fun logDriveMotor(module: SwerveModule, log: SysIdRoutineLog) {
         log.motor(module.configuration.name)
             .voltage(Units.Volt.of(module.driveMotor.voltage))
             .linearPosition(Units.Meters.of(module.driveMotor.position))
@@ -243,9 +243,10 @@ object SwerveSubsystem : SubsystemBase() {
             SwerveDriveTest.setDriveSysIdRoutine(
                 SysIdRoutine.Config(),
                 this,
-                swerveDrive, 12.0),
+                swerveDrive, 12.0
+            ),
             3.0, 5.0, 3.0
-            )
+        )
     }
 
     /**
@@ -273,22 +274,21 @@ object SwerveSubsystem : SubsystemBase() {
         setOdomAtStart: Boolean,
     ): Command {
         var startPosition: Pose2d = Pose2d()
-        if(PathPlannerAuto.getStaringPoseFromAutoFile(autoName) == null) {
+        if (PathPlannerAuto.getStaringPoseFromAutoFile(autoName) == null) {
             startPosition = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].startingDifferentialPose
         } else {
             startPosition = PathPlannerAuto.getStaringPoseFromAutoFile(autoName)
         }
 
-        if(DriverStation.getAlliance() == Optional.of(Alliance.Red)){
+        if (DriverStation.getAlliance() == Optional.of(Alliance.Red)) {
             startPosition = GeometryUtil.flipFieldPose(startPosition)
         }
 
-        if (setOdomAtStart)
-            {
-                if (startPosition != null) {
-                    resetOdometry(startPosition)
-                }
+        if (setOdomAtStart) {
+            if (startPosition != null) {
+                resetOdometry(startPosition)
             }
+        }
 
         // TODO: Configure path planner's AutoBuilder
         return PathPlannerAuto(autoName)
@@ -399,7 +399,13 @@ object SwerveSubsystem : SubsystemBase() {
         vSide: Double,
         angle: Rotation2d,
     ): ChassisSpeeds {
-        return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, angle.radians, getHeading().radians, maximumSpeed)
+        return swerveDrive.swerveController.getTargetSpeeds(
+            vForward,
+            vSide,
+            angle.radians,
+            getHeading().radians,
+            maximumSpeed
+        )
     }
 
     /**
@@ -416,7 +422,14 @@ object SwerveSubsystem : SubsystemBase() {
         headingX: Double,
         headingY: Double
     ): ChassisSpeeds {
-        return swerveDrive.swerveController.getTargetSpeeds(vForward, vSide, headingX, headingY, getHeading().radians, maximumSpeed)
+        return swerveDrive.swerveController.getTargetSpeeds(
+            vForward,
+            vSide,
+            headingX,
+            headingY,
+            getHeading().radians,
+            maximumSpeed
+        )
     }
 
     /**

@@ -10,6 +10,7 @@ import frc.robot.subsystems.PivotSubsystem
 class HomePivotCommand : Command() {
     /** The subsystem that this command runs on. */
     private val pivotSubsystem = PivotSubsystem
+
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(pivotSubsystem)

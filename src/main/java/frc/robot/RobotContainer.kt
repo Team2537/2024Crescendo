@@ -1,26 +1,17 @@
 package frc.robot
 
-import LauncherSubsystem
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.InstantCommand
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.commands.Autos
-import frc.robot.commands.climb.ManualClimbCommand
-import frc.robot.commands.intake.ManualIntakeCommand
-import frc.robot.commands.intake.TestTransfer
-import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
-import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.*
+import frc.robot.subsystems.climb.ClimberSubsystem
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
-import lib.profiles.DriverProfile
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,7 +40,7 @@ object RobotContainer {
         TeleopDriveCommand(
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
             { MathUtil.applyDeadband(-controller.leftX, 0.1) },
-            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
+            { MathUtil.applyDeadband(-controller.rightX, 0.1) },
             { controller.rightTriggerAxis },
         )
 
@@ -57,7 +48,7 @@ object RobotContainer {
         CorrectedDriveCommand(
             { MathUtil.applyDeadband(-controller.leftY, 0.1) },
             { MathUtil.applyDeadband(-0.0, 0.1) },
-            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
+            { MathUtil.applyDeadband(-controller.rightX, 0.1) },
             { controller.hid.leftBumper },
             { controller.hid.rightBumper },
         )
@@ -76,10 +67,6 @@ object RobotContainer {
         { -controller.rightY }
     )
 
-    val manualIntake: ManualIntakeCommand = ManualIntakeCommand(
-        { -controller.rightTriggerAxis },
-        { controller.leftTriggerAxis }
-    )
 
 //    val trackSpeakerCommand = ParallelCommandGroup(
 //        RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight),
@@ -94,18 +81,13 @@ object RobotContainer {
 
     val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
 
-    val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
 
     val launchCommand: LaunchCommand = LaunchCommand(
-        {1.0},
+        { 1.0 },
         { controller.leftTrigger(0.75).asBoolean },
         { PivotSubsystem.getRelativePosition() },
         { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
     )
-
-
-
-
 
 
     init {
@@ -122,15 +104,14 @@ object RobotContainer {
      * Use to eager initialize objects
      */
     private fun initializeObjects() {
-        Autos
+//        Autos
 //        SwerveSubsystem
-        Autos
+//        Autos
 //        LimelightSubsystem
-        DriverProfile
-        PivotSubsystem
-        LauncherSubsystem
-        IntakeSubsystem
-        ClimbSubsystem
+//        DriverProfile
+//        PivotSubsystem
+//        LauncherSubsystem
+        ClimberSubsystem
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -143,55 +124,7 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.leftBumper().toggleOnTrue(
-            ParallelDeadlineGroup(
-                IntakeNoteCommand(),
-                ToggleIntakeCommand().alongWith(
-                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
-                )
-            )
-        )
-
-//        controller.rightBumper().onTrue(
-//            Commands.runOnce({
-//                if (teleopDrive.isScheduled) {
-//                    teleopDrive.cancel()
-//                    trackSpeakerCommand.schedule()
-//                } else {
-//                    trackSpeakerCommand.cancel()
-//                    teleopDrive.schedule()
-//                }
-//            })
-//        )
-
-        controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.povUp().onTrue(ampPivot)
-        controller.povRight().onTrue(intakePivot)
-        controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(
-            autoAim
-        ) // TODO: Implement auto-aiming
-        controller.rightBumper().toggleOnTrue(
-            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
-        )
-
-        controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
-        controller.b().toggleOnTrue(manualPivot)
-        controller.x().onTrue(manualClimb)
-//        controller.rightBumper().toggleOnTrue(manualClimb)
-        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
-        controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .toggleOnTrue(TestTransfer()) // TODO: Implement Toggle
-//        controller.button(Constants.OperatorConstants.START_BUTTON)
-//            .onTrue(Commands.runOnce({
-//                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
-//            })) // TODO: Implement Intake Command Override
-
-
-        LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
-
-
-
+        ClimberSubsystem.defaultCommand = ClimberSubsystem.dualArmControl { -controller.rightY }
     }
 
 
