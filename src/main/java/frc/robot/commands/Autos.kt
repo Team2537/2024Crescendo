@@ -4,13 +4,8 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.*
-import frc.robot.Constants
-import frc.robot.commands.pivot.HomePivotCommand
-import frc.robot.commands.pivot.QuickPivotCommand
-import frc.robot.commands.pivot.SetKnownPosition
 import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
-import frc.robot.subsystems.PivotSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 
 object Autos {
@@ -36,27 +31,7 @@ object Autos {
     }
 
     fun registerNamedCommands() {
-//        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch())
-        NamedCommands.registerCommand("Auto Aim", QuickPivotCommand(0.0, true, true))
-        NamedCommands.registerCommand(
-            "Aim Subwoofer", QuickPivotCommand(
-                Constants.PivotConstants.SUBWOOFER_POSITION, false, false
-            )
-        )
-        NamedCommands.registerCommand("Shoot", LaunchCommand(
-            { 1.0 },
-            { true },
-            { PivotSubsystem.getRelativePosition() },
-            { false }
-        ))
-        NamedCommands.registerCommand("Home", HomePivotCommand())
-        NamedCommands.registerCommand(
-            "Aim Intake", QuickPivotCommand(
-                Constants.PivotConstants.INTAKE_POSITION, false, false
-            )
-        )
-        NamedCommands.registerCommand("Pull Note", IntakeNoteCommand())
-        NamedCommands.registerCommand("Set Down", SetKnownPosition(91.28))
+//        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch()) )
         NamedCommands.registerCommand(
             "Rotate Towards Target",
             RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
@@ -104,19 +79,6 @@ object Autos {
         return SwerveSubsystem.getAutonomousCommand("Mid_To_TopNote", true)
     }
 
-    private fun onlyShoot(): Command {
-        return SequentialCommandGroup(
-            SetKnownPosition(90.1),
-            QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false),
-            LaunchCommand(
-                { 1.0 },
-                { true },
-                { PivotSubsystem.getRelativePosition() },
-                { false }
-            ),
-        )
-    }
-
     private fun twoNote(): Command {
         return SwerveSubsystem.getAutonomousCommand("Two_Note", true)
     }
@@ -156,7 +118,6 @@ object Autos {
         TEST_AUTO("Test Auto", { testAuto() }),
         SHOOT_DRIVE_MID("Shoot & Drive Source", { shootDriveSource() }),
         SHOOT_DRIVE_RIGHT("Shoot & Drive Amp", { shootAndDriveRight() }),
-        BASIC_SHOOT("Basic Shoot", { onlyShoot() }),
         TWO_NOTE("Two Note", { twoNote() }),
         THREE_NOTE_CENTER("Three Note Center", { threeNoteCenter() }),
         THREE_NOTE_AMP("Three Note Amp", { threeNoteAmp() }),

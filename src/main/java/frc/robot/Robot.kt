@@ -2,7 +2,6 @@ package frc.robot
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.Autos
-import frc.robot.subsystems.PivotSubsystem
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
@@ -75,7 +74,6 @@ object Robot : LoggedRobot() {
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
-        PivotSubsystem.stop()
         Autos.selectedAutonomousCommand.cancel()
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
@@ -87,7 +85,6 @@ object Robot : LoggedRobot() {
     }
 
     override fun teleopInit() {
-        PivotSubsystem.stop()
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         Autos.selectedAutonomousCommand.cancel()

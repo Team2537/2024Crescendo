@@ -1,6 +1,7 @@
 {
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/Pivot/Mechanism": "Mechanism2d",
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Autonomous/Auto Chooser": "String Chooser",
       "/Shuffleboard/Climber/Arms": "Mechanism2d",
