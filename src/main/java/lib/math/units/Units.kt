@@ -159,9 +159,22 @@ var CANSparkBase.velocity: RotationVelocity
 typealias RotationVelocity = Measure<Velocity<Angle>>
 typealias SpanVelocity = Measure<Velocity<Distance>>
 typealias Speed = SpanVelocity
+typealias Acceleration = Measure<Velocity<Velocity<Distance>>>
 typealias Span = Measure<Distance>
 typealias Rotation = Measure<Angle>
 typealias TimeSpan = Measure<Time>
+
+// If anyone has a better, more intuitive name for any of these, please suggest them.
+// I am not very satisfied with the flow of these names.
+typealias VoltageSpan = Measure<Voltage>
+typealias PowerSpan = Measure<Power>
+typealias ElectricalCurrent = Measure<Current>
+typealias EnergySpan = Measure<Energy>
+typealias TemperatureSpan = Measure<Temperature>
+
+// This one's fine though
+/** A Span of no unit, such as a percentage */
+typealias RawSpan = Measure<Dimensionless>
 
 operator fun <U : Unit<U>> Measure<U>.rangeTo(endInclusive: Measure<U>): ClosedMeasureRange<Measure<U>, U> {
     return ClosedMeasureRange(this, endInclusive);

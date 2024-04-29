@@ -27,6 +27,12 @@ import edu.wpi.first.units.Units
 import java.util.*
 import kotlin.collections.ArrayList
 
+// TODO: Hey Falon, I have no idea if this list can save
+//  memory from only accessing the reflection once,
+//  or if the jvm does that better. I don't have a way
+//  to test it though, so I'm gonna be lazy and pass
+//  the job off to someone else (you). Cheers(?)!
+
 // Potential to allow at-runtime addition of unit
 private var unitsToSearch: ArrayList<Unit<*>>? = null
 
@@ -108,7 +114,10 @@ val BaseStatusSignal.measure: Measure<*>
 //            return Per.combine(numUnit, denUnit).of(this.valueAsDouble)
 
             // valve and an italian restaurant should hire me with this spaghetti
-            // FIXME: NOT THIS, PLEASE
+            // FIXME: This is bad. Someone smarter than me please make this less bad.
+            //  If this causes errors, I am very so terribly sorry. I regret even
+            //  writing this stupid hack, and it is completely untested. But it compiles,
+            //  and that is progress. Progress enough anyway.
             return DumbGenericsHackSolutionSoThatThisCompiles.makePer(numUnit!!::class.java, denUnit!!::class.java, numUnit, denUnit).of(this.valueAsDouble)
         }
 
