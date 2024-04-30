@@ -2,11 +2,15 @@ package frc.robot.commands.vision
 
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 import lib.math.units.into
+import lib.math.units.measure
+import lib.math.units.radians
 import lib.vision.Limelight
 
 /**
@@ -21,7 +25,7 @@ class RotateTowardsTargetCommand(private val limelight: Limelight) : Command() {
     private val pidController: PIDController
 
     private var rotation: Double = 0.0
-    private var target = 0.0
+    private var target: Measure<Angle> = 0.0.radians
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
@@ -31,7 +35,7 @@ class RotateTowardsTargetCommand(private val limelight: Limelight) : Command() {
 
     /** @suppress */
     override fun initialize() {
-        target = SwerveSubsystem.getHeading().degrees - (limelight.absoluteTX into Degrees)
+        target = SwerveSubsystem.heading.measure - limelight.absoluteTX
     }
 
     /** @suppress */

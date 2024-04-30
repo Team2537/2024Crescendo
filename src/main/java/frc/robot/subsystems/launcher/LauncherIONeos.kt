@@ -72,11 +72,10 @@ class LauncherIONeos : LauncherIO {
         inputs.rollerPosition.mut_replace(rollerMotor.encoder.position, Units.Meters)
         inputs.topFlywheelsVelocity.mut_replace(topFlywheels.encoder.velocity, Units.MetersPerSecond)
         inputs.bottomFlywheelsVelocity.mut_replace(bottomFlywheels.encoder.velocity, Units.MetersPerSecond)
-        inputs.topFlywheelAppliedVoltage.mut_replace(topFlywheels.appliedOutput * topFlywheels.busVoltage, Units.Volts)
+        inputs.topFlywheelAppliedVoltage.mut_replace(
+            topFlywheels.appliedOutput * topFlywheels.busVoltage, Units.Volts)
         inputs.bottomFlywheelAppliedVoltage.mut_replace(
-            bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage,
-            Units.Volts
-        )
+            bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage, Units.Volts)
         inputs.rightNoteDetected = rightNoteDetector.get()
     }
 

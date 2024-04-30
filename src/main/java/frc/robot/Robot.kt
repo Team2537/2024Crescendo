@@ -2,9 +2,11 @@ package frc.robot
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.Autos
+import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGReader
 import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 /**
@@ -30,17 +32,35 @@ object Robot : LoggedRobot() {
      */
     override fun robotInit() {
         Logger.recordMetadata("ProjectName", "2024Crescendo")
+        Logger.recordMetadata("RobotName", Constants.RobotData.ROBOT_NAME)
+        Logger.recordMetadata("EventName", Constants.RobotData.EVENT_NAME)
 
-        if (isReal()) {
-            Logger.addDataReceiver(WPILOGWriter())
-            Logger.addDataReceiver(NT4Publisher())
-        } else {
-//            setUseTiming(false)
-//            val logPath: String = LogFileUtil.findReplayLog()
-//            Logger.setReplaySource(WPILOGReader(logPath))
-//            Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
-            Logger.addDataReceiver(NT4Publisher())
+        when(Constants.RobotData.MODE){
+            Constants.RobotData.Mode.REAL -> {
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+            }
+            Constants.RobotData.Mode.SIM -> {
+                Logger.addDataReceiver(NT4Publisher())
+            }
+            Constants.RobotData.Mode.REPLAY -> {
+                val logPath: String = LogFileUtil.findReplayLog() // This pulls from AdvantageScope among other things
+                Logger.setReplaySource(WPILOGReader(logPath))
+                Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
+                Logger.addDataReceiver(NT4Publisher())
+            }
         }
+
+//        if (isReal()) {
+//            Logger.addDataReceiver(WPILOGWriter())
+//            Logger.addDataReceiver(NT4Publisher())
+//        } else {
+////            setUseTiming(false)
+////            val logPath: String = LogFileUtil.findReplayLog()
+////            Logger.setReplaySource(WPILOGReader(logPath))
+////            Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
+//            Logger.addDataReceiver(NT4Publisher())
+//        }
 
         Logger.start()
 

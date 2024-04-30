@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
+import edu.wpi.first.wpilibj.RobotBase
 import swervelib.math.Matter
 import swervelib.parser.PIDFConfig
 import java.io.File
@@ -23,6 +24,17 @@ object Constants {
 
     const val GEARBOX_RATIO = 36.0
     const val PULLEY_RATIO = 40.0 / 18.0
+
+    object RobotData {
+        const val ROBOT_NAME = "Banshee"
+        const val EVENT_NAME = "N/A" // Remember to update this
+        val MODE = if(RobotBase.isReal()) Mode.REAL else Mode.SIM // Manually switch to REPLAY if needed
+
+
+        enum class Mode {
+            REAL, SIM, REPLAY
+        }
+    }
 
     object OperatorConstants {
         const val LEFT_X_DEADBAND = 0.01
