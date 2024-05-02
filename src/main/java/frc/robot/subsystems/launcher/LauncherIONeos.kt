@@ -44,10 +44,10 @@ class LauncherIONeos : LauncherIO {
         rollerMotor.setSmartCurrentLimit(40)
 
         // Set the conversion factors for the encoders so that they are in rotations, with no gearing
-        topFlywheels.encoder.positionConversionFactor = 1.0
-        bottomFlywheels.encoder.positionConversionFactor = 1.0
-        topFlywheels.encoder.velocityConversionFactor = 1.0
-        bottomFlywheels.encoder.velocityConversionFactor = 1.0
+        topFlywheels.encoder.positionConversionFactor = 1.0 / (3 * Math.PI)
+        bottomFlywheels.encoder.positionConversionFactor = 1.0 / (3 * Math.PI)
+        topFlywheels.encoder.velocityConversionFactor = 1.0 / (3 * Math.PI)
+        bottomFlywheels.encoder.velocityConversionFactor = 1.0 / (3 * Math.PI)
 
         // Set the motors to brake mode so that they don't move (as easily) when disabled
         topFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)

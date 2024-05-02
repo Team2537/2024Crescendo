@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.commands.launcher.IntakeNoteCommand
+import frc.robot.commands.launcher.LaunchCommand
 import frc.robot.commands.pivot.QuickPivotCommand
 import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.subsystems.climb.ClimberSubsystem
@@ -41,6 +42,10 @@ object RobotContainer {
     private val manualPivot = PivotSubsystem.manualPivot { controller.rightY }
 
     private val manualClimb = ClimberSubsystem.dualArmControl { controller.rightY }
+
+    private val isNoteStored: Trigger = Trigger { LaunchSubsystem.input.rightNoteDetected }
+
+    private val launchCommand: LaunchCommand = LaunchCommand { controller.leftTriggerAxis > 0.75 }
 
 
     init {
@@ -96,6 +101,8 @@ object RobotContainer {
         // Manual control bindings
         controller.b().toggleOnTrue(manualPivot)
         controller.x().toggleOnTrue(manualClimb)
+
+        controller.a().and(isNoteStored).onTrue(launchCommand)
     }
 
 

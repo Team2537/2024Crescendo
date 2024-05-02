@@ -16,7 +16,7 @@ import lib.math.units.into
 import java.util.function.BooleanSupplier
 
 class LaunchCommand(
-    private val targetSpeed: Measure<Velocity<Distance>>,
+    private val targetSpeed: Measure<Velocity<Distance>> = 925.inchesPerSecond,
     private val shouldLaunch: BooleanSupplier
 ) : Command() {
     private val subsystem = LaunchSubsystem
