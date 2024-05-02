@@ -143,13 +143,17 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
+//        controller.leftBumper().toggleOnTrue(
+//            ParallelDeadlineGroup(
+//                IntakeNoteCommand(),
+//                ToggleIntakeCommand().alongWith(
+//                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
+//                )
+//            )
+//        )
+
         controller.leftBumper().toggleOnTrue(
-            ParallelDeadlineGroup(
-                IntakeNoteCommand(),
-                ToggleIntakeCommand().alongWith(
-                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
-                )
-            )
+            IntakeNoteCommand()
         )
 
 //        controller.rightBumper().onTrue(
