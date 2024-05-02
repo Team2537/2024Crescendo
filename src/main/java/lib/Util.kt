@@ -63,7 +63,7 @@ inline fun <reified T> Json.encodeToString(data: T): String {
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
+inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { SwerveSubsystem.pose }): Trigger {
     return zoneTrigger(Zones[tag], position)
 }
 
@@ -73,7 +73,7 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
+inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.pose }): Trigger {
     return Trigger { Zones[position.invoke()] == zone }
 }
 

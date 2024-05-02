@@ -4,7 +4,6 @@ import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj2.command.*
-import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.SwerveSubsystem
 
@@ -30,13 +29,7 @@ object Autos {
         registerNamedCommands()
     }
 
-    fun registerNamedCommands() {
-//        NamedCommands.registerCommand("Auto Launch", Sequences.autoLaunch()) )
-        NamedCommands.registerCommand(
-            "Rotate Towards Target",
-            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
-        )
-    }
+    private fun registerNamedCommands() {}
 
     private fun examplePath(): Command {
         // return SwerveSubsystem.getAutonomousCommand("examplePath", true)

@@ -1,5 +1,11 @@
 package frc.robot.subsystems
 
+import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.commands.PathPlannerAuto
+import com.pathplanner.lib.util.GeometryUtil
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig
+import com.pathplanner.lib.util.PIDConstants
+import com.pathplanner.lib.util.ReplanningConfig
 import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
@@ -20,6 +26,7 @@ import swervelib.parser.SwerveDriveConfiguration
 import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.io.File
+import java.util.*
 import edu.wpi.first.math.util.Units as Conversions
 
 /**
@@ -82,6 +89,65 @@ object SwerveSubsystem : SubsystemBase() {
         )
 
         drivebase.resetDriveEncoders()
+    }
+
+    /**
+     * Configures PathPlanner's AutoBuilder.
+     * @see AutoBuilder
+     */
+    fun configurePathPlanner()  {
+        // TODO: Configure path planner's AutoBuilder
+        AutoBuilder.configureHolonomic(
+            this::pose,
+            this::resetOdometry,
+            this::robotVelocity,
+            this::setChassisSpeeds,
+            HolonomicPathFollowerConfig(
+                PIDConstants(1.0, 0.0, 1.0),
+                PIDConstants(1.0, 0.0, 0.0),
+                4.0,
+                config.driveBaseRadiusMeters,
+                ReplanningConfig(
+                    true,
+                    true,
+                )
+            ),
+            {
+                if (DriverStation.getAlliance().isPresent){
+                    DriverStation.getAlliance().get() == DriverStation.Alliance.Red
+                } else {
+                    false
+                }
+            },
+            this
+
+        )
+    }
+
+    fun getAutonomousCommand(
+        autoName: String,
+        setOdomAtStart: Boolean,
+    ): Command {
+        var startPosition: Pose2d = Pose2d()
+        if(PathPlannerAuto.getStaringPoseFromAutoFile(autoName) == null) {
+            startPosition = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].startingDifferentialPose
+        } else {
+            startPosition = PathPlannerAuto.getStaringPoseFromAutoFile(autoName)
+        }
+
+        if(DriverStation.getAlliance() == Optional.of(DriverStation.Alliance.Red)){
+            startPosition = GeometryUtil.flipFieldPose(startPosition)
+        }
+
+        if (setOdomAtStart)
+        {
+            if (startPosition != null) {
+                resetOdometry(startPosition)
+            }
+        }
+
+        // TODO: Configure path planner's AutoBuilder
+        return PathPlannerAuto(autoName)
     }
 
     fun characterizeDrive(): Command? {

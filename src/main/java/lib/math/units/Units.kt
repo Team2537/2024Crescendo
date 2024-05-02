@@ -32,7 +32,7 @@ import edu.wpi.first.units.Units.*
  * Converts a measure into a given unit, return the value as a double.
  *
  * @return The measure's magnitude converted into the given unit.
- * @see Measure. in
+ * @see Measure.in
  *
  * @since 2024-02-08
  */
