@@ -16,14 +16,14 @@ class IntakeNoteCommand : Command() {
     }
 
     override fun initialize() {
-        io.setRollerBrakeMode(false)
+        io?.setRollerBrakeMode(false)
         timer.restart()
-        io.setRollerPower(0.1)
-        io.stopFlywheels()
+        io?.setRollerPower(0.1)
+        io?.stopFlywheels()
     }
 
     override fun execute() {
-        io.setRollerPower(-0.1)
+        io?.setRollerPower(-0.1)
         if (!inputs.rightNoteDetected) timer.reset()
     }
 
@@ -33,6 +33,6 @@ class IntakeNoteCommand : Command() {
 
     override fun end(interrupted: Boolean) {
         timer.stop()
-        io.runRollerSetpoint(inputs.rollerPosition + 0.3.inches)
+        io?.runRollerSetpoint(inputs.rollerPosition + 0.3.inches)
     }
 }

@@ -35,25 +35,25 @@ class LaunchCommand(
     }
 
     override fun initialize() {
-        io.setFlywheelsBrakeMode(false)
+        io?.setFlywheelsBrakeMode(false)
         timer.restart()
     }
 
     override fun execute() {
         if (!pivotInputs.relativeAngle.gt(75.0.degrees)) {
             shotType = LaunchSubsystem.LaunchType.SPEAKER
-            io.runSetpoint(
+            io?.runSetpoint(
                 targetSpeed,
-                feedforward_t.calculate(targetSpeed.into(Units.InchesPerSecond)),
-                feedforward_b.calculate(targetSpeed.into(Units.InchesPerSecond)),
+                feedforward_t.calculate(targetSpeed.baseUnitMagnitude()),
+                feedforward_b.calculate(targetSpeed.baseUnitMagnitude()),
                 SparkPIDController.ArbFFUnits.kVoltage
             )
         } else {
             shotType = LaunchSubsystem.LaunchType.AMP
-            io.runSetpoint(
+            io?.runSetpoint(
                 targetSpeed.divide(4.0),
-                feedforward_t.calculate(targetSpeed.divide(4.0).into(Units.InchesPerSecond)),
-                feedforward_b.calculate(targetSpeed.divide(4.0).into(Units.InchesPerSecond)),
+                feedforward_t.calculate(targetSpeed.divide(4.0).baseUnitMagnitude()),
+                feedforward_b.calculate(targetSpeed.divide(4.0).baseUnitMagnitude()),
                 SparkPIDController.ArbFFUnits.kVoltage
             )
         }
@@ -64,11 +64,11 @@ class LaunchCommand(
             if (shotType == LaunchSubsystem.LaunchType.AMP
                 && inputs.topFlywheelsVelocity.gte(minVelocity.divide(4.0))
             ) {
-                io.setRollerVoltage(Units.Volts.of(-12.0))
+                io?.setRollerVoltage(Units.Volts.of(-12.0))
             } else if (inputs.topFlywheelsVelocity.gte(minVelocity)
                 && inputs.bottomFlywheelsVelocity.gte(minVelocity)
             ) {
-                io.setRollerVoltage(Units.Volts.of(-12.0))
+                io?.setRollerVoltage(Units.Volts.of(-12.0))
             }
         }
     }
@@ -79,10 +79,10 @@ class LaunchCommand(
 
     override fun end(interrupted: Boolean) {
         timer.stop()
-        io.stopFlywheels()
-        io.setRollerBrakeMode(true)
-        io.stopRoller()
-        io.setFlywheelsBrakeMode(true)
+        io?.stopFlywheels()
+        io?.setRollerBrakeMode(true)
+        io?.stopRoller()
+        io?.setFlywheelsBrakeMode(true)
     }
 
 

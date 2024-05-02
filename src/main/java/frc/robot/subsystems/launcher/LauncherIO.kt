@@ -132,7 +132,7 @@ interface LauncherIO {
      * Send a raw voltage to the flywheels.
      * @param voltage The voltage to send to the flywheels.
      */
-    fun setFlywheelVoltage(voltage: Measure<Voltage>)
+    fun setFlywheelVoltage(topVoltage: Measure<Voltage>, bottomVoltage: Measure<Voltage>)
 
     /**
      * Send a raw voltage to the roller.

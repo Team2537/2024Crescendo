@@ -147,9 +147,9 @@ class LauncherIONeos : LauncherIO {
         rollerMotor.stopMotor()
     }
 
-    override fun setFlywheelVoltage(voltage: Measure<Voltage>) {
-        topFlywheels.setVoltage(voltage.into(Units.Volts))
-        bottomFlywheels.setVoltage(voltage.into(Units.Volts))
+    override fun setFlywheelVoltage(topVoltage: Measure<Voltage>, bottomVoltage: Measure<Voltage>) {
+        topFlywheels.setVoltage(topVoltage.into(Units.Volts))
+        bottomFlywheels.setVoltage(bottomVoltage.into(Units.Volts))
     }
 
     override fun setRollerVoltage(voltage: Measure<Voltage>) {

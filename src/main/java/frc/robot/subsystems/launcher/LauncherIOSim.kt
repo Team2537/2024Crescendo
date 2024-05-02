@@ -88,7 +88,7 @@ class LauncherIOSim : LauncherIO {
         TODO("Not yet implemented")
     }
 
-    override fun setFlywheelVoltage(voltage: Measure<Voltage>) {
+    override fun setFlywheelVoltage(topVoltage: Measure<Voltage>, bottomVoltage: Measure<Voltage>) {
         TODO("Not yet implemented")
     }
 
