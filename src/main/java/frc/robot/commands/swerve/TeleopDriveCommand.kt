@@ -66,8 +66,8 @@ class TeleopDriveCommand(
 
         // Drive using raw values.
         swerve.drive(
-            Translation2d(forwardVelocity * swerve.maximumSpeed, strafeVelocity * swerve.maximumSpeed),
-            angVelocity * controller.config.maxAngularVelocity,
+            Translation2d(forwardVelocity, strafeVelocity),
+            angVelocity,
             swerve.fieldOriented,
         )
     }

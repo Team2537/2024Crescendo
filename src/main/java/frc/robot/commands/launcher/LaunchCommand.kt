@@ -65,11 +65,11 @@ class LaunchCommand(
         // If the pivot angle is less than 10 degrees, set the flywheels to a quarter of the desired speed
         // This is for amp shots
         if(pivotAngle.asDouble < 10) {
-            launcherSubsystem.setFlywheelVelocity(600.0.rpm)
-            minVelocity = 500.0
-        } else {
-            launcherSubsystem.setFlywheelVelocity(2100.rpm)
+            launcherSubsystem.setFlywheelVelocity(2500.0.rpm)
             minVelocity = 2000.0
+        } else {
+            launcherSubsystem.setFlywheelVelocity(2800.rpm)
+            minVelocity = 2600.0
 
         }
 
@@ -84,7 +84,7 @@ class LaunchCommand(
         if(launcherSubsystem.noteTrigger.asBoolean
             && ((launch.asBoolean
             && launcherSubsystem.topFlywheels.encoder.velocity > minVelocity) || override.asBoolean)){
-            launcherSubsystem.setRollerSpeed(-1.0)
+            launcherSubsystem.setRollerSpeed(-.5)
         }
     }
 

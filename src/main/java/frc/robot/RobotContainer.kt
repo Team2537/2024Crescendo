@@ -153,7 +153,9 @@ object RobotContainer {
 //        )
 
         controller.leftBumper().toggleOnTrue(
-            IntakeNoteCommand()
+            ampPivot.andThen(
+                IntakeNoteCommand()
+            )
         )
 
 //        controller.rightBumper().onTrue(

@@ -54,7 +54,7 @@ object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
 
     /** The maximum speed of the swerve drive */
-    var maximumSpeed: Double = OldUnits.feetToMeters(5.0)
+    var maximumSpeed: Double = OldUnits.feetToMeters(14.5)
 
     /** The Shuffleboard tab for the SwerveSubsystem */
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")
@@ -98,6 +98,8 @@ object SwerveSubsystem : SubsystemBase() {
         // Make sure no modules are in anti-jitter mode, untested and it does funny stuff with the encoder offsets
         swerveDrive.modules.forEach {
             it.setAntiJitter(false)
+            tab.addDouble("${it.configuration.name}_D") { it.driveMotor.voltage }
+            tab.addDouble("${it.configuration.name}_A") { it.angleMotor.voltage }
         }
 
         // Set whether the cosine compensator should be enabled, as it breaks simulation
