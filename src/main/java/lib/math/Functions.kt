@@ -62,5 +62,5 @@ fun Number.powScale(exp: Number): Number {
     return this.toDouble().powScale(exp.toDouble())
 }
 
-val slowmodeFunction: (Double) -> Double = { x: Double -> (-0.8 * x) + 1.0}
+val slowmodeFunction: (Double) -> Double = { x: Double -> (-0.8 * x) + 1.0 }
 

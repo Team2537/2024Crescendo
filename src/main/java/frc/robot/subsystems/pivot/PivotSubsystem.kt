@@ -1,11 +1,14 @@
 package frc.robot.subsystems.pivot
 
+import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.Constants
+import lib.math.units.degrees
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import java.util.function.DoubleSupplier
@@ -13,6 +16,13 @@ import java.util.function.DoubleSupplier
 object PivotSubsystem : SubsystemBase() {
     val io: PivotIO
     val inputs: PivotIO.PivotIOInputs
+
+    val feedforward: ArmFeedforward = ArmFeedforward(
+        Constants.PivotConstants.kS,
+        Constants.PivotConstants.kG,
+        Constants.PivotConstants.kV,
+        Constants.PivotConstants.kA
+    )
 
     val mech = Mechanism2d(3.0, 3.0)
     val root = mech.getRoot("pivot_arm", 2.0, 0.0)
@@ -29,14 +39,17 @@ object PivotSubsystem : SubsystemBase() {
         inputs = PivotIO.PivotIOInputs()
     }
 
-    fun homingRoutine(): Command? {
+    fun homingRoutine(): Command {
         return this.runEnd(
-            { io.setRawVoltage(Units.Volts.of(-0.2 * 12)) },
-            { io.stop() }
+            { io.setRawVoltage(Units.Volts.of(0.2 * 12)) },
+            {
+                io.stop()
+                io.zeroRelativeEncoder(90.0.degrees)
+            }
         ).until { inputs.homingSensorTriggered }
     }
 
-    fun manualPivot(speed: DoubleSupplier): Command? {
+    fun manualPivot(speed: DoubleSupplier): Command {
         return this.runEnd(
             { io.setRawVoltage(Units.Volts.of(speed.asDouble * 6.0)) },
             { io.stop() }
@@ -48,5 +61,9 @@ object PivotSubsystem : SubsystemBase() {
         Logger.processInputs("Pivot", inputs)
         wrist.angle = inputs.relativeAngle.into(Units.Degrees)
         Logger.recordOutput("Pivot/Mechanism", mech)
+    }
+
+    enum class PivotDirection {
+        UP, DOWN
     }
 }

@@ -12,7 +12,7 @@ object IntakeSubsystem : SubsystemBase() {
         io = IntakeIONeos()
     }
 
-    fun intakeNote(): Command? {
+    fun intakeNote(): Command {
         return this.runEnd({
             io.setIntakePower(-1.0)
             io.setTransferPower(1.0)
@@ -22,7 +22,7 @@ object IntakeSubsystem : SubsystemBase() {
         })
     }
 
-    fun feedNote(): Command? {
+    fun feedNote(): Command {
         return this.runEnd({
             io.setTransferPower(1.0)
         }, {

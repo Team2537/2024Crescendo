@@ -35,14 +35,16 @@ object Robot : LoggedRobot() {
         Logger.recordMetadata("RobotName", Constants.RobotData.ROBOT_NAME)
         Logger.recordMetadata("EventName", Constants.RobotData.EVENT_NAME)
 
-        when(Constants.RobotData.MODE){
+        when (Constants.RobotData.MODE) {
             Constants.RobotData.Mode.REAL -> {
                 Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
             }
+
             Constants.RobotData.Mode.SIM -> {
                 Logger.addDataReceiver(NT4Publisher())
             }
+
             Constants.RobotData.Mode.REPLAY -> {
                 val logPath: String = LogFileUtil.findReplayLog() // This pulls from AdvantageScope among other things
                 Logger.setReplaySource(WPILOGReader(logPath))

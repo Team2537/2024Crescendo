@@ -28,16 +28,22 @@ interface LauncherIO {
     class LauncherIOInputs : LoggableInputs {
         /** Stores the linear velocity of the roller */
         var rollerVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
+
         /** Stores the position of the roller */
         var rollerPosition: MutableMeasure<Distance> = MutableMeasure.zero(Units.Meters)
+
         /** Stores the linear velocity of the top flywheels */
         var topFlywheelsVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
+
         /** Stores the linear velocity of the bottom flywheels */
         var bottomFlywheelsVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
+
         /** Stores the current applied voltage to the top flywheels */
         var topFlywheelAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+
         /** Stores the current applied voltage to the bottom flywheels */
         var bottomFlywheelAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+
         /** Stores if the right sensor has detected a note */
         var rightNoteDetected: Boolean = false
 

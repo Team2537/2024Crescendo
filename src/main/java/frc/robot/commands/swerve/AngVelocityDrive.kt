@@ -2,8 +2,8 @@ package frc.robot.commands.swerve
 
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.SwerveSubsystem
-import java.util.function.DoubleSupplier
 import lib.math.slowmodeFunction
+import java.util.function.DoubleSupplier
 
 class AngVelocityDrive(
     private val forwardsVelocity: DoubleSupplier,

@@ -2,10 +2,18 @@ package frc.robot
 
 //import frc.robot.subsystems.SwerveSubsystem
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.commands.launcher.IntakeNoteCommand
+import frc.robot.commands.pivot.QuickPivotCommand
+import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.subsystems.climb.ClimberSubsystem
+import frc.robot.subsystems.intake.IntakeSubsystem
+import frc.robot.subsystems.launcher.LaunchSubsystem
 import frc.robot.subsystems.pivot.PivotSubsystem
 import frc.robot.util.SingletonXboxController
 
@@ -25,6 +33,15 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
+    private val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION)
+    private val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION)
+    private val speakerPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION)
+
+    private val homePivot: Command = PivotSubsystem.homingRoutine()
+    private val manualPivot = PivotSubsystem.manualPivot { controller.rightY }
+
+    private val manualClimb = ClimberSubsystem.dualArmControl { controller.rightY }
+
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
@@ -39,17 +56,13 @@ object RobotContainer {
      * Use to eager initialize objects
      */
     private fun initializeObjects() {
-//        Autos
-//        SwerveSubsystem
-//        Autos
-//        LimelightSubsystem
-//        DriverProfile
-//        PivotSubsystem
-//        LauncherSubsystem
         ClimberSubsystem
+        PivotSubsystem
+        LaunchSubsystem
+        IntakeSubsystem
+        SwerveSubsystem
     }
 
-    // Replace with CommandPS4Controller or CommandJoystick if needed
 
     /**
      * Use this method to define your `trigger->command` mappings. Triggers can be created via the
@@ -59,8 +72,30 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        ClimberSubsystem.defaultCommand = ClimberSubsystem.dualArmControl { -controller.rightY }
-        PivotSubsystem.defaultCommand = PivotSubsystem.manualPivot { -controller.leftY }
+        // Intake Command Group
+        controller.leftBumper().toggleOnTrue(
+            ParallelDeadlineGroup(
+                IntakeNoteCommand(),
+                IntakeSubsystem.intakeNote().alongWith(intakePivot)
+            )
+        )
+
+        // Zero the gyro
+        controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        // Toggle field oriented drive
+        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
+
+        // Pivot position bindings
+        controller.povUp().onTrue(ampPivot)
+        controller.povDown().onTrue(speakerPivot)
+        controller.povRight().onTrue(intakePivot)
+
+        // Home the pivot
+        controller.y().onTrue(homePivot)
+
+        // Manual control bindings
+        controller.b().toggleOnTrue(manualPivot)
+        controller.x().toggleOnTrue(manualClimb)
     }
 
 

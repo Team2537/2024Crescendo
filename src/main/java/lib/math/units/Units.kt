@@ -63,6 +63,11 @@ operator fun <U : Unit<U>?> Measure<U>.unaryPlus(): Measure<U> {
     return if (this is ImmutableMeasure) this else mutableCopy()
 }
 
+operator fun <U : Unit<U>?> Measure<U>.div(other: Measure<Dimensionless>): Measure<U> {
+    return this.divide(other)
+}
+
+
 /**
  * The velocity that the motor is rotating at. The velocity is measured by
  * this motor's [com.revrobotics.RelativeEncoder], and controlled by its

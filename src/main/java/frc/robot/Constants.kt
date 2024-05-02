@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
 import edu.wpi.first.wpilibj.RobotBase
+import lib.math.units.degrees
 import swervelib.math.Matter
 import swervelib.parser.PIDFConfig
 import java.io.File
@@ -28,7 +29,7 @@ object Constants {
     object RobotData {
         const val ROBOT_NAME = "Banshee"
         const val EVENT_NAME = "N/A" // Remember to update this
-        val MODE = if(RobotBase.isReal()) Mode.REAL else Mode.SIM // Manually switch to REPLAY if needed
+        val MODE = if (RobotBase.isReal()) Mode.REAL else Mode.SIM // Manually switch to REPLAY if needed
 
 
         enum class Mode {
@@ -99,9 +100,9 @@ object Constants {
         const val kI = 0.01
         const val kD = 0.0
 
-        const val SUBWOOFER_POSITION = 81.0
-        const val AMP_POSITION = 0.5
-        const val INTAKE_POSITION = 73.5
+        val SUBWOOFER_POSITION = 9.0.degrees
+        val AMP_POSITION = 89.5.degrees
+        val INTAKE_POSITION = 16.5.degrees
         const val PODIUM_POSITION = 57.0 // Ish
         const val MID_POSITION = 63.2
 

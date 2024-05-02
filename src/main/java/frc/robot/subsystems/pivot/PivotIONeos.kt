@@ -37,6 +37,8 @@ class PivotIONeos : PivotIO {
 
         pivotMotor.setSmartCurrentLimit(40)
 
+        pivotMotor.inverted = true
+
         syncEncoders()
 
         pivotMotor.burnFlash()
@@ -58,8 +60,8 @@ class PivotIONeos : PivotIO {
         relativeEncoder.position = absoluteEncoder.distance
     }
 
-    override fun zeroRelativeEncoder() {
-        relativeEncoder.position = 0.0
+    override fun zeroRelativeEncoder(position: Measure<Angle>) {
+        relativeEncoder.position = position.into(Units.Degrees)
     }
 
     override fun runSetpoint(setpoint: Measure<Angle>, arbFFUnits: Measure<Voltage>) {

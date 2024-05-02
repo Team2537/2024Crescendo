@@ -34,7 +34,7 @@ interface PivotIO {
 
     fun syncEncoders()
 
-    fun zeroRelativeEncoder()
+    fun zeroRelativeEncoder(position: Measure<Angle> = Units.Degrees.zero())
 
     fun runSetpoint(setpoint: Measure<Angle>, arbFFUnits: Measure<Voltage>)
 

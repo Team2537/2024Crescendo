@@ -37,6 +37,8 @@ class PivotIOSim : PivotIO {
 
     val appliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
 
+    init {}
+
     override fun updateInputs(inputs: PivotIO.PivotIOInputs) {
         armSim.update(0.02)
 
@@ -55,8 +57,8 @@ class PivotIOSim : PivotIO {
         println("Syncing encoders")
     }
 
-    override fun zeroRelativeEncoder() {
-        armSim.setState(0.0, 0.0)
+    override fun zeroRelativeEncoder(position: Measure<Angle>) {
+        armSim.setState(position.into(Units.Radians), 0.0)
     }
 
     override fun runSetpoint(setpoint: Measure<Angle>, arbFFUnits: Measure<Voltage>) {

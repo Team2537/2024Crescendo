@@ -43,7 +43,7 @@ object ClimberSubsystem : SubsystemBase() {
         tab.add("Arms", arms)
     }
 
-    fun individualArmControl(leftPower: DoubleSupplier, rightPower: DoubleSupplier): Command? {
+    fun individualArmControl(leftPower: DoubleSupplier, rightPower: DoubleSupplier): Command {
         return this.runEnd({
             io.setLeftArmPower(leftPower.asDouble)
             io.setRightArmPower(rightPower.asDouble)
@@ -52,7 +52,7 @@ object ClimberSubsystem : SubsystemBase() {
         })
     }
 
-    fun dualArmControl(power: DoubleSupplier): Command? {
+    fun dualArmControl(power: DoubleSupplier): Command {
         return this.runEnd({
             io.setLeftArmPower(power.asDouble)
             io.setRightArmPower(power.asDouble)
@@ -61,7 +61,7 @@ object ClimberSubsystem : SubsystemBase() {
         })
     }
 
-    fun clearEncoders(): Command? {
+    fun clearEncoders(): Command {
         return this.runOnce {
             io.resetLeftArmPosition()
             io.resetRightArmPosition()
