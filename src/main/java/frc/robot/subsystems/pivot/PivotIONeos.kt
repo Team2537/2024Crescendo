@@ -39,6 +39,11 @@ class PivotIONeos : PivotIO {
 
         pivotMotor.inverted = true
 
+        pivotMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 90.0f)
+        pivotMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.0f)
+        pivotMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
+        pivotMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
+
         syncEncoders()
 
         pivotMotor.burnFlash()

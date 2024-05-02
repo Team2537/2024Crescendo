@@ -1,12 +1,15 @@
 package frc.robot.subsystems.pivot
 
 import edu.wpi.first.math.controller.ArmFeedforward
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.Constants
 import lib.math.units.degrees
 import lib.math.units.into
@@ -29,6 +32,8 @@ object PivotSubsystem : SubsystemBase() {
     val arm_base = root.append(MechanismLigament2d("arm_base", 1.0, 90.0))
     val wrist = arm_base.append(MechanismLigament2d("wrist", 0.5, 0.0))
 
+    val sydIDRoutine: SysIdRoutine
+
     init {
         if (RobotBase.isReal()) {
             io = PivotIONeos()
@@ -37,6 +42,18 @@ object PivotSubsystem : SubsystemBase() {
         }
 
         inputs = PivotIO.PivotIOInputs()
+
+        sydIDRoutine = SysIdRoutine(
+            SysIdRoutine.Config(
+                null, null, null,
+                { state -> Logger.recordOutput("Pivot/SysID", state.toString()) }
+            ),
+            SysIdRoutine.Mechanism(
+                { volts: Measure<Voltage> -> io.setRawVoltage(volts) },
+                null,
+                this
+            )
+        )
     }
 
     fun homingRoutine(): Command {
