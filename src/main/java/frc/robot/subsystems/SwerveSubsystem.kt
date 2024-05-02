@@ -54,7 +54,7 @@ object SwerveSubsystem : SubsystemBase() {
     private val swerveDrive: SwerveDrive
 
     /** The maximum speed of the swerve drive */
-    var maximumSpeed: Double = OldUnits.feetToMeters(14.5)
+    var maximumSpeed: Double = OldUnits.feetToMeters(5.0)
 
     /** The Shuffleboard tab for the SwerveSubsystem */
     var tab: ShuffleboardTab = Shuffleboard.getTab("Testing")

@@ -33,7 +33,7 @@ class LaunchCommand(
     /** The supplier that returns the angle of the pivot */
     private val pivotAngle: DoubleSupplier
     /** The minimum velocity that the flywheels should be at before the note is launched */
-    private var minVelocity: Double = 6000.0
+    private var minVelocity: Double = 2000.0
     /** The supplier that returns whether the launch should be overridden */
     private var override: BooleanSupplier
 
@@ -65,11 +65,11 @@ class LaunchCommand(
         // If the pivot angle is less than 10 degrees, set the flywheels to a quarter of the desired speed
         // This is for amp shots
         if(pivotAngle.asDouble < 10) {
-            launcherSubsystem.setFlywheelSpeeds(speed.asDouble / 4)
-            minVelocity = 1200.0
+            launcherSubsystem.setFlywheelVelocity(600.0.rpm)
+            minVelocity = 500.0
         } else {
-            launcherSubsystem.setFlywheelVelocity(6100.0.rpm)
-            minVelocity = 6000.0
+            launcherSubsystem.setFlywheelVelocity(2100.rpm)
+            minVelocity = 2000.0
 
         }
 
