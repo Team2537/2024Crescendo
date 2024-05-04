@@ -33,7 +33,15 @@ object Robot : LoggedRobot() {
     override fun robotInit() {
         Logger.recordMetadata("ProjectName", "2024Crescendo")
         Logger.recordMetadata("RobotName", Constants.RobotData.ROBOT_NAME)
-        Logger.recordMetadata("EventName", Constants.RobotData.EVENT_NAME)
+        Logger.recordMetadata("GitSha", BuildConstants.GIT_SHA)
+        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH)
+        Logger.recordMetadata("BuildTime", BuildConstants.BUILD_DATE)
+        when(BuildConstants.DIRTY){
+            1 -> Logger.recordMetadata("GitDirty", "Uncommited Changes")
+            0 -> Logger.recordMetadata("GitDirty", "No Uncommited Changes")
+            else -> Logger.recordMetadata("GitDirty", "Unknown")
+        }
+
 
         when (Constants.RobotData.MODE) {
             Constants.RobotData.Mode.REAL -> {

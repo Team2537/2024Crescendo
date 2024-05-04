@@ -9,9 +9,18 @@ plugins {
 
     // json serialization
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.21'
+    id "com.peterabeles.gversion" version "1.10"
 }
 
-
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    srcDir       = "src/main/java/"
+    classPackage = "frc.robot"
+    className    = "BuildConstants"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "America/New_York" // Use preferred time zone
+    indent       = "  "
+}
 
 java {
 }
