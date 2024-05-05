@@ -64,7 +64,7 @@ object RobotContainer {
         ClimberSubsystem
         PivotSubsystem
         LaunchSubsystem
-        IntakeSubsystem
+//        IntakeSubsystem
         SwerveSubsystem
     }
 

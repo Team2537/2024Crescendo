@@ -219,11 +219,11 @@ object SwerveSubsystem : SubsystemBase() {
     }
 
     override fun periodic() {
-        Logger.recordOutput("Swerve/Pose", pose)
-        Logger.recordOutput("Swerve/Field Velocity", fieldVelocity)
-        Logger.recordOutput("Swerve/Robot Velocity", robotVelocity)
-        Logger.recordOutput("Swerve/Heading", heading)
-        Logger.recordOutput("Swerve/Field Oriented", shouldFieldOriented)
+//        Logger.recordOutput("Swerve/Pose", pose)
+//        Logger.recordOutput("Swerve/Field Velocity", fieldVelocity)
+//        Logger.recordOutput("Swerve/Robot Velocity", robotVelocity)
+//        Logger.recordOutput("Swerve/Heading", heading)
+//        Logger.recordOutput("Swerve/Field Oriented", shouldFieldOriented)
     }
 
 }
