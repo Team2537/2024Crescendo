@@ -152,11 +152,7 @@ object RobotContainer {
 //            )
 //        )
 
-        controller.leftBumper().toggleOnTrue(
-            ampPivot.andThen(
-                IntakeNoteCommand()
-            )
-        )
+
 
 //        controller.rightBumper().onTrue(
 //            Commands.runOnce({
@@ -182,8 +178,13 @@ object RobotContainer {
         )
 
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
-        controller.b().toggleOnTrue(manualPivot)
-        controller.x().onTrue(manualClimb)
+//        controller.b().toggleOnTrue(manualPivot)
+        controller.b().toggleOnTrue(
+            ampPivot.andThen(
+                IntakeNoteCommand()
+            )
+        )
+        controller.x().toggleOnTrue(manualClimb)
 //        controller.rightBumper().toggleOnTrue(manualClimb)
         controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)

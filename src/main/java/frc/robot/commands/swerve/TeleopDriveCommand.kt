@@ -67,7 +67,7 @@ class TeleopDriveCommand(
         // Drive using raw values.
         swerve.drive(
             Translation2d(forwardVelocity, strafeVelocity),
-            angVelocity,
+            angVelocity * 2,
             swerve.fieldOriented,
         )
     }

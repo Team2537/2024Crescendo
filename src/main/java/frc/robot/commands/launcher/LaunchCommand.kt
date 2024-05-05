@@ -64,14 +64,9 @@ class LaunchCommand(
     override fun execute() {
         // If the pivot angle is less than 10 degrees, set the flywheels to a quarter of the desired speed
         // This is for amp shots
-        if(pivotAngle.asDouble < 10) {
-            launcherSubsystem.setFlywheelVelocity(2500.0.rpm)
-            minVelocity = 2000.0
-        } else {
-            launcherSubsystem.setFlywheelVelocity(2800.rpm)
-            minVelocity = 2600.0
+        launcherSubsystem.setFlywheelVelocity(3000.rpm)
+        minVelocity = 2600.0
 
-        }
 
         // If the note trigger is pressed, reset the timer so it starts counting from 0
         // This is used to make sure the flywheels dont end before the note is launched
