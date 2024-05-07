@@ -17,6 +17,8 @@ import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.launcher.LaunchSubsystem
 import frc.robot.subsystems.pivot.PivotSubsystem
 import frc.robot.util.SingletonXboxController
+import lib.commands.deadline
+import lib.commands.with
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -79,10 +81,7 @@ object RobotContainer {
     private fun configureBindings() {
         // Intake Command Group
         controller.leftBumper().toggleOnTrue(
-            ParallelDeadlineGroup(
-                IntakeNoteCommand(),
-                IntakeSubsystem.intakeNote().alongWith(intakePivot)
-            )
+            IntakeNoteCommand() deadline IntakeSubsystem.intakeNote() with intakePivot
         )
 
         // Zero the gyro

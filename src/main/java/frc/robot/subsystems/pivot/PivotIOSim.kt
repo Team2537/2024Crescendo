@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot
 
+import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.numbers.N1
 import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.math.system.LinearSystem
@@ -10,6 +11,7 @@ import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units
 import edu.wpi.first.units.Voltage
+import edu.wpi.first.wpilibj.Notifier
 import edu.wpi.first.wpilibj.simulation.DIOSim
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim
 import frc.robot.Constants
@@ -35,9 +37,21 @@ class PivotIOSim : PivotIO {
         0.0
     )
 
+
+    val pidController: PIDController = PIDController(0.1, 0.0, 0.0)
+
     val appliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
 
-    init {}
+    val setpoint: MutableMeasure<Angle> = MutableMeasure.zero(Units.Radians)
+    val arbFF: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+
+    val pidLoop: Notifier = Notifier { setRawVoltage(
+        Units.Volts.of(pidController.calculate(armSim.angleRads, setpoint.baseUnitMagnitude())).plus(arbFF)
+    ) }
+
+    init {
+        pidLoop.startPeriodic(0.02)
+    }
 
     override fun updateInputs(inputs: PivotIO.PivotIOInputs) {
         armSim.update(0.02)
@@ -46,6 +60,7 @@ class PivotIOSim : PivotIO {
         inputs.relativeAngle.mut_replace(armSim.angleRads, Units.Radians)
         inputs.homingSensorTriggered = homingSensor.value
         inputs.appliedVoltage.mut_replace(appliedVoltage)
+        inputs.setpoint.mut_replace(setpoint)
     }
 
     override fun setRawVoltage(voltage: Measure<Voltage>) {
@@ -62,7 +77,8 @@ class PivotIOSim : PivotIO {
     }
 
     override fun runSetpoint(setpoint: Measure<Angle>, arbFFUnits: Measure<Voltage>) {
-        TODO("Not yet implemented")
+        this.setpoint.mut_replace(setpoint)
+        arbFF.mut_replace(arbFFUnits)
     }
 
     override fun stop() {
