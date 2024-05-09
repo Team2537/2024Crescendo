@@ -6,11 +6,8 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
-import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.commands.launcher.IntakeNoteCommand
 import frc.robot.commands.launcher.LaunchCommand
 import frc.robot.commands.pivot.QuickPivotCommand
@@ -20,6 +17,8 @@ import frc.robot.subsystems.intake.IntakeSubsystem
 import frc.robot.subsystems.launcher.LaunchSubsystem
 import frc.robot.subsystems.pivot.PivotSubsystem
 import frc.robot.util.SingletonXboxController
+import lib.commands.deadline
+import lib.commands.with
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,8 +49,6 @@ object RobotContainer {
 
     private val launchCommand: LaunchCommand = LaunchCommand { controller.leftTriggerAxis > 0.75 }
 
-    private val intakeNote: IntakeNoteCommand = IntakeNoteCommand()
-
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
@@ -69,7 +66,7 @@ object RobotContainer {
         ClimberSubsystem
         PivotSubsystem
         LaunchSubsystem
-//        IntakeSubsystem
+        IntakeSubsystem
         SwerveSubsystem
     }
 
@@ -83,8 +80,8 @@ object RobotContainer {
      */
     private fun configureBindings() {
         // Intake Command Group
-        controller.rightBumper().toggleOnTrue(
-            intakeNote
+        controller.leftBumper().toggleOnTrue(
+            IntakeNoteCommand() deadline IntakeSubsystem.intakeNote() with intakePivot
         )
 
         // Zero the gyro
@@ -102,21 +99,9 @@ object RobotContainer {
 
         // Manual control bindings
         controller.b().toggleOnTrue(manualPivot)
-        controller.x().whileTrue(
-            SequentialCommandGroup(
-                LaunchSubsystem.topSysIDRoutine.dynamic(SysIdRoutine.Direction.kForward),
-                WaitCommand(2.0),
-                LaunchSubsystem.topSysIDRoutine.dynamic(SysIdRoutine.Direction.kReverse),
-                WaitCommand(2.0),
-                LaunchSubsystem.topSysIDRoutine.quasistatic(SysIdRoutine.Direction.kForward),
-                WaitCommand(2.0),
-                LaunchSubsystem.topSysIDRoutine.quasistatic(SysIdRoutine.Direction.kReverse)
-            )
-        )
+        controller.x().toggleOnTrue(manualClimb)
 
         controller.a().and(isNoteStored).onTrue(launchCommand)
-
-
     }
 
 
