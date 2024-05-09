@@ -76,6 +76,10 @@ object PivotSubsystem : SubsystemBase() {
     override fun periodic() {
         io.updateInputs(inputs)
         Logger.processInputs("Pivot", inputs)
+        Logger.recordOutput("Absolute Encoder", io.getRawAbs())
+    }
+
+    override fun simulationPeriodic() {
         wrist.angle = inputs.relativeAngle.into(Units.Degrees)
         Logger.recordOutput("Pivot/Mechanism", mech)
     }

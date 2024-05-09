@@ -38,6 +38,10 @@ interface LauncherIO {
         /** Stores the linear velocity of the bottom flywheels */
         var bottomFlywheelsVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
 
+        var topFlywheelsPosition: MutableMeasure<Distance> = MutableMeasure.zero(Units.Meters)
+
+        var bottomFlywheelsPosition: MutableMeasure<Distance> = MutableMeasure.zero(Units.Meters)
+
         /** Stores the current applied voltage to the top flywheels */
         var topFlywheelAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
 
@@ -55,6 +59,8 @@ interface LauncherIO {
             table?.put("rollerVelocity", rollerVelocity)
             table?.put("flywheelsVelocity_t", topFlywheelsVelocity)
             table?.put("flywheelsVelocity_b", bottomFlywheelsVelocity)
+            table?.put("flywheelsPosition_t", topFlywheelsPosition)
+            table?.put("flywheelsPosition_b", bottomFlywheelsPosition)
             table?.put("noteDetected_r", rightNoteDetected)
             table?.put("rollerPosition", rollerPosition)
             table?.put("appliedVoltage_t", topFlywheelAppliedVoltage)
@@ -69,6 +75,8 @@ interface LauncherIO {
             rollerVelocity.mut_replace(table?.get("rollerVelocity", rollerVelocity))
             topFlywheelsVelocity.mut_replace(table?.get("flywheelsVelocity_t", topFlywheelsVelocity))
             bottomFlywheelsVelocity.mut_replace(table?.get("flywheelsVelocity_b", bottomFlywheelsVelocity))
+            topFlywheelsPosition.mut_replace(table?.get("flywheelsPosition_t", topFlywheelsPosition))
+            bottomFlywheelsPosition.mut_replace(table?.get("flywheelsPosition_b", bottomFlywheelsPosition))
             rightNoteDetected = table?.get("noteDetected_r", rightNoteDetected) ?: false
             rollerPosition.mut_replace(table?.get("rollerPosition", rollerPosition))
             topFlywheelAppliedVoltage.mut_replace(table?.get("appliedVoltage_t", topFlywheelAppliedVoltage))

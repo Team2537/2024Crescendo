@@ -39,4 +39,6 @@ interface PivotIO {
     fun runSetpoint(setpoint: Measure<Angle>, arbFFUnits: Measure<Voltage>)
 
     fun stop()
+
+    fun getRawAbs(): Double
 }

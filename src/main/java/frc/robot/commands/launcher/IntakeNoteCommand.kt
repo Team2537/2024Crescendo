@@ -33,6 +33,6 @@ class IntakeNoteCommand : Command() {
 
     override fun end(interrupted: Boolean) {
         timer.stop()
-        io?.runRollerSetpoint(inputs.rollerPosition + 0.3.inches)
+        io?.runRollerSetpoint(inputs.rollerPosition + 2.0.inches)
     }
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder
 import frc.robot.Constants
 import lib.math.units.degrees
 import lib.math.units.into
+import lib.math.units.unaryMinus
 
 class PivotIONeos : PivotIO {
     val pivotMotor: CANSparkMax = CANSparkMax(
@@ -30,6 +31,7 @@ class PivotIONeos : PivotIO {
         absoluteEncoder.distancePerRotation = Constants.PivotConstants.ABS_ENCODER_CONVERSION
         absoluteEncoder.positionOffset = Constants.PivotConstants.ABSOLUTE_OFFSET
 
+
         pivotPID.p = Constants.PivotConstants.kP
         pivotPID.i = Constants.PivotConstants.kI
         pivotPID.d = Constants.PivotConstants.kD
@@ -41,16 +43,16 @@ class PivotIONeos : PivotIO {
 
         pivotMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 90.0f)
         pivotMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.0f)
-        pivotMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true)
-        pivotMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true)
+        pivotMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, false)
+        pivotMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, false)
 
-        syncEncoders()
+//        syncEncoders()
 
         pivotMotor.burnFlash()
     }
 
     override fun updateInputs(inputs: PivotIO.PivotIOInputs) {
-        inputs.absoluteAngle.mut_replace(absoluteEncoder.distance.degrees)
+        inputs.absoluteAngle.mut_replace(-absoluteEncoder.distance.degrees)
         inputs.relativeAngle.mut_replace(relativeEncoder.position.degrees)
         inputs.homingSensorTriggered = homingSensor.get()
         inputs.appliedVoltage.mut_replace(pivotMotor.appliedOutput * pivotMotor.busVoltage, Units.Volts)
@@ -62,7 +64,7 @@ class PivotIONeos : PivotIO {
     }
 
     override fun syncEncoders() {
-        relativeEncoder.position = absoluteEncoder.distance
+        relativeEncoder.position = -absoluteEncoder.distance
     }
 
     override fun zeroRelativeEncoder(position: Measure<Angle>) {
@@ -82,6 +84,10 @@ class PivotIONeos : PivotIO {
 
     override fun stop() {
         pivotMotor.stopMotor()
+    }
+
+    override fun getRawAbs(): Double {
+        return absoluteEncoder.absolutePosition
     }
 
 }

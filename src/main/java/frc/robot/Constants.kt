@@ -87,7 +87,7 @@ object Constants {
         const val HOMING_SENSOR_PORT = 2
 
 
-        const val ABSOLUTE_OFFSET = 0.320913258022831
+        const val ABSOLUTE_OFFSET = 0.578
         const val REL_ENCODER_CONVERSION = 360 / (GEARBOX_RATIO * PULLEY_RATIO)
         const val ABS_ENCODER_CONVERSION = 360 / PULLEY_RATIO
 

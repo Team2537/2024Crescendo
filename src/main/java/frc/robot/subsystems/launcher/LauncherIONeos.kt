@@ -2,9 +2,11 @@ package frc.robot.subsystems.launcher
 
 import com.revrobotics.*
 import edu.wpi.first.units.*
+import edu.wpi.first.units.Per
 import edu.wpi.first.wpilibj.DigitalInput
 import frc.robot.Constants
 import lib.math.units.into
+import edu.wpi.first.math.util.Units as Conversions
 
 class LauncherIONeos : LauncherIO {
     /** Motor for the top flywheels */
@@ -46,15 +48,18 @@ class LauncherIONeos : LauncherIO {
         // Set the conversion factors for the encoders so that they are in rotations, with no gearing
         topFlywheels.encoder.positionConversionFactor = 1.0 / (3 * Math.PI)
         bottomFlywheels.encoder.positionConversionFactor = 1.0 / (3 * Math.PI)
-        topFlywheels.encoder.velocityConversionFactor = 1.0 / (3 * Math.PI)
-        bottomFlywheels.encoder.velocityConversionFactor = 1.0 / (3 * Math.PI)
+        topFlywheels.encoder.velocityConversionFactor = 60.0 / (3 * Math.PI)
+        bottomFlywheels.encoder.velocityConversionFactor = 60.0 / (3 * Math.PI)
+
+        rollerMotor.encoder.positionConversionFactor = 1.0 / (1.7 * Math.PI)
+        rollerMotor.encoder.velocityConversionFactor = 60.0 / (1.7 * Math.PI)
 
         // Set the motors to brake mode so that they don't move (as easily) when disabled
         topFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)
         bottomFlywheels.setIdleMode(CANSparkBase.IdleMode.kBrake)
 
         // Set the PID values for the roller
-        rollerMotor.pidController.p = 0.25
+        rollerMotor.pidController.p = 1.0
         rollerMotor.pidController.i = 0.0
         rollerMotor.pidController.d = 0.0
 
@@ -68,17 +73,19 @@ class LauncherIONeos : LauncherIO {
     }
 
     override fun updateInputs(inputs: LauncherIO.LauncherIOInputs) {
-        inputs.rollerVelocity.mut_replace(rollerMotor.encoder.velocity, Units.MetersPerSecond)
-        inputs.rollerPosition.mut_replace(rollerMotor.encoder.position, Units.Meters)
-        inputs.topFlywheelsVelocity.mut_replace(topFlywheels.encoder.velocity, Units.MetersPerSecond)
-        inputs.bottomFlywheelsVelocity.mut_replace(bottomFlywheels.encoder.velocity, Units.MetersPerSecond)
+        inputs.rollerVelocity.mut_replace(rollerMotor.encoder.velocity, Units.InchesPerSecond)
+        inputs.rollerPosition.mut_replace(rollerMotor.encoder.position, Units.Inches)
+        inputs.topFlywheelsVelocity.mut_replace(topFlywheels.encoder.velocity, Units.InchesPerSecond)
+        inputs.bottomFlywheelsVelocity.mut_replace(bottomFlywheels.encoder.velocity, Units.InchesPerSecond)
+        inputs.topFlywheelsPosition.mut_replace(topFlywheels.encoder.position, Units.Inches)
+        inputs.bottomFlywheelsPosition.mut_replace(bottomFlywheels.encoder.position, Units.Inches)
         inputs.topFlywheelAppliedVoltage.mut_replace(
             topFlywheels.appliedOutput * topFlywheels.busVoltage, Units.Volts
         )
         inputs.bottomFlywheelAppliedVoltage.mut_replace(
             bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage, Units.Volts
         )
-        inputs.rightNoteDetected = rightNoteDetector.get()
+        inputs.rightNoteDetected = !rightNoteDetector.get()
     }
 
     override fun setRollerPower(power: Double) {

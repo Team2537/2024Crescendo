@@ -69,4 +69,8 @@ class PivotIOSim : PivotIO {
         appliedVoltage.mut_replace(0.0, Units.Volt)
         armSim.setInputVoltage(0.0)
     }
+
+    override fun getRawAbs(): Double {
+        return 0.0
+    }
 }
