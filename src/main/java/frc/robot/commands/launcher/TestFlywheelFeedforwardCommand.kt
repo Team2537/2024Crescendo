@@ -3,7 +3,6 @@ package frc.robot.commands.launcher
 import LauncherSubsystem
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj2.command.Command
-import lib.math.units.rpm
 
 /**
  * Command to test the feedforward velocity control of the flywheel

@@ -4,8 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command
 import LauncherSubsystem
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.wpilibj.Timer
-import lib.math.units.rpm
-import lib.math.units.velocity
+import lib.math.units.inRPM
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
@@ -68,7 +67,7 @@ class LaunchCommand(
             launcherSubsystem.setFlywheelSpeeds(speed.asDouble / 4)
             minVelocity = 1200.0
         } else {
-            launcherSubsystem.setFlywheelVelocity(6100.0.rpm)
+            launcherSubsystem.setFlywheelVelocity(6100.0.inRPM)
             minVelocity = 6000.0
 
         }

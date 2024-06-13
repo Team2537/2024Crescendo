@@ -1,18 +1,13 @@
 package frc.robot.commands.pivot
 
-import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
-import lib.calculateAngle
 import lib.math.units.into
-import lib.math.units.meters
-import java.util.*
+import lib.math.units.inMeters
 
 /**
  * Command to pivot the arm to a specific angle
@@ -72,7 +67,7 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
 //
 //            target = calculateAngle(xDistanceMeters.meters)
             // Distance from the speaker to the robot
-            val dist = LimelightSubsystem.odometryLimelight.distance2d.meters
+            val dist = LimelightSubsystem.odometryLimelight.distance2d.inMeters
             // Get the angle from the autoAimTree based on the distance, set the target to that angle
             target = pivotSubsystem.autoAimTree.get(dist into Units.Inches)
             println(target)

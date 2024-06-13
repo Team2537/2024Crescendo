@@ -5,7 +5,7 @@ import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import lib.math.units.Rotation
 import lib.math.units.into
-import lib.math.units.radians
+import lib.math.units.inRadians
 import lib.vision.LimelightHelpers.LimelightResults
 import lib.vision.LimelightHelpers.PoseEstimate
 import kotlin.math.atan2
@@ -99,7 +99,7 @@ class Limelight(private val hostname: String) {
 
     private fun targetAngleAbsolute(): Rotation {
         val targetPose = LimelightHelpers.getTargetPose3d_RobotSpace(hostname)
-        return atan2(targetPose.x, targetPose.z).radians
+        return atan2(targetPose.x, targetPose.z).inRadians
     }
 
     private fun getTD(): Double {
