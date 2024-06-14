@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
 import lib.math.units.*
@@ -101,5 +102,12 @@ class PivotSubsystem : SubsystemBase() {
 
     fun stop(){
         pivotMotor.stopMotor()
+    }
+
+    fun homeCommand(): Command {
+        return this.runEnd(
+            { pivotMotor.set(-0.2) },
+            { stop() }
+        ).until { homed }
     }
 }

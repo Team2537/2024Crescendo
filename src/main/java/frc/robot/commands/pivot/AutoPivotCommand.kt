@@ -13,9 +13,8 @@ class AutoPivotCommand(
     private val subsystem: PivotSubsystem,
     private val setpoint: Double
 ) : Command() {
-    private lateinit var startState: TrapezoidProfile.State
     private lateinit var endState: TrapezoidProfile.State
-    private lateinit var targetState: TrapezoidProfile.State
+    private lateinit var currentState: TrapezoidProfile.State
     private lateinit var profile: TrapezoidProfile
     private var timer: Timer = Timer()
 
@@ -24,11 +23,10 @@ class AutoPivotCommand(
     }
 
     override fun initialize() {
-        startState = TrapezoidProfile.State(
+        currentState = TrapezoidProfile.State(
             subsystem.getAngle().into(Units.Radians),
             subsystem.getVelocity().into(Units.RadiansPerSecond)
         )
-
         endState = TrapezoidProfile.State(
             setpoint,
             0.0
@@ -39,14 +37,14 @@ class AutoPivotCommand(
 
     override fun execute() {
         val elapsed = timer.get()
-        targetState = if(profile.isFinished(elapsed)){
+        currentState = if(profile.isFinished(elapsed)){
             endState
         } else {
-            profile.calculate(elapsed, startState, endState)
+            profile.calculate(elapsed, currentState, endState)
         }
 
-        val feedforward = subsystem.calculateFeedforward(subsystem.getAngle(), targetState.velocity.inRPS)
-        subsystem.applyPID(targetState.position.inRadians, feedforward)
+        val feedforward = subsystem.calculateFeedforward(subsystem.getAngle(), currentState.velocity.inRPS)
+        subsystem.applyPID(currentState.position.inRadians, feedforward)
     }
 
     override fun end(interrupted: Boolean) {
