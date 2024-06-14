@@ -3,7 +3,6 @@ package frc.robot.commands
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import frc.robot.commands.intake.ToggleIntakeCommand
-import frc.robot.commands.launcher.IntakeNoteCommand
 
 object CommandGroups {
 //    fun autoLaunch(): Command {

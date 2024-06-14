@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.Constants
 import lib.evilGetHeading
 import lib.math.units.into
-import lib.vision.VisionMeasurement
 import swervelib.SwerveDrive
 import swervelib.SwerveDriveTest
 import swervelib.SwerveModule
@@ -466,15 +465,6 @@ object SwerveSubsystem : SubsystemBase() {
      */
     fun addVisionMeasurement(measurement: Pose2d, timestamp: Double) {
         swerveDrive.addVisionMeasurement(measurement, timestamp)
-    }
-
-    /**
-     * Add a vision measurement to the swerve drive's pose estimator.
-     * @see VisionMeasurement
-     * @param measurement The vision measurement to add, contains its own pose and timestamp.
-     */
-    fun addVisionMeasurement(measurement: VisionMeasurement) {
-        swerveDrive.addVisionMeasurement(measurement.position.toPose2d(), measurement.timestamp)
     }
 
     /**

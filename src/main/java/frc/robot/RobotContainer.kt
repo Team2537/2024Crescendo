@@ -16,7 +16,6 @@ import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
-import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.*
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
@@ -37,9 +36,6 @@ object RobotContainer {
     // Testing pre-commit
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
-
-    val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
-
 
 //    val trackTarget = TrackTargetCommand()
 

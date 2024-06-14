@@ -44,7 +44,7 @@ class AutoPivotCommand(
         }
 
         val feedforward = subsystem.calculateFeedforward(subsystem.getAngle(), currentState.velocity.inRPS)
-        subsystem.applyPID(currentState.position.inRadians, feedforward)
+        subsystem.setTargetPosition(currentState.position.inRadians, feedforward)
     }
 
     override fun end(interrupted: Boolean) {

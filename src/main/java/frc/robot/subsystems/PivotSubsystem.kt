@@ -5,7 +5,6 @@ import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.units.*
 import edu.wpi.first.wpilibj.DigitalInput
-import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout
@@ -90,7 +89,7 @@ class PivotSubsystem : SubsystemBase() {
         return feedforward.calculate(angle.into(Units.Radians), velocity.into(Units.RadiansPerSecond)).inVolts
     }
 
-    fun applyPID(angle: Measure<Angle>, feedforward: Measure<Voltage>){
+    fun setTargetPosition(angle: Measure<Angle>, feedforward: Measure<Voltage>){
         pivotPIDController.setReference(
             angle.into(Units.Radians),
             CANSparkBase.ControlType.kPosition,
