@@ -76,8 +76,7 @@ object Constants {
 
 
         const val ABSOLUTE_OFFSET = 0.320913258022831
-        const val REL_ENCODER_CONVERSION = 360 / (GEARBOX_RATIO * PULLEY_RATIO)
-        const val ABS_ENCODER_CONVERSION = 360 / PULLEY_RATIO
+        const val REL_ENCODER_CONVERSION = (2*Math.PI) / (GEARBOX_RATIO * PULLEY_RATIO)
 
         const val kG = 0.39
         const val kV = 1.56

@@ -2,176 +2,129 @@ package frc.robot.subsystems
 
 import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap
-import edu.wpi.first.math.util.Units
+import edu.wpi.first.math.trajectory.TrapezoidProfile
+import edu.wpi.first.units.*
 import edu.wpi.first.wpilibj.DigitalInput
-import edu.wpi.first.wpilibj.DutyCycleEncoder
+import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
-import lib.putMap
+import lib.math.units.*
 
-object PivotSubsystem : SubsystemBase() {
+class PivotSubsystem : SubsystemBase() {
+    private val pivotMotor: CANSparkMax = CANSparkMax(
+        PivotConstants.PIVOT_MOTOR_PORT,
+        CANSparkLowLevel.MotorType.kBrushless
+    )
 
-    /** The motor for the pivot */
-    val pivotMotor: CANSparkMax = CANSparkMax(PivotConstants.PIVOT_MOTOR_PORT,
-        CANSparkLowLevel.MotorType.kBrushless)
+    private val pivotEncoder: RelativeEncoder = pivotMotor.encoder
 
-    /** The absolute encoder for the pivot */
-    val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(PivotConstants.ABSOLUTE_ENCODER_PORT)
+    private val pivotPIDController: SparkPIDController = pivotMotor.pidController
 
-    /** The relative encoder for the pivot, contained within the SparkMax */
-    val relativeEncoder: RelativeEncoder = pivotMotor.encoder
+    private val homingSensor: DigitalInput = DigitalInput(PivotConstants.HOMING_SENSOR_PORT)
 
-    /** The PID controller for the pivot */
-    val pivotPID: SparkPIDController = pivotMotor.pidController
+    private val layout: ShuffleboardLayout = Shuffleboard.getTab("Subsystems")
+        .getLayout("Pivot", BuiltInLayouts.kList)
 
-    /** The homing sensor for the pivot, to trigger when the pivot is upright */
-    val homingSensor: DigitalInput = DigitalInput(PivotConstants.HOMING_SENSOR_PORT)
-
-    /** The Shuffleboard tab for the pivot subsystem */
-    val tab: ShuffleboardTab = Shuffleboard.getTab("Pivot")
+    private val angle: MutableMeasure<Angle> = MutableMeasure.zero(Units.Radians)
+    private var setpoint: Double = 0.0 // Radians, no units because its an underlying value so whatever
 
     /**
-     * The tree map for the auto-aiming of the pivot
-     * This is a map of distances to angles
+     * The feedforward controller for the pivot
+     * Uses radians per second as the velocity unit
      */
-    val autoAimTree: InterpolatingDoubleTreeMap = InterpolatingDoubleTreeMap()
-
-    /** Feedforward controller for the pivot */
-    private val feedforward: ArmFeedforward = ArmFeedforward(
+    private val feedforward = ArmFeedforward(
         PivotConstants.kS,
         PivotConstants.kG,
         PivotConstants.kV,
-        PivotConstants.kA
+        PivotConstants.kA,
     )
 
+    private val constraints: TrapezoidProfile.Constraints = TrapezoidProfile.Constraints(1.0, 0.5)
+    private lateinit var profile: TrapezoidProfile
+    private val timer: Timer = Timer()
+
+    private lateinit var startState: TrapezoidProfile.State
+    private lateinit var endState: TrapezoidProfile.State
+
+    private lateinit var targetState: TrapezoidProfile.State
+
     init {
-        // Restore factory defaults for the motor
         pivotMotor.restoreFactoryDefaults()
 
-        // Set the conversion factors for the encoders, so that they're in degrees after the gearbox and pulley ratio
-        relativeEncoder.positionConversionFactor = PivotConstants.REL_ENCODER_CONVERSION
-        absoluteEncoder.distancePerRotation = PivotConstants.ABS_ENCODER_CONVERSION
-        absoluteEncoder.positionOffset = PivotConstants.ABSOLUTE_OFFSET
+        pivotEncoder.positionConversionFactor = PivotConstants.REL_ENCODER_CONVERSION
+        pivotEncoder.velocityConversionFactor = PivotConstants.REL_ENCODER_CONVERSION
 
-        // Set the PID constants for the pivot
-        pivotPID.p = PivotConstants.kP
-        pivotPID.i = PivotConstants.kI
-        pivotPID.d = PivotConstants.kD
-        pivotPID.ff = 0.0
+        pivotEncoder.position = 0.0
 
-        // Logging for Shuffleboard, position, velocity, voltage, and homing sensor
-        tab.addDouble("Throughbore Distance") { getAbsolutePosition() }
-        tab.addDouble("Absolute Position") { absoluteEncoder.absolutePosition }
-        tab.addDouble("Relative Position") { getRelativePosition() }
-        tab.addDouble("Voltage Sent") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
-        tab.addBoolean("Homing Sensor") { getHomingSensor() }
+        pivotPIDController.p = PivotConstants.kP
+        pivotPIDController.i = PivotConstants.kI
+        pivotPIDController.d = PivotConstants.kD
+        pivotPIDController.setIMaxAccum(100.0, 0) // We need to figure out what this is
 
-        // Reset the relative encoder to 0 so it's in a known state
-        zeroEncoder()
-
-        // Set current limits for the motor
         pivotMotor.setSmartCurrentLimit(40)
 
-        // Add map of distances to angles for auto-aiming
-        // This isn't really used in the current code, but it's left in for backwards compatibility
-        // Or something ¯\_(ツ)_/¯
-        autoAimTree.putMap(PivotConstants.distanceMap)
+        layout.addDouble("Encoder Position") { pivotEncoder.position }
+        layout.addDouble("Encoder Velocity") { pivotEncoder.velocity }
+        layout.addBoolean("Homing Sensor") { homingSensor.get() }
+        layout.addDouble("Output") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
+        layout.addDouble("IAccum") { pivotPIDController.iAccum }
+
+        timer.start()
+        updateProfile()
     }
 
-    /**
-     * Get the interpolated angle for a given position
-     * @param position The distance to get the angle for
-     * @return The angle for the given distance
-     */
-    fun getInterpolatedAngle(position: Double): Double {
-        return autoAimTree.get(position)
+
+    val homed: Boolean
+        get() = homingSensor.get()
+
+    fun updateProfile() {
+        startState = TrapezoidProfile.State(pivotEncoder.position, pivotEncoder.velocity)
+        endState = TrapezoidProfile.State(setpoint, 0.0)
+        profile = TrapezoidProfile(constraints)
+        timer.reset()
     }
 
-    /**
-     * Get the absolute position of the pivot
-     * @return The absolute position of the pivot
-     */
-    fun getAbsolutePosition(): Double {
-        return absoluteEncoder.distance
+    fun getAngle(): MutableMeasure<Angle> = angle.mut_replace(pivotEncoder.position.inRadians)
+
+
+    private fun setVoltage(voltage: Measure<Voltage>) {
+        pivotMotor.setVoltage(voltage.into(Units.Volts))
     }
 
-    /**
-     * Get the relative position of the pivot
-     * @return The relative position of the pivot
-     */
-    fun getRelativePosition(): Double {
-        return relativeEncoder.position
+    fun setTargetPosition(position: Measure<Angle>) {
+        if(setpoint != position.into(Units.Radians)) {
+            setpoint = position.into(Units.Radians)
+            updateProfile()
+        }
     }
 
-    /**
-     * Sync the relative encoder to the absolute encoder
-     */
-    fun syncRelative(){
-        relativeEncoder.setPosition(getAbsolutePosition())
-    }
+    fun runAutomatic(){
+        val elapsedTime = timer.get()
+        targetState = if(profile.isFinished(elapsedTime)){
+            endState
+        } else {
+            profile.calculate(elapsedTime, startState, endState)
+        }
 
-    /**
-     * Get the homing sensor value
-     * @return The value of the homing sensor
-     */
-    fun getHomingSensor() = homingSensor.get()
+        val feedforwardVoltage = feedforward.calculate(pivotEncoder.position, targetState.velocity)
 
-    /**
-     * Zero the relative encoder
-     */
-    fun zeroEncoder() {
-        relativeEncoder.setPosition(0.0)
-    }
-
-    /**
-     * Set the speed of the pivot
-     * @param speed The speed to set the pivot to
-     */
-    fun setRawSpeed(speed: Double){
-        pivotMotor.set(speed)
-    }
-
-    /**
-     * Set a voltage amount to send to the pivot
-     * @param voltage The voltage to send to the pivot
-     */
-    fun setVoltage(voltage: Double) {
-        pivotMotor.setVoltage(voltage)
-    }
-
-    /** Reset the absolute encoder */
-    fun resetEncoder() {
-        absoluteEncoder.reset()
-    }
-
-    /**
-     * Set the position of the pivot using PID
-     * @param position The position to set the pivot to
-     */
-    fun setPIDPosition(position: Double) {
-        pivotPID.setReference(position, CANSparkBase.ControlType.kPosition)
-        println("Setting position to $position")
-    }
-
-    /**
-     * Set the position of the pivot using PID with feedforward specialized to hold it in place
-     * @param position The position to set the pivot to
-     */
-    fun holdArm(position: Double){
-        pivotPID.setReference(position,
+        pivotPIDController.setReference(
+            targetState.position,
             CANSparkBase.ControlType.kPosition,
             0,
-            feedforward.calculate(Units.degreesToRadians(position), 0.0)
+            feedforwardVoltage,
+            SparkPIDController.ArbFFUnits.kVoltage
         )
     }
 
-    /** Stop the pivot */
-    fun stop() {
-        pivotMotor.stopMotor()
-    }
 
+//    fun calculateFeedforward(
+//        angle: Measure<Angle>,
+//        velocity: Measure<Velocity<Angle>>
+//    ): Measure<Voltage> {
+//        return feedforward.calculate(angle.into(Units.Radians), velocity.into(Units.RadiansPerSecond)).inVolts
+//    }
 }
