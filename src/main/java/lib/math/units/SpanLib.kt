@@ -63,9 +63,18 @@ inline val Number.inMinutes: Measure<Time>
 inline val Number.inMilliseconds: Measure<Time>
     get() = Units.Milliseconds.of(this.toDouble())
 
+inline val Number.inVolts: Measure<Voltage>
+    get() = Units.Volts.of(this.toDouble())
+
 
 /**
- * Converts a measure to a mutable measure.
- * @return The mutable measure.
+ * Converts a measure into a given unit, return the value as a double.
+ *
+ * @return The measure's magnitude converted into the given unit.
+ * @see Measure.in
+ *
+ * @since 2024-02-08
  */
-fun <U : Unit<U>?> Measure<U>.toMutable() : MutableMeasure<U> = MutableMeasure.mutable(this)
+infix fun <U : Unit<U>> Measure<U>.into(unit: U): Double {
+    return this.`in`(unit)
+}
