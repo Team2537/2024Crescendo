@@ -60,8 +60,15 @@ object Constants {
         const val BOTTOM_FLYWHEELS = 22
         const val ROLLER_MOTOR = 14
 
-        const val LEFT_NOTE_DETECTOR = 0
-        const val RIGHT_NOTE_DETECTOR = 3
+        const val NOTE_DETECTOR = 3
+
+        const val WHEEL_DIAMETER = 3.0
+        const val FLYWHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI
+
+        const val ROLLER_DIAMETER = 1.7
+        const val ROLLER_CIRCUMFERENCE = ROLLER_DIAMETER * Math.PI
+
+
     }
 
     object PivotConstants {
