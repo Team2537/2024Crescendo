@@ -98,4 +98,8 @@ class PivotSubsystem : SubsystemBase() {
             SparkPIDController.ArbFFUnits.kVoltage
         )
     }
+
+    fun stop(){
+        pivotMotor.stopMotor()
+    }
 }

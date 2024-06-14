@@ -48,4 +48,9 @@ class AutoPivotCommand(
         val feedforward = subsystem.calculateFeedforward(subsystem.getAngle(), targetState.velocity.inRPS)
         subsystem.applyPID(targetState.position.inRadians, feedforward)
     }
+
+    override fun end(interrupted: Boolean) {
+        subsystem.stop()
+        timer.stop()
+    }
 }
