@@ -18,6 +18,9 @@ inline val Number.inMeters: Measure<Distance>
 inline val Number.inFeet: Measure<Distance>
     get() = Units.Feet.of(this.toDouble())
 
+inline val Number.inInches: Measure<Distance>
+    get() = Units.Inches.of(this.toDouble())
+
 inline val Number.inCentimeters: Measure<Distance>
     get() = Units.Centimeters.of(this.toDouble())
 
