@@ -12,7 +12,7 @@ object CommandGroups {
 //                HomePivotCommand(),
 //                ParallelCommandGroup(
 //                    Commands.runOnce(
-//                        {LauncherSubsystem.state = LauncherSubsystem.State.PRIMED}
+//                        {frc.robot.subsystems.LauncherSubsystem.state = frc.robot.subsystems.LauncherSubsystem.State.PRIMED}
 //                    ),
 //                    PrimeLauncherCommand(),
 //                    QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, true)
