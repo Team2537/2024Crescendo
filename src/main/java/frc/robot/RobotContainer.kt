@@ -1,25 +1,14 @@
 package frc.robot
 
-import LauncherSubsystem
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.InstantCommand
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.commands.Autos
-import frc.robot.commands.climb.ManualClimbCommand
-import frc.robot.commands.intake.ManualIntakeCommand
-import frc.robot.commands.intake.TestTransfer
-import frc.robot.commands.intake.ToggleIntakeCommand
-import frc.robot.commands.launcher.*
-import frc.robot.commands.pivot.*
 import frc.robot.commands.swerve.*
 import frc.robot.subsystems.*
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
-import lib.profiles.DriverProfile
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
