@@ -147,4 +147,8 @@ class LauncherSubsystem : SubsystemBase() {
     fun setRawRollerVoltage(voltage: Double){
         roller.setVoltage(voltage)
     }
+
+    enum class ShotType {
+        SPEAKER, AMP
+    }
 }
