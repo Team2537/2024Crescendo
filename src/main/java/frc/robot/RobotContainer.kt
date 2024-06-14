@@ -53,55 +53,6 @@ object RobotContainer {
             { controller.rightTriggerAxis },
         )
 
-    val correctedDrive: CorrectedDriveCommand =
-        CorrectedDriveCommand(
-            { MathUtil.applyDeadband(-controller.leftY, 0.1) },
-            { MathUtil.applyDeadband(-0.0, 0.1) },
-            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
-        )
-
-    val cornerSpin: CornerSpinCommand =
-        CornerSpinCommand(
-            { -controller.rightX },
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
-        )
-
-    val absoluteDrive: AbsoluteDriveCommand = AbsoluteDriveCommand(
-        { -controller.leftY },
-        { -controller.leftX },
-        { -controller.rightX },
-        { -controller.rightY }
-    )
-
-    val manualIntake: ManualIntakeCommand = ManualIntakeCommand(
-        { -controller.rightTriggerAxis },
-        { controller.leftTriggerAxis }
-    )
-
-//    val trackSpeakerCommand = ParallelCommandGroup(
-//        RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight),
-//        QuickPivotCommand(0.0, false, true)
-//    )
-
-    val intakePivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
-    val subwooferPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.SUBWOOFER_POSITION, false, false)
-    val ampPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.AMP_POSITION, false, false)
-    val podiumPivot: QuickPivotCommand = QuickPivotCommand(Constants.PivotConstants.MID_POSITION, false, false)
-    val autoAim: QuickPivotCommand = QuickPivotCommand(0.0, false, true)
-
-    val manualPivot: ManualPivotCommand = ManualPivotCommand() { controller.rightY }
-
-    val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
-
-    val launchCommand: LaunchCommand = LaunchCommand(
-        {1.0},
-        { controller.leftTrigger(0.75).asBoolean },
-        { PivotSubsystem.getRelativePosition() },
-        { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
-    )
 
 
 
@@ -110,7 +61,6 @@ object RobotContainer {
 
     init {
         // TODO: comment stuff in this function cause I'm lazy (:
-        initializeObjects()
         configureBindings()
         SwerveSubsystem.defaultCommand = teleopDrive
 
@@ -118,20 +68,7 @@ object RobotContainer {
 
     }
 
-    /**
-     * Use to eager initialize objects
-     */
-    private fun initializeObjects() {
-        Autos
-//        SwerveSubsystem
-        Autos
-//        LimelightSubsystem
-        DriverProfile
-        PivotSubsystem
-        LauncherSubsystem
-        IntakeSubsystem
-        ClimbSubsystem
-    }
+
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -142,57 +79,7 @@ object RobotContainer {
      * subclasses such for [Xbox][CommandXboxController]/[PS4][edu.wpi.first.wpilibj2.command.button.CommandPS4Controller]
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
-    private fun configureBindings() {
-        controller.leftBumper().toggleOnTrue(
-            ParallelDeadlineGroup(
-                IntakeNoteCommand(),
-                ToggleIntakeCommand().alongWith(
-                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
-                )
-            )
-        )
-
-//        controller.rightBumper().onTrue(
-//            Commands.runOnce({
-//                if (teleopDrive.isScheduled) {
-//                    teleopDrive.cancel()
-//                    trackSpeakerCommand.schedule()
-//                } else {
-//                    trackSpeakerCommand.cancel()
-//                    teleopDrive.schedule()
-//                }
-//            })
-//        )
-
-        controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
-        controller.povUp().onTrue(ampPivot)
-        controller.povRight().onTrue(intakePivot)
-        controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(
-            autoAim
-        ) // TODO: Implement auto-aiming
-        controller.rightBumper().toggleOnTrue(
-            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
-        )
-
-        controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
-        controller.b().toggleOnTrue(manualPivot)
-        controller.x().onTrue(manualClimb)
-//        controller.rightBumper().toggleOnTrue(manualClimb)
-        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
-        controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .toggleOnTrue(TestTransfer()) // TODO: Implement Toggle
-//        controller.button(Constants.OperatorConstants.START_BUTTON)
-//            .onTrue(Commands.runOnce({
-//                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
-//            })) // TODO: Implement Intake Command Override
-
-
-        LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
-
-
-
-    }
+    private fun configureBindings() {}
 
 
 }

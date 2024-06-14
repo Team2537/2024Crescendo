@@ -59,8 +59,7 @@ object Robot : TimedRobot() {
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
-        PivotSubsystem.stop()
-        Autos.selectedAutonomousCommand.cancel()
+         Autos.selectedAutonomousCommand.cancel()
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
         Autos.selectedAutonomousCommand.schedule()
@@ -71,7 +70,6 @@ object Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
-        PivotSubsystem.stop()
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         Autos.selectedAutonomousCommand.cancel()
