@@ -8,9 +8,6 @@ import frc.robot.Constants
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.IntakeNoteCommand
 import frc.robot.commands.launcher.LaunchCommand
-import frc.robot.commands.pivot.HomePivotCommand
-import frc.robot.commands.pivot.QuickPivotCommand
-import frc.robot.commands.pivot.SetKnownPosition
 import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.PivotSubsystem
