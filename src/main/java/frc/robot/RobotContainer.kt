@@ -99,7 +99,7 @@ object RobotContainer {
     val launchCommand: LaunchCommand = LaunchCommand(
         {1.0},
         { controller.leftTrigger(0.75).asBoolean },
-        { PivotSubsystem.getRelativePosition() },
+        { PivotSubsystem.relativePosition },
         { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
     )
 

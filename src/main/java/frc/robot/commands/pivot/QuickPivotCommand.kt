@@ -79,14 +79,14 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
         }
 
         // Determine the direction to pivot
-        direction = pivotSubsystem.getRelativePosition() > target
+        direction = pivotSubsystem.relativePosition > target
     }
 
     /**
      * Set the pivot to move up or down based on the direction
      */
     override fun execute() {
-        if (pivotSubsystem.getRelativePosition() > target) {
+        if (pivotSubsystem.relativePosition > target) {
             pivotSubsystem.pivotMotor.set(-0.2)
         } else {
             pivotSubsystem.pivotMotor.set(0.2)
@@ -100,9 +100,9 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
         if (direction) {
-            return pivotSubsystem.getRelativePosition() < target
+            return pivotSubsystem.relativePosition < target
         } else {
-            return pivotSubsystem.getRelativePosition() > target
+            return pivotSubsystem.relativePosition > target
         }
     }
 

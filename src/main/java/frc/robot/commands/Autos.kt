@@ -48,7 +48,7 @@ object Autos {
         NamedCommands.registerCommand("Shoot", LaunchCommand(
             { 1.0 },
             { true },
-            { PivotSubsystem.getRelativePosition() },
+            { PivotSubsystem.relativePosition },
             { false }
         ))
         NamedCommands.registerCommand("Home", HomePivotCommand())
@@ -120,7 +120,7 @@ object Autos {
             LaunchCommand(
                 { 1.0 },
                 { true },
-                { PivotSubsystem.getRelativePosition() },
+                { PivotSubsystem.relativePosition },
                 { false }
             ),
         )
