@@ -94,6 +94,8 @@ object PivotSubsystem : SubsystemBase() {
      */
     fun getInterpolatedAngle(position: Span): Rotation {
         // FIXME WHAT UNITS ARE THEYYYY???
+        // You'll hate me for this, but its inches -> degrees
+        // 0 degrees is fully upright, as it pivots back to shoot higher it goes towards 90
         return autoAimTree[position into Meters].radians // No one bothered to say what unit the map was in??????
     }
 
