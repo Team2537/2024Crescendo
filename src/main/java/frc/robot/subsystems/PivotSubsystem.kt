@@ -4,19 +4,19 @@ import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.math.trajectory.TrapezoidProfile
-import edu.wpi.first.units.Dimensionless
-import edu.wpi.first.units.Measure
+import edu.wpi.first.units.*
 import edu.wpi.first.units.Units.*
-import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
 import lib.math.units.*
 import lib.putMap
+import java.util.function.Supplier
 
 object PivotSubsystem : SubsystemBase() {
 
@@ -45,7 +45,9 @@ object PivotSubsystem : SubsystemBase() {
     private val goalState: TrapezoidProfile.State = TrapezoidProfile.State()
     /** The current trapezoid profile */
     private var profile: TrapezoidProfile = TrapezoidProfile(PivotConstants.armConstraints)
-    private val timer: Timer = Timer()
+    private val profileTimer: Timer = Timer()
+
+    private val deltaTimer: Timer = Timer()
 
     /**
      * The target position of the arm, in degrees. A value of [Double.NaN] indicates
@@ -107,7 +109,9 @@ object PivotSubsystem : SubsystemBase() {
 
         setpoint = 0.0
 
-        timer.start()
+        deltaTimer.start()
+
+        profileTimer.start()
         updateProfile()
     }
 
@@ -126,7 +130,7 @@ object PivotSubsystem : SubsystemBase() {
      * Checks if the pivot motor *should be* at rest
      */
     val isFinished: Boolean
-        get() = setpoint.isNaN() || profile.isFinished(deltaTime)
+        get() = setpoint.isNaN() || profile.isFinished(profileTime)
 
     /**
      * Gets the position of the pivot. By default, this will be the relative position.
@@ -285,6 +289,8 @@ object PivotSubsystem : SubsystemBase() {
      * is only called a single time per cycle, [tryUpdate] may be used.
      */
     fun update(){
+        deltaTimer.reset()
+
         // If setpoint is NaN then things have been canceled
         if(setpoint.isNaN()){
             return
@@ -299,15 +305,17 @@ object PivotSubsystem : SubsystemBase() {
         )
     }
 
-    private val deltaTime = timer.get()
+    private val profileTime get() = profileTimer.get()
+
+    private val deltaTime get() = deltaTimer.get()
 
     private fun getTargetState(): TrapezoidProfile.State {
 
-        timer.restart()
-        return if(profile.isFinished(deltaTime))
+        profileTimer.restart()
+        return if(profile.isFinished(profileTime))
             TrapezoidProfile.State(setpoint, 0.0)
         else
-            profile.calculate(deltaTime, oldState, goalState)
+            profile.calculate(profileTime, oldState, goalState)
     }
 
     private fun updateProfile() {
@@ -321,7 +329,7 @@ object PivotSubsystem : SubsystemBase() {
         // reset.
         profile = TrapezoidProfile(PivotConstants.armConstraints)
 
-        timer.reset()
+        profileTimer.reset()
     }
 
     /** Stop the pivot */
@@ -336,6 +344,103 @@ object PivotSubsystem : SubsystemBase() {
         if(doesAutoUpdate){
             update()
             hasUpdated = true
+        }
+    }
+
+    // Command Factories
+
+    /**
+     * Gets a [Command] that will tell the pivot to move to the position given by
+     * [setter] each cycle.
+     *
+     * This command will use [tryUpdate] to update the subsystem.
+     *
+     * @param setter The specified retrieval of position. This will be run each cycle.
+     *
+     * @return A command that will set the pivot position.
+     */
+    fun getSetCommand(setter: Supplier<out Rotation>): Command {
+        return SetCommand(setter)
+    }
+
+    /**
+     * Gets a [Command] that will move the pivot by the change given by [changer]
+     * each cycle. The change will be scaled to "per second" -- i.e., a constant
+     * output of 45 degrees will move the pivot 45 degrees per second.
+     *
+     * This command will use [tryUpdate] to update the subsystem.
+     *
+     * @param changer The specified retrieval of change in position, scaled by delta
+     * time. This will run each cycle.
+     *
+     * @return A command that will modify the pivot position.
+     */
+    fun getChangeCommand(changer: Supplier<out Rotation>): Command {
+        return ChangeCommand(changer, 1.0)
+    }
+
+    /**
+     * Gets a [Command] that will move the pivot by the change given by [changer]
+     * each cycle. The change will be scaled by the given ratio and then by delta
+     * time. The default value of 1.0 will result in a "per second" ratio.
+     *
+     * This command will use [tryUpdate] to update the subsystem.
+     *
+     * @param changer The specified retrieval of change in position, scaled by delta
+     * time. This will run each cycle.
+     *
+     * @return A command that will modify the pivot position.
+     */
+    fun getChangeCommand(ratio: Double, changer: Supplier<out Rotation>): Command {
+        return ChangeCommand(changer, ratio)
+    }
+
+    private class SetCommand(private val setter: Supplier<out Rotation>) : Command() {
+        init {
+            addRequirements(PivotSubsystem)
+        }
+
+        /**
+         * Will not end until interrupted
+         */
+        override fun isFinished(): Boolean {
+            return false
+        }
+
+        override fun execute() {
+            targetPosition = setter.get()
+            tryUpdate()
+        }
+    }
+
+    private class ChangeCommand(private val changer: Supplier<out Rotation>, private val ratio: Double) : Command() {
+        private val current: MutableMeasure<Angle> = Degrees.zero().mutableCopy()
+
+        init {
+            addRequirements(PivotSubsystem)
+        }
+
+        /**
+         * Will not end until interrupted
+         */
+        override fun isFinished(): Boolean {
+            return false
+        }
+
+        override fun execute() {
+            tryUpdate()
+
+            val change = changer.get()
+            if(change.magnitude() == 0.0)
+                return
+
+            // This is identical to multiplying the change itself by the ratio,
+            // but this way avoids creating garbage measures or potential mutation
+            // of what the supplier returns
+            val raw: Double = ratio * deltaTime * (change into current.unit())
+            current.mut_plus(raw, current.unit())
+
+            targetPosition = current
         }
     }
 
