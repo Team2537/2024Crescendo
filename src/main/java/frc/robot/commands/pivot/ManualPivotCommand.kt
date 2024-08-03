@@ -1,5 +1,6 @@
 package frc.robot.commands.pivot
 
+import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.PivotSubsystem
 import java.util.function.DoubleSupplier
@@ -27,7 +28,7 @@ class ManualPivotCommand(voltage: DoubleSupplier) : Command() {
      * Runs every 20ms
      */
     override fun execute() {
-        pivotSubsystem.setVoltage(voltage.asDouble)
+        pivotSubsystem.setVoltage(Volts.of(voltage.asDouble))
     }
 
     /**

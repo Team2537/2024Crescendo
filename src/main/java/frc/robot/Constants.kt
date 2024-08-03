@@ -3,10 +3,9 @@ package frc.robot
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.Filesystem
-import lib.math.units.RotationVelocity
-import lib.math.units.rpm
 import swervelib.math.Matter
 import swervelib.parser.PIDFConfig
 import java.io.File
@@ -104,6 +103,11 @@ object Constants {
             Pair(104.33, 65.78),
             Pair(187.4, 60.5)
         )
+
+        // The constraints are stolen from that one example you gave me
+        val armConstraints: TrapezoidProfile.Constraints = TrapezoidProfile.Constraints(1.0, 2.0)
+        const val HOME_DEGREES: Double = 90.0
+        const val HOME_RADIANS: Double = HOME_DEGREES * Math.PI / 180.0 // static conversion; methods are runtime
     }
 
     object IntakeConstants {

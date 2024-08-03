@@ -1,18 +1,12 @@
 package frc.robot.commands.pivot
 
-import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants
 import frc.robot.subsystems.LimelightSubsystem
 import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
-import lib.calculateAngle
-import lib.math.units.into
+import lib.math.units.Rotation
 import lib.math.units.meters
-import java.util.*
 
 /**
  * Command to pivot the arm to a specific angle
@@ -20,11 +14,11 @@ import java.util.*
  * @param auto does absolutely nothing
  * @param autoAim whether the angle should be calculated based on the limelight
  */
-class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Command() {
+class QuickPivotCommand(target: Rotation, auto: Boolean, autoAim: Boolean) : Command() {
     /** The subsystem that this command runs on. */
     private val pivotSubsystem = PivotSubsystem
     /** The target angle to pivot to */
-    private var target: Double
+    private var target: Rotation
     /** The direction the pivot should move */
     private var direction: Boolean = false
     /** Does absolutely nothing */
@@ -74,7 +68,7 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
             // Distance from the speaker to the robot
             val dist = LimelightSubsystem.odometryLimelight.distance2d.meters
             // Get the angle from the autoAimTree based on the distance, set the target to that angle
-            target = pivotSubsystem.autoAimTree.get(dist into Units.Inches)
+            target = pivotSubsystem.getInterpolatedAngle(dist)
             println(target)
         }
 
@@ -87,9 +81,9 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
      */
     override fun execute() {
         if (pivotSubsystem.relativePosition > target) {
-            pivotSubsystem.pivotMotor.set(-0.2)
+            pivotSubsystem.setRawSpeed(-0.2)
         } else {
-            pivotSubsystem.pivotMotor.set(0.2)
+            pivotSubsystem.setRawSpeed(0.2)
         }
     }
 
@@ -110,7 +104,7 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
      * Hold the pivot in place when the command is interrupted or canceled
      */
     override fun end(interrupted: Boolean) {
-        pivotSubsystem.holdArm(target)
+        pivotSubsystem.setRotation(target)
         println("Auto Pivot Stopped")
     }
 }

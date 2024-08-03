@@ -2,15 +2,18 @@ package frc.robot.commands.pivot
 
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.subsystems.PivotSubsystem
+import lib.math.units.Rotation
 
 /**
  * A command that sets the pivot to a known position.
  *
  * @param position the position to set the pivot to
  */
-class SetKnownPosition(position: Double) : Command() {
+class SetKnownPosition(position: Rotation) : Command() {
+    // This is somewhat of demonstration of the new simplified interface of the [PivotSubsystem] should
+    // look like in use/how it should work: simply set position and update
     private val pivotSubsystem = PivotSubsystem
-    private val position: Double
+    private val position: Rotation
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
@@ -22,14 +25,14 @@ class SetKnownPosition(position: Double) : Command() {
      * Set the pivot encoder to the desired position
      */
     override fun initialize() {
-        pivotSubsystem.relativeEncoder.setPosition(position)
+        pivotSubsystem.position = position
     }
 
-    /**
-     * This command is finished instantly
-     */
+    override fun execute() {
+        pivotSubsystem.tryUpdate()
+    }
+
     override fun isFinished(): Boolean {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return true
+        return pivotSubsystem.isFinished
     }
 }
