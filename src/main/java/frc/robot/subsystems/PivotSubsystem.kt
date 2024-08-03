@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
 import lib.math.units.*
@@ -257,6 +258,19 @@ object PivotSubsystem : SubsystemBase() {
         }
     }
 
+    /**
+     * Rotates the position of the pivot using PID with feedforward
+     *
+     * @param change The amount to rotate by.
+     */
+    fun rotate(change: Rotation){
+       val rawChange = change into Degrees
+       if(rawChange != 0.0){
+           setpoint += rawChange
+           updateProfile()
+       }
+    }
+
     private var autoUpdate: Boolean = false
     var doesAutoUpdate: Boolean
         get() = autoUpdate
@@ -360,7 +374,10 @@ object PivotSubsystem : SubsystemBase() {
      * @return A command that will set the pivot position.
      */
     fun getSetCommand(setter: Supplier<out Rotation>): Command {
-        return SetCommand(setter)
+        return Commands.run({
+            targetPosition = setter.get()
+            tryUpdate()
+        }, this)
     }
 
     /**
@@ -376,7 +393,21 @@ object PivotSubsystem : SubsystemBase() {
      * @return A command that will modify the pivot position.
      */
     fun getChangeCommand(changer: Supplier<out Rotation>): Command {
-        return ChangeCommand(changer, 1.0)
+        return Commands.run({
+            tryUpdate()
+
+            val change = changer.get()
+
+            // This is only here to, you guessed it, prevent garbage measures
+            // If rotate() were to be used, delta time would need to be
+            // multiplied to the measure, which creates a garbage measure
+            // Because this is internal (and I'm leaving paragraphs of explanation),
+            // I decided to do the dirty work here.
+            // Same applies to the other overload of this method
+            val raw: Double = deltaTime * (change into Degrees)
+            if(raw != 0.0)
+                rawRotateBy(raw)
+        }, this)
     }
 
     /**
@@ -392,56 +423,29 @@ object PivotSubsystem : SubsystemBase() {
      * @return A command that will modify the pivot position.
      */
     fun getChangeCommand(ratio: Double, changer: Supplier<out Rotation>): Command {
-        return ChangeCommand(changer, ratio)
-    }
-
-    private class SetCommand(private val setter: Supplier<out Rotation>) : Command() {
-        init {
-            addRequirements(PivotSubsystem)
-        }
-
-        /**
-         * Will not end until interrupted
-         */
-        override fun isFinished(): Boolean {
-            return false
-        }
-
-        override fun execute() {
-            targetPosition = setter.get()
-            tryUpdate()
-        }
-    }
-
-    private class ChangeCommand(private val changer: Supplier<out Rotation>, private val ratio: Double) : Command() {
-        private val current: MutableMeasure<Angle> = Degrees.zero().mutableCopy()
-
-        init {
-            addRequirements(PivotSubsystem)
-        }
-
-        /**
-         * Will not end until interrupted
-         */
-        override fun isFinished(): Boolean {
-            return false
-        }
-
-        override fun execute() {
+        return Commands.run({
             tryUpdate()
 
             val change = changer.get()
-            if(change.magnitude() == 0.0)
-                return
 
-            // This is identical to multiplying the change itself by the ratio,
-            // but this way avoids creating garbage measures or potential mutation
-            // of what the supplier returns
-            val raw: Double = ratio * deltaTime * (change into current.unit())
-            current.mut_plus(raw, current.unit())
+            // This is only here to, you guessed it, prevent garbage measures
+            val raw: Double = ratio * deltaTime * (change into Degrees)
+            if(raw != 0.0)
+                rawRotateBy(raw)
+        }, this)
+    }
 
-            targetPosition = current
-        }
+    /**
+     * Rotates by a raw amount.
+     *
+     * This is STRICTLY used to avoid garbage measures. DO NOT USE
+     * for anything but the change commands this subsystem can fabricate.
+     *
+     * @param degrees Angle change in degrees
+     */
+    private fun rawRotateBy(degrees: Double){
+        setpoint += degrees
+        updateProfile()
     }
 
 }
