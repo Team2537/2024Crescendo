@@ -62,10 +62,12 @@ object Robot : TimedRobot() {
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
         PivotSubsystem.stop()
-        Autos.selectedAutonomousCommand.createCommand(
-            DriverStation.getAlliance()
-                .orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red)
-            .schedule()
+//        when(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)){
+//            DriverStation.Alliance.Blue -> Autos.selectedAutonomousCommand.first.schedule()
+//            DriverStation.Alliance.Red -> Autos.selectedAutonomousCommand.second.schedule()
+//            else -> Autos.selectedAutonomousCommand.first.schedule()
+//        }
+        Autos.selectedAutonomousCommand.schedule()
     }
 
     /** This method is called periodically during autonomous.  */
@@ -74,6 +76,7 @@ object Robot : TimedRobot() {
 
     override fun teleopInit() {
         PivotSubsystem.stop()
+        Autos.selectedAutonomousCommand.cancel()
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
     }
