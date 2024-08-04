@@ -27,6 +27,11 @@ class ChoreoAuto(
 ) {
     val pathList = Choreo.getTrajectoryGroup(pathGroup)
 
+    /**
+     * Factory for creating the actual command group from the event map and path group
+     *
+     * @param isRed Whether the paths and initial pose need to be flipped or not
+     */
     fun createCommand(isRed: Boolean): Command {
         val auto: SequentialCommandGroup = SequentialCommandGroup()
         if (shouldReset) {
