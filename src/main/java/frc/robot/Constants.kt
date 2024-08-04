@@ -1,14 +1,18 @@
 package frc.robot
 
+import edu.wpi.first.math.controller.PIDController
+import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Units.MetersPerSecond
 import edu.wpi.first.wpilibj.Filesystem
 import lib.math.units.RotationVelocity
-import lib.math.units.rpm
+import lib.math.units.SpanVelocity
+import lib.math.units.degreesPerSecond
+import lib.math.units.feetPerSecond
 import swervelib.math.Matter
-import swervelib.parser.PIDFConfig
 import java.io.File
 
 /*
@@ -28,12 +32,16 @@ object Constants {
 
         const val BACK_BUTTON = 7
         const val START_BUTTON = 8
+
+        val xSlewRateLimiter: SlewRateLimiter = SlewRateLimiter(0.1)
+        val ySlewRateLimiter: SlewRateLimiter = SlewRateLimiter(0.1)
+        val thetaSlewRateLimiter: SlewRateLimiter = SlewRateLimiter(0.1)
     }
 
     object Auto {
-        val xAutoPID: PIDFConfig = PIDFConfig(0.7, 0.0, 0.0)
-        val yAutoPID: PIDFConfig = PIDFConfig(0.7, 0.0, 0.0)
-        val angleAutoPID: PIDFConfig = PIDFConfig(0.4, 0.0, 0.01)
+        val xAutoPID: PIDController = PIDController(0.7, 0.0, 0.0)
+        val yAutoPID: PIDController = PIDController(0.7, 0.0, 0.0)
+        val thetaAutoPID: PIDController = PIDController(0.4, 0.0, 0.01)
         const val MAX_SPEED = 4.0
         const val MAX_ACCELERATION = 2.0
     }
@@ -42,6 +50,7 @@ object Constants {
         // Hold time on motor brakes when disabled
         const val WHEEL_LOCK_TIME = 10.0 // seconds
 
+
         const val TRACK_WIDTH = 0.47244
         const val WHEEL_BASE = 0.47244
         const val WHEEL_RADIUS = 0.050799972568014815
@@ -49,6 +58,11 @@ object Constants {
         const val MOI = 6.0 // This is fake, get the real one once CAD is done
         const val BUMPER_LENGTH = 0.80645
         const val BUMPER_WIDTH = 1.00965
+        
+        /** [SpanVelocity] to store the maximum speed of the drivebase */
+        val maximumSpeed: SpanVelocity = 14.5.feetPerSecond
+
+        val maxAngularVelocity: RotationVelocity = 180.0.degreesPerSecond
     }
 
     object IOConstants {
