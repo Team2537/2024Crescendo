@@ -32,8 +32,7 @@ import swervelib.parser.SwerveParser
 import swervelib.telemetry.SwerveDriveTelemetry
 import java.util.function.DoubleSupplier
 
-// NAME WILL BE CHANGED LATER
-object SwerveSubsystem : SubsystemBase() {
+class SwerveSubsystem : SubsystemBase() {
 
     /** YAGSL's Swerve drive object for hardware interaction */
     private val drivebase: SwerveDrive

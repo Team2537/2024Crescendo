@@ -36,6 +36,8 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
+    private val swerve: SwerveSubsystem = SwerveSubsystem()
+
     val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
 
 
@@ -66,7 +68,7 @@ object RobotContainer {
         { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
     )
 
-    val teleopDrive: Command = SwerveSubsystem.driveCommand(
+    val teleopDrive: Command = swerve.driveCommand(
         { -controller.leftY },
         { -controller.leftX },
         { -controller.rightX }
@@ -80,7 +82,7 @@ object RobotContainer {
         // TODO: comment stuff in this function cause I'm lazy (:
         initializeObjects()
         configureBindings()
-        SwerveSubsystem.defaultCommand = teleopDrive
+        swerve.defaultCommand = teleopDrive
 
         Shuffleboard.getTab("Scheduler").add("Scheduler", CommandScheduler.getInstance())
 
@@ -132,7 +134,7 @@ object RobotContainer {
 //            })
 //        )
 
-        controller.leftStick().onTrue(InstantCommand(SwerveSubsystem::zeroGyro))
+        controller.leftStick().onTrue(InstantCommand(swerve::zeroGyro))
         controller.povUp().onTrue(ampPivot)
         controller.povRight().onTrue(intakePivot)
         controller.povDown().onTrue(subwooferPivot)
@@ -144,7 +146,7 @@ object RobotContainer {
         controller.b().toggleOnTrue(manualPivot)
         controller.x().onTrue(manualClimb)
 //        controller.rightBumper().toggleOnTrue(manualClimb)
-        controller.rightStick().onTrue(InstantCommand(SwerveSubsystem::toggleFieldOriented))
+        controller.rightStick().onTrue(InstantCommand(swerve::toggleFieldOriented))
         controller.button(Constants.OperatorConstants.BACK_BUTTON)
             .toggleOnTrue(TestTransfer()) // TODO: Implement Toggle
 //        controller.button(Constants.OperatorConstants.START_BUTTON)
