@@ -36,7 +36,7 @@ object RobotContainer {
 
     private val controller = SingletonXboxController // TODO: refactor to use ProfileController
 
-    private val swerve: SwerveSubsystem = SwerveSubsystem()
+    val swerve: SwerveSubsystem = SwerveSubsystem()
 
     val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
 

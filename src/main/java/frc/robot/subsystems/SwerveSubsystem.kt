@@ -91,40 +91,6 @@ class SwerveSubsystem : SubsystemBase() {
         }
     }
 
-    fun getPathCommand(path: ChoreoTrajectory, resetOdometry: Boolean = false): Command {
-        val pathCommand: Command = Choreo.choreoSwerveCommand(
-            path,
-            { pose },
-            choreoController,
-            { speeds: ChassisSpeeds -> setChassisSpeeds(speeds) },
-            {
-                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red
-            },
-            this
-        )
-
-        if (resetOdometry) {
-            val resetCommand: DeferredCommand = DeferredCommand(
-                {
-                    this.runOnce {
-                        val newPose = if (DriverStation.getAlliance()
-                                .orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red
-                        ) {
-                            path.initialPose
-                        } else {
-                            path.flippedInitialPose
-                        }
-
-                        resetOdometry(newPose)
-                    }
-                },
-                setOf(this)
-            )
-
-            return resetCommand.andThen(pathCommand)
-        } else { return pathCommand }
-    }
-
     fun setChassisSpeeds(chassisSpeeds: ChassisSpeeds) {
         drivebase.setChassisSpeeds(chassisSpeeds)
     }
@@ -243,7 +209,7 @@ class SwerveSubsystem : SubsystemBase() {
             .angularVelocity(Units.DegreesPerSecond.of(module.angleMotor.velocity))
     }
 
-    private fun resetOdometry(newPose: Pose2d) {
+    fun resetOdometry(newPose: Pose2d) {
         drivebase.resetOdometry(newPose)
     }
 }

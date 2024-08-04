@@ -1,7 +1,7 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.Autos
 import frc.robot.subsystems.PivotSubsystem
@@ -32,6 +32,9 @@ object Robot : TimedRobot() {
         // button bindings, and put our autonomous chooser on the dashboard.
         RobotContainer
         enableLiveWindowInTest(true)
+        if(isSimulation()){
+            DriverStation.silenceJoystickConnectionWarning(true)
+        }
     }
 
     /**
@@ -59,10 +62,10 @@ object Robot : TimedRobot() {
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
         PivotSubsystem.stop()
-        Autos.selectedAutonomousCommand.cancel()
-        // We store the command as a Robot property in the rare event that the selector on the dashboard
-        // is modified while the command is running since we need to access it again in teleopInit()
-        Autos.selectedAutonomousCommand.schedule()
+        Autos.selectedAutonomousCommand.createCommand(
+            DriverStation.getAlliance()
+                .orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red)
+            .schedule()
     }
 
     /** This method is called periodically during autonomous.  */
@@ -73,7 +76,6 @@ object Robot : TimedRobot() {
         PivotSubsystem.stop()
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
-        Autos.selectedAutonomousCommand.cancel()
     }
 
     /** This method is called periodically during operator control.  */
