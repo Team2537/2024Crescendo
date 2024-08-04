@@ -1,8 +1,8 @@
 package frc.robot
 
 import LauncherSubsystem
-import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
@@ -15,8 +15,6 @@ import frc.robot.commands.intake.TestTransfer
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.*
 import frc.robot.commands.pivot.*
-import frc.robot.commands.swerve.*
-import frc.robot.commands.vision.RotateTowardsTargetCommand
 import frc.robot.subsystems.*
 //import frc.robot.subsystems.SwerveSubsystem
 import frc.robot.util.SingletonXboxController
@@ -40,41 +38,6 @@ object RobotContainer {
 
     val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
 
-
-//    val trackTarget = TrackTargetCommand()
-
-    // TODO: This is kinda weird but inverting (and the drive encoders) makes it display properly
-    //     No, uninverting both doesn't fix it :(
-    val teleopDrive: TeleopDriveCommand =
-        TeleopDriveCommand(
-            { MathUtil.applyDeadband(-controller.leftY, 0.1) },
-            { MathUtil.applyDeadband(-controller.leftX, 0.1) },
-            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
-            { controller.rightTriggerAxis },
-        )
-
-    val correctedDrive: CorrectedDriveCommand =
-        CorrectedDriveCommand(
-            { MathUtil.applyDeadband(-controller.leftY, 0.1) },
-            { MathUtil.applyDeadband(-0.0, 0.1) },
-            { MathUtil.applyDeadband(-controller.rightX, 0.1)},
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
-        )
-
-    val cornerSpin: CornerSpinCommand =
-        CornerSpinCommand(
-            { -controller.rightX },
-            { controller.hid.leftBumper },
-            { controller.hid.rightBumper },
-        )
-
-    val absoluteDrive: AbsoluteDriveCommand = AbsoluteDriveCommand(
-        { -controller.leftY },
-        { -controller.leftX },
-        { -controller.rightX },
-        { -controller.rightY }
-    )
 
     val manualIntake: ManualIntakeCommand = ManualIntakeCommand(
         { -controller.rightTriggerAxis },
@@ -103,6 +66,11 @@ object RobotContainer {
         { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
     )
 
+    val teleopDrive: Command = SwerveSubsystem.driveCommand(
+        { -controller.leftY },
+        { -controller.leftX },
+        { -controller.rightX }
+    )
 
 
 
@@ -171,9 +139,6 @@ object RobotContainer {
         controller.povLeft().onTrue(
             autoAim
         ) // TODO: Implement auto-aiming
-        controller.rightBumper().toggleOnTrue(
-            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
-        )
 
         controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
         controller.b().toggleOnTrue(manualPivot)
