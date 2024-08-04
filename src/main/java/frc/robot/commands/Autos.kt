@@ -36,12 +36,13 @@ object Autos {
 
     val ThreePieceSpeakerPath = Choreo.getTrajectoryGroup("3P_SP_N123")
     val ThreePieceSpeakerRed = SequentialCommandGroup(
-        RobotContainer.swerve.resetOdometry(ThreePieceSpeakerPath.first().flippedInitialPose),
+        InstantCommand({RobotContainer.swerve.resetOdometry(ThreePieceSpeakerPath.first().flippedInitialPose)}),
         getPath(ThreePieceSpeakerPath[0], true, RobotContainer.swerve),
         WaitCommand(2.0),
         getPath(ThreePieceSpeakerPath[1], true, RobotContainer.swerve),
     )
     val ThreePieceSpeakerBlue = SequentialCommandGroup(
+        InstantCommand({RobotContainer.swerve.resetOdometry(ThreePieceSpeakerPath.first().initialPose)}),
         getPath(ThreePieceSpeakerPath[0], false, RobotContainer.swerve),
         WaitCommand(2.0),
         getPath(ThreePieceSpeakerPath[1], false, RobotContainer.swerve),
