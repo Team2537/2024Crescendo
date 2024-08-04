@@ -30,20 +30,11 @@ object Autos {
         val pathList = Choreo.getTrajectoryGroup("3P_SP_N123")
 
 
-        return Commands.runOnce({
-            pathList.forEachIndexed { index, path ->
-                println("$index: $path.")
-            }
-        })
-
-//        return Commands.sequence(
-//            PrintCommand(pathList.size.toString()),
-//            SwerveSubsystem.getPathCommand(pathList[0], true),
-//            Commands.waitSeconds(2.0),
-//            SwerveSubsystem.getPathCommand(pathList[1]),
-//            Commands.waitSeconds(2.0),
-//            SwerveSubsystem.getPathCommand(pathList[2])
-//        )
+        return Commands.sequence(
+            SwerveSubsystem.getPathCommand(pathList[0], true),
+            Commands.waitSeconds(2.0),
+            SwerveSubsystem.getPathCommand(pathList[1]),
+        )
     }
 
 
