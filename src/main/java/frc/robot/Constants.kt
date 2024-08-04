@@ -19,10 +19,6 @@ import java.io.File
  */
 
 object Constants {
-    val ROBOT_MASS = Units.lbsToKilograms(148.0)
-    val CHASSIS = Matter(Translation3d(0.0, 0.0, Units.inchesToMeters(8.0)), ROBOT_MASS)
-    const val LOOP_TIME = 0.13 // s, 20ms + 110ms spark max velocity lag
-
     const val GEARBOX_RATIO = 36.0
     const val PULLEY_RATIO = 40.0/18.0
 
@@ -45,6 +41,14 @@ object Constants {
     object Drivebase {
         // Hold time on motor brakes when disabled
         const val WHEEL_LOCK_TIME = 10.0 // seconds
+
+        const val TRACK_WIDTH = 0.47244
+        const val WHEEL_BASE = 0.47244
+        const val WHEEL_RADIUS = 0.050799972568014815
+        const val MASS = 62.1422
+        const val MOI = 6.0 // This is fake, get the real one once CAD is done
+        const val BUMPER_LENGTH = 0.80645
+        const val BUMPER_WIDTH = 1.00965
     }
 
     object IOConstants {
