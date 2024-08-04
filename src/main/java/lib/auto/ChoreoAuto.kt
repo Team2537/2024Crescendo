@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import frc.robot.subsystems.SwerveSubsystem
 import java.util.*
-import kotlin.jvm.optionals.getOrDefault
+import java.util.function.Supplier
 
 class ChoreoAuto(
     val pathGroup: String,
     val swerve: SwerveSubsystem,
     val shouldReset: Boolean = false,
-    val eventMap: Map<Int, Command>,
+    val eventMap: Map<Int, Supplier<Command>>,
     val timeout: Double = 16.0
 ) {
     val pathList = Choreo.getTrajectoryGroup(pathGroup)
@@ -29,7 +29,8 @@ class ChoreoAuto(
         pathList.forEachIndexed() { index, path ->
             auto.addCommands(
                 getPath(path, isRed, swerve),
-                eventMap.getOrDefault(index, InstantCommand())
+                kotlin.collections.Map<Int, Supplier<Command>>::getOrDefault
+                    .invoke(eventMap, index, Supplier { InstantCommand() }).get()
             )
         }
 
