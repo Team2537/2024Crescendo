@@ -15,6 +15,13 @@ object Autos {
             setDefaultOption(AutoMode.default.optionName, AutoMode.default)
         }
 
+    private fun waitPrint(msg: String, wait: Double): Command {
+        return Commands.parallel(
+            Commands.print(msg),
+            Commands.waitSeconds(wait)
+        )
+    }
+
     val defaultAutonomousCommand: ChoreoAuto
         get() = AutoMode.default.routine.get()
 
@@ -35,9 +42,22 @@ object Autos {
         RobotContainer.swerve,
         true,
         mapOf(
-            0 to Supplier { PrintCommand("Picking up note 1") },
+            0 to Supplier {
+                waitPrint("Shooting Note 1", 3.0)
+            },
+            1 to Supplier {
+                waitPrint("Shooting Note 2", 3.0)
+            },
+            2 to Supplier {
+                waitPrint("Shooting Note 3", 3.0)
+            }
+        ),
+        mapOf(
+            0 to Supplier { PrintCommand("Picking Up Note 1") },
             1 to Supplier { PrintCommand("Picking Up Note 2") },
-        )
+            2 to Supplier { PrintCommand("Picking Up Note 3") }
+        ),
+        startCommand = Supplier { waitPrint("Shooting Stored Note", 2.0) }
     )
 
 

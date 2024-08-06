@@ -15,15 +15,17 @@ import java.util.function.Supplier
  * @param pathGroup Name of the path group that is used for this routine
  * @param swerve Swerve subsystem to send control requests to
  * @param shouldReset Boolean to define if the auto routine should reset odometry to the initial position of the first path
- * @param eventMap Map of path index -> command to run after path finishes, starts at zero
+ * @param sequentialEventMap Map of path index -> command to run after path finishes, starts at zero
  * @param timeout Timeout in seconds of the routine, defaults to 16, just above the auto period
  */
 class ChoreoAuto(
     val pathGroup: String,
     val swerve: SwerveSubsystem,
     val shouldReset: Boolean = true,
-    val eventMap: Map<Int, Supplier<Command>>,
-    val timeout: Double = 16.0
+    val sequentialEventMap: Map<Int, Supplier<Command>>,
+    val parallelEventMap: Map<Int, Supplier<Command>>,
+    val timeout: Double = 16.0,
+    val startCommand: Supplier<Command> = Supplier { InstantCommand() },
 ) {
     val pathList = Choreo.getTrajectoryGroup(pathGroup)
 
@@ -34,6 +36,8 @@ class ChoreoAuto(
      */
     fun createCommand(isRed: Boolean): Command {
         val auto: SequentialCommandGroup = SequentialCommandGroup()
+        auto.addCommands(startCommand.get())
+
         if (shouldReset) {
             if (isRed) {
                 auto.addCommands(InstantCommand({ swerve.resetOdometry(pathList.first().flippedInitialPose) }))
@@ -42,10 +46,13 @@ class ChoreoAuto(
             }
         }
         pathList.forEachIndexed() { index, path ->
+            val parallel: Command = kotlin.collections.Map<Int, Supplier<Command>>::getOrDefault
+                .invoke(parallelEventMap, index, Supplier { InstantCommand() }).get()
+
             auto.addCommands(
-                getPath(path, isRed, swerve),
+                getPath(path, isRed, swerve, parallel),
                 kotlin.collections.Map<Int, Supplier<Command>>::getOrDefault
-                    .invoke(eventMap, index, Supplier { InstantCommand() }).get()
+                    .invoke(sequentialEventMap, index, Supplier { InstantCommand() }).get()
             )
         }
 
