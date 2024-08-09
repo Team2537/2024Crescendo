@@ -40,8 +40,7 @@ object Autos {
     val ThreePieceSpeaker = ChoreoAuto(
         "3P_SP_N123",
         RobotContainer.swerve,
-        true,
-        mapOf(
+        sequentialEventMap = mapOf(
             0 to Supplier {
                 waitPrint("Shooting Note 1", 3.0)
             },
@@ -52,7 +51,7 @@ object Autos {
                 waitPrint("Shooting Note 3", 3.0)
             }
         ),
-        mapOf(
+        parallelEventMap = mapOf(
             0 to Supplier { PrintCommand("Picking Up Note 1") },
             1 to Supplier { PrintCommand("Picking Up Note 2") },
             2 to Supplier { PrintCommand("Picking Up Note 3") }
