@@ -21,13 +21,14 @@ import java.util.function.Supplier
 class ChoreoAuto(
     val pathGroup: String,
     val swerve: SwerveSubsystem,
-    val shouldReset: Boolean = true,
     val sequentialEventMap: Map<Int, Supplier<Command>>,
     val parallelEventMap: Map<Int, Supplier<Command>>,
-    val timeout: Double = 16.0,
     val startCommand: Supplier<Command> = Supplier { InstantCommand() },
-) {
+    val timeout: Double = 16.0,
+    val shouldReset: Boolean = true,
+    ) {
     val pathList = Choreo.getTrajectoryGroup(pathGroup)
+    var command: Optional<Command> = Optional.empty()
 
     /**
      * Factory for creating the actual command group from the event map and path group
@@ -56,6 +57,8 @@ class ChoreoAuto(
             )
         }
 
-        return Commands.waitSeconds(timeout).deadlineWith(auto)
+        val autoCommand = Commands.waitSeconds(timeout).deadlineWith(auto)
+        command = Optional.of(autoCommand)
+        return autoCommand
     }
 }
