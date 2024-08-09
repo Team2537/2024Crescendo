@@ -6,8 +6,10 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.commands.Autos
 import frc.robot.commands.climb.ManualClimbCommand
 import frc.robot.commands.intake.ManualIntakeCommand
@@ -38,7 +40,7 @@ object RobotContainer {
 
     val swerve: SwerveSubsystem = SwerveSubsystem()
 
-    val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
+//    val launcherIsUsed: Trigger = Trigger() { CommandScheduler.getInstance().requiring(LauncherSubsystem) == null }
 
 
     val manualIntake: ManualIntakeCommand = ManualIntakeCommand(
@@ -61,21 +63,18 @@ object RobotContainer {
 
     val manualClimb: ManualClimbCommand = ManualClimbCommand() { controller.rightY }
 
-    val launchCommand: LaunchCommand = LaunchCommand(
-        {1.0},
-        { controller.leftTrigger(0.75).asBoolean },
-        { PivotSubsystem.getRelativePosition() },
-        { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
-    )
+//    val launchCommand: LaunchCommand = LaunchCommand(
+//        {1.0},
+//        { controller.leftTrigger(0.75).asBoolean },
+//        { PivotSubsystem.getRelativePosition() },
+//        { controller.button(Constants.OperatorConstants.START_BUTTON).asBoolean }
+//    )
 
     val teleopDrive: Command = swerve.driveCommand(
         { -controller.leftY },
         { -controller.leftX },
         { -controller.rightX }
     )
-
-
-
 
 
     init {
@@ -98,7 +97,7 @@ object RobotContainer {
 //        LimelightSubsystem
         DriverProfile
         PivotSubsystem
-        LauncherSubsystem
+//        LauncherSubsystem
         IntakeSubsystem
         ClimbSubsystem
     }
@@ -113,14 +112,14 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        controller.leftBumper().toggleOnTrue(
-            ParallelDeadlineGroup(
-                IntakeNoteCommand(),
-                ToggleIntakeCommand().alongWith(
-                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
-                )
-            )
-        )
+//        controller.leftBumper().toggleOnTrue(
+//            ParallelDeadlineGroup(
+//                IntakeNoteCommand(),
+//                ToggleIntakeCommand().alongWith(
+//                    QuickPivotCommand(Constants.PivotConstants.INTAKE_POSITION, false, false)
+//                )
+//            )
+//        )
 
 //        controller.rightBumper().onTrue(
 //            Commands.runOnce({
@@ -135,28 +134,44 @@ object RobotContainer {
 //        )
 
         controller.leftStick().onTrue(InstantCommand(swerve::zeroGyro))
-        controller.povUp().onTrue(ampPivot)
-        controller.povRight().onTrue(intakePivot)
-        controller.povDown().onTrue(subwooferPivot)
-        controller.povLeft().onTrue(
-            autoAim
-        ) // TODO: Implement auto-aiming
+//        controller.povUp().onTrue(ampPivot)
+//        controller.povRight().onTrue(intakePivot)
+//        controller.povDown().onTrue(subwooferPivot)
+//        controller.povLeft().onTrue(
+//            autoAim
+//        ) // TODO: Implement auto-aiming
 
-        controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
-        controller.b().toggleOnTrue(manualPivot)
-        controller.x().onTrue(manualClimb)
+//        controller.y().onTrue(HomePivotCommand()) // TODO: Implement homing launcher
+//        controller.b().toggleOnTrue(manualPivot)
+//        controller.x().onTrue(manualClimb)
 //        controller.rightBumper().toggleOnTrue(manualClimb)
-        controller.rightStick().onTrue(InstantCommand(swerve::toggleFieldOriented))
-        controller.button(Constants.OperatorConstants.BACK_BUTTON)
-            .toggleOnTrue(TestTransfer()) // TODO: Implement Toggle
+        controller.rightStick().onTrue(swerve.toggleFieldOriented())
+//        controller.button(Constants.OperatorConstants.BACK_BUTTON)
+//            .toggleOnTrue(TestTransfer()) // TODO: Implement Toggle
 //        controller.button(Constants.OperatorConstants.START_BUTTON)
 //            .onTrue(Commands.runOnce({
 //                SwerveSubsystem.resetOdometry(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
 //            })) // TODO: Implement Intake Command Override
 
+        controller.b().whileTrue(
+            swerve.driveCommand(
+                {0.3},
+                {0.0},
+                {0.0}
+            ).withTimeout(2.0)
+                .andThen(
+                    swerve.driveCommand(
+                        {-0.3},
+                        {0.0},
+                        {0.0}
+                    ).withTimeout(2.0)
+                )
+        )
 
-        LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
+        controller.a().whileTrue(swerve.center())
 
+
+//        LauncherSubsystem.noteTrigger.and(controller.a()).onTrue(launchCommand) // TODO: Implement Priming
 
 
     }

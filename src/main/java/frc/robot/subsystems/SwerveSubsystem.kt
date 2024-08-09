@@ -3,6 +3,7 @@ package frc.robot.subsystems
 import com.choreo.lib.Choreo
 import com.choreo.lib.ChoreoControlFunction
 import com.choreo.lib.ChoreoTrajectory
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
@@ -15,9 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.DeferredCommand
-import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.*
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.Constants
 import frc.robot.Constants.Drivebase.maxAngularVelocity
@@ -89,6 +88,14 @@ class SwerveSubsystem : SubsystemBase() {
         } else {
             drivebase.setCosineCompensator(true)
         }
+
+//        drivebase.replaceSwerveModuleFeedforward()
+
+        board.addDouble("FL Angle") { MathUtil.inputModulus(drivebase.modules[0].angleMotor.position, -90.0, 90.0) }
+        board.addDouble("FR Angle") { MathUtil.inputModulus(drivebase.modules[1].angleMotor.position, -90.0, 90.0) }
+        board.addDouble("BL Angle") { MathUtil.inputModulus(drivebase.modules[2].angleMotor.position, -90.0, 90.0) }
+        board.addDouble("BR Angle") { MathUtil.inputModulus(drivebase.modules[3].angleMotor.position, -90.0, 90.0) }
+
     }
 
     fun setChassisSpeeds(chassisSpeeds: ChassisSpeeds) {
@@ -121,16 +128,21 @@ class SwerveSubsystem : SubsystemBase() {
         )
     }
 
-    fun zeroGyro(){
+    fun zeroGyro() {
         drivebase.zeroGyro()
     }
 
-    private fun getDriveSysID(): SysIdRoutine {
+    fun getDriveSysID(): SysIdRoutine {
         return SysIdRoutine(
-            SysIdRoutine.Config(),
+            SysIdRoutine.Config(
+                null,
+                null,
+                Units.Seconds.of(3.0)
+            ),
             SysIdRoutine.Mechanism(
                 { volts: Measure<Voltage> ->
                     drivebase.modules.forEach { module ->
+                        module.angleMotor.setReference(0.0, 0.0)
                         module.driveMotor.voltage = volts.into(Units.Volts)
                     }
                 },
@@ -163,29 +175,17 @@ class SwerveSubsystem : SubsystemBase() {
         )
     }
 
-    fun getDriveSysIDDynamic(direction: SysIdRoutine.Direction): Command {
-        return this.run {
-            SwerveDriveTest.centerModules(drivebase)
-            getDriveSysID().dynamic(direction)
-        }
-    }
-
-    fun getDriveSysIDQuasistatic(direction: SysIdRoutine.Direction): Command {
-        return this.run {
-            SwerveDriveTest.centerModules(drivebase)
-            getDriveSysID().quasistatic(direction)
-        }
-    }
-
     fun getAngleSysIDDynamic(direction: SysIdRoutine.Direction): Command {
-        return this.run {
-            getAngleSysID().dynamic(direction)
-        }
+        return getAngleSysID().dynamic(direction)
     }
 
     fun getAngleSysIDQuasistatic(direction: SysIdRoutine.Direction): Command {
+        return getAngleSysID().quasistatic(direction)
+    }
+
+    fun center(): Command {
         return this.run {
-            getAngleSysID().quasistatic(direction)
+            SwerveDriveTest.centerModules(drivebase)
         }
     }
 
