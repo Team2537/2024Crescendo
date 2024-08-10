@@ -317,15 +317,17 @@ object PivotSubsystem : SubsystemBase() {
             0,
             feedforward.calculate(Math.toRadians(relativeEncoder.position + PivotConstants.HOME_DEGREES), targetState.velocity)
         )
+
+        hasUpdated = true
     }
 
+    /** The time, in seconds, that the current profile has been active for */
     private val profileTime get() = profileTimer.get()
 
+    /** The time, in seconds, since the last call to [update] */
     private val deltaTime get() = deltaTimer.get()
 
     private fun getTargetState(): TrapezoidProfile.State {
-
-        profileTimer.restart()
         return if(profile.isFinished(profileTime))
             TrapezoidProfile.State(setpoint, 0.0)
         else
