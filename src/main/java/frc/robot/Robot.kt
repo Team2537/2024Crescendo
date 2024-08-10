@@ -73,9 +73,8 @@ object Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
-        if(Autos.selectedAutonomousCommand.command.isPresent){
-            Autos.selectedAutonomousCommand.command.get().cancel()
-        }
+        Autos.selectedAutonomousCommand.cancel()
+
         PivotSubsystem.stop()
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.

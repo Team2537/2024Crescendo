@@ -1,6 +1,7 @@
 package lib.auto
 
 import com.choreo.lib.Choreo
+import com.choreo.lib.ChoreoTrajectory
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
@@ -19,16 +20,18 @@ import java.util.function.Supplier
  * @param timeout Timeout in seconds of the routine, defaults to 16, just above the auto period
  */
 class ChoreoAuto(
-    val pathGroup: String,
-    val swerve: SwerveSubsystem,
-    val sequentialEventMap: Map<Int, Supplier<Command>>,
-    val parallelEventMap: Map<Int, Supplier<Command>>,
-    val startCommand: Supplier<Command> = Supplier { InstantCommand() },
-    val timeout: Double = 16.0,
-    val shouldReset: Boolean = true,
+    private val pathGroup: String,
+    private val swerve: SwerveSubsystem,
+    private val sequentialEventMap: Map<Int, Supplier<Command>>,
+    private val parallelEventMap: Map<Int, Supplier<Command>>,
+    private val startCommand: Supplier<Command> = Supplier { InstantCommand() },
+    private val timeout: Double = 16.0,
+    private val shouldReset: Boolean = true,
     ) {
-    val pathList = Choreo.getTrajectoryGroup(pathGroup)
-    var command: Optional<Command> = Optional.empty()
+    private val pathList: ArrayList<ChoreoTrajectory> = Choreo.getTrajectoryGroup(pathGroup)
+//    private var command: Optional<Command> = Optional.empty()
+    // Did you forget about null or is there a different reason to use an optional?
+    private var command: Command? = null
 
     /**
      * Factory for creating the actual command group from the event map and path group
@@ -58,7 +61,15 @@ class ChoreoAuto(
         }
 
         val autoCommand = Commands.waitSeconds(timeout).deadlineWith(auto)
-        command = Optional.of(autoCommand)
+//        command = Optional.of(autoCommand)
+        command = autoCommand
         return autoCommand
     }
+
+    /**
+     * Cancels the current command of the auto if it is present, else does nothing.
+     *
+     * @return `true` if the command was canceled, `false` if nothing happened
+     */
+    fun cancel(): Boolean = command?.cancel() !== null
 }
