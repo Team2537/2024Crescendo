@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
@@ -76,6 +77,10 @@ object PivotSubsystem : SubsystemBase() {
     )
 
     init {
+        // Register self for periodic() calls. This is recommended to happen in the
+        // constructor of the subsystem
+        CommandScheduler.getInstance().registerSubsystem(this)
+
         // Restore factory defaults for the motor
         pivotMotor.restoreFactoryDefaults()
 
@@ -95,7 +100,7 @@ object PivotSubsystem : SubsystemBase() {
         tab.addDouble("Absolute Position") { absoluteEncoder.absolutePosition }
         tab.add("Relative Position") { relativePosition }
         tab.addDouble("Voltage Sent") { pivotMotor.appliedOutput * pivotMotor.busVoltage }
-        tab.addBoolean("Homing Sensor") { this.isUpright }
+        tab.addBoolean("Homing Sensor") { this.isHome }
 
         // Reset the relative encoder to 0 so it's in a known state
         zeroEncoder()
@@ -136,8 +141,6 @@ object PivotSubsystem : SubsystemBase() {
     /**
      * Gets the position of the pivot. By default, this will be the relative position.
      *
-     * Complain to Falon or something if you want to change that
-     *
      * @see relativePosition
      * @see absolutePosition
      */
@@ -172,8 +175,7 @@ object PivotSubsystem : SubsystemBase() {
      */
     val relativePosition: Rotation
         get() {
-            // The conversion ratio supposedly goes to degrees.
-            // Blame falon if it's wrong
+            // The conversion ratio goes to degrees.
             return relativeEncoder.position.degrees
         }
 
@@ -185,14 +187,12 @@ object PivotSubsystem : SubsystemBase() {
         relativeEncoder.position = absoluteEncoder.distance
     }
 
-    // According to the docs for the homingSensor object, it is supposed to trigger when the
-    // pivot is upright, so, once again, complain to Falon if the previous comments are wrong
-    // Previously was getHomingSensor()
     /**
-     * Get the homing sensor value
+     * Checks if the pivot is "home" by use of a sensor.
+     *
      * @return The value of the homing sensor
      */
-    val isUpright get() = homingSensor.get()
+    val isHome get() = homingSensor.get()
 
     /**
      * Zero the relative encoder
@@ -271,38 +271,10 @@ object PivotSubsystem : SubsystemBase() {
        }
     }
 
-    private var autoUpdate: Boolean = false
-    var doesAutoUpdate: Boolean
-        get() = autoUpdate
-        set(value) {
-            autoUpdate = value
-        }
-
-    private var hasUpdated = false
-
-    /**
-     * Try to run the [update] method, only running if it has not been run this cycle.
-     *
-     * By "this cycle," it simply checks if it has run its [periodic] method without calling
-     * [update], in which this method is free to invoke [update].
-     */
-    fun tryUpdate(): Boolean {
-        if(!hasUpdated) {
-            update()
-            hasUpdated = true
-            return true
-        }
-        return false
-    }
-
     /**
      * Updates the PID controller using trapezoid profiles and feedforward.
-     *
-     * If [doesAutoUpdate] is `true`, this method will be called by the command scheduler via [periodic].
-     * Otherwise, it will be left to the command to call this method. In order to ensure that this method
-     * is only called a single time per cycle, [tryUpdate] may be used.
      */
-    fun update(){
+    private fun update(){
         deltaTimer.reset()
 
         // If setpoint is NaN then things have been canceled
@@ -317,8 +289,6 @@ object PivotSubsystem : SubsystemBase() {
             0,
             feedforward.calculate(Math.toRadians(relativeEncoder.position + PivotConstants.HOME_DEGREES), targetState.velocity)
         )
-
-        hasUpdated = true
     }
 
     /** The time, in seconds, that the current profile has been active for */
@@ -356,11 +326,7 @@ object PivotSubsystem : SubsystemBase() {
 
     override fun periodic() {
         super.periodic()
-        hasUpdated = false
-        if(doesAutoUpdate){
-            update()
-            hasUpdated = true
-        }
+        update() // always be updating
     }
 
     // Command Factories
@@ -369,16 +335,24 @@ object PivotSubsystem : SubsystemBase() {
      * Gets a [Command] that will tell the pivot to move to the position given by
      * [setter] each cycle.
      *
-     * This command will use [tryUpdate] to update the subsystem.
-     *
      * @param setter The specified retrieval of position. This will be run each cycle.
      *
      * @return A command that will set the pivot position.
      */
     fun getSetCommand(setter: Supplier<out Rotation>): Command {
         return Commands.run({
-            targetPosition = setter.get()
-            tryUpdate()
+            setRotation(setter.get())
+        }, this)
+    }
+
+    /**
+     * Gets a [Command] that will tell the pivot to move to a predefined position.
+     *
+     * @param rotation The constant position to reset to
+     */
+    fun getSetCommand(rotation: Rotation): Command {
+        return Commands.runOnce({
+            setRotation(rotation)
         }, this)
     }
 
@@ -387,8 +361,6 @@ object PivotSubsystem : SubsystemBase() {
      * each cycle. The change will be scaled to "per second" -- i.e., a constant
      * output of 45 degrees will move the pivot 45 degrees per second.
      *
-     * This command will use [tryUpdate] to update the subsystem.
-     *
      * @param changer The specified retrieval of change in position, scaled by delta
      * time. This will run each cycle.
      *
@@ -396,19 +368,14 @@ object PivotSubsystem : SubsystemBase() {
      */
     fun getChangeCommand(changer: Supplier<out Rotation>): Command {
         return Commands.run({
-            tryUpdate()
-
             val change = changer.get()
 
-            // This is only here to, you guessed it, prevent garbage measures
-            // If rotate() were to be used, delta time would need to be
-            // multiplied to the measure, which creates a garbage measure
-            // Because this is internal (and I'm leaving paragraphs of explanation),
-            // I decided to do the dirty work here.
-            // Same applies to the other overload of this method
+            // Multiply by deltaTime to convert to a "per-second" basis
             val raw: Double = deltaTime * (change into Degrees)
-            if(raw != 0.0)
-                rawRotateBy(raw)
+            if (raw != 0.0) {
+                setpoint += raw
+                updateProfile()
+            }
         }, this)
     }
 
@@ -417,8 +384,6 @@ object PivotSubsystem : SubsystemBase() {
      * each cycle. The change will be scaled by the given ratio and then by delta
      * time. The default value of 1.0 will result in a "per second" ratio.
      *
-     * This command will use [tryUpdate] to update the subsystem.
-     *
      * @param changer The specified retrieval of change in position, scaled by delta
      * time. This will run each cycle.
      *
@@ -426,28 +391,15 @@ object PivotSubsystem : SubsystemBase() {
      */
     fun getChangeCommand(ratio: Double, changer: Supplier<out Rotation>): Command {
         return Commands.run({
-            tryUpdate()
-
             val change = changer.get()
 
-            // This is only here to, you guessed it, prevent garbage measures
+            // Multiply by deltaTime to convert to a "per-second" basis, then also a predefined ratio
             val raw: Double = ratio * deltaTime * (change into Degrees)
-            if(raw != 0.0)
-                rawRotateBy(raw)
+            if (raw != 0.0) {
+                // Raw rotation because we have already converted to degrees
+                setpoint += raw
+                updateProfile()
+            }
         }, this)
     }
-
-    /**
-     * Rotates by a raw amount.
-     *
-     * This is STRICTLY used to avoid garbage measures. DO NOT USE
-     * for anything but the change commands this subsystem can fabricate.
-     *
-     * @param degrees Angle change in degrees
-     */
-    private fun rawRotateBy(degrees: Double){
-        setpoint += degrees
-        updateProfile()
-    }
-
 }

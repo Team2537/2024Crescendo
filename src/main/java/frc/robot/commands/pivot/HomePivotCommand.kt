@@ -27,7 +27,7 @@ class HomePivotCommand : Command() {
      */
     override fun isFinished(): Boolean {
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return pivotSubsystem.isUpright
+        return pivotSubsystem.isHome
     }
 
     /**
