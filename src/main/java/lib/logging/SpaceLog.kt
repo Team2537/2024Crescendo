@@ -1,6 +1,8 @@
 package lib.logging
 
 import dev.doglog.DogLog
+import edu.wpi.first.util.struct.StructSerializable
+import java.util.*
 
 /**
  * A custom logger built for FRC Team 2537 "Space Raiders" that wraps
@@ -56,6 +58,107 @@ class SpaceLog private constructor() {
             if (!willLog(lvl)) return
             DogLog.log("$key/$lvl", msg)
         }
+
+        fun log(lvl: Level, key: String, long: Long) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", long)
+        }
+
+        fun log(lvl: Level, key: String, arr: LongArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr)
+        }
+
+        fun log(lvl: Level, key: String, int: Int) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", int.toLong())
+        }
+
+        fun log(lvl: Level, key: String, arr: IntArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr)
+        }
+
+        fun log(lvl: Level, key: String, short: Short) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", short.toLong())
+        }
+
+        fun log(lvl: Level, key: String, arr: ShortArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr.contentToString())
+        }
+
+        fun log(lvl: Level, key: String, byte: Byte) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", byte.toLong())
+        }
+
+        fun log(lvl: Level, key: String, char: Char) {
+            if (!willLog(lvl)) return
+            // This format of characters may change if it is revealed that it sucks.
+            DogLog.log("$key/$lvl", "'$char' (\\u${Integer.toHexString(char.code)})")
+        }
+
+        fun log(lvl: Level, key: String, arr: ByteArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr.contentToString())
+        }
+
+        fun log(lvl: Level, key: String, double: Double) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", double)
+        }
+
+        fun log(lvl: Level, key: String, arr: DoubleArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr)
+        }
+        fun log(lvl: Level, key: String, float: Float) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", float)
+        }
+
+        fun log(lvl: Level, key: String, arr: FloatArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr)
+        }
+
+        fun log(lvl: Level, key: String, bool: Boolean) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", bool)
+        }
+
+        fun log(lvl: Level, key: String, arr: BooleanArray) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr)
+        }
+
+        fun log(lvl: Level, key: String, enum: Enum<*>) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", enum)
+        }
+
+        fun log(lvl: Level, key: String, obj: Any?) {
+            if (!willLog(lvl)) return
+
+            // The extra method overhead is not needed for a one object case
+            if(obj is StructSerializable)
+                DogLog.log("$key/$lvl", obj)
+            else
+                DogLog.log("$key/$lvl", obj.toString())
+        }
+
+        fun log(lvl: Level, key: String, arr: Array<out Any?>) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr.contentToString())
+        }
+
+        fun log(lvl: Level, key: String, arr: Array<out StructSerializable>) {
+            if (!willLog(lvl)) return
+            DogLog.log("$key/$lvl", arr)
+        }
+
 
         /**
          * Logs a message under a given key at [trace level][Level.TRACE]. Will not
@@ -162,7 +265,10 @@ class SpaceLog private constructor() {
         @JvmStatic
         @Suppress("SpellCheckingInspection")
         fun logf(lvl: Level, key: String, fmt: String, vararg args: Any?) {
-            if (!willLog(lvl)) return
+            // Additional check for enabled; this check is ommitted elsewhere because we
+            // must format before sending to DogLog (unless we create a custum struct
+            // that will format lazily (which I just might do)).
+            if (!willLog(lvl) || !DogLogSpy.enabled()) return
 
             DogLog.log(key, format(fmt, args))
         }
