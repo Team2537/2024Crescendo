@@ -21,7 +21,30 @@ object SpaceLog {
      * A level at which the [SpaceLog] can log.
      */
     enum class Level {
-        TRACE, DEBUG, INFO, WARN, ERROR
+        /**
+         * The finest level of logging, for tracing robot behaviour.
+         */
+        TRACE,
+
+        /**
+         * A level for general debug information.
+         */
+        DEBUG,
+
+        /**
+         * The default level. For information that is almost always useful to have.
+         */
+        INFO,
+
+        /**
+         * A level for warnings about non-fatal incidents that are best avoided.
+         */
+        WARN,
+
+        /**
+         * A level for errors, whether fatal or not, that absolutely must be recorded.
+         */
+        ERROR
     }
 
     /**
@@ -291,7 +314,7 @@ object SpaceLog {
         // FIXME: Implement a format of choice
         //  String#format would work for C-style formatting, but more modern
         //  choices should be considered.
-//            throw UnsupportedOperationException("Unimplemented Method: SpaceLog#format(String, Object...)")
+//        throw UnsupportedOperationException("Unimplemented Method: SpaceLog#format(String, Object...)")
         // asterisk spreads array into varargs
         return String.format(fmt, *args)
     }
