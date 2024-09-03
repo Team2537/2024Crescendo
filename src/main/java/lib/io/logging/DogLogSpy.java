@@ -1,4 +1,4 @@
-package lib.logging;
+package lib.io.logging;
 
 import dev.doglog.DogLog;
 
