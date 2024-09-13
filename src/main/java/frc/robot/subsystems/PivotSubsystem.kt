@@ -20,6 +20,7 @@ import lib.math.units.*
 import lib.putMap
 import java.util.function.Supplier
 
+
 object PivotSubsystem : SubsystemBase() {
 
     /** The motor for the pivot */
@@ -291,6 +292,18 @@ object PivotSubsystem : SubsystemBase() {
         )
     }
 
+    /**
+     * Drives the arm to a position using a trapezoidal motion profile. This function is usually
+     * wrapped in a `RunCommand` which runs it repeatedly while the command is active.
+     *
+     *
+     * This function updates the motor position control loop using a setpoint from the trapezoidal
+     * motion profile. The target position is the last set position with `setTargetPosition`.
+     */
+    fun run() {
+        update();
+    }
+
     /** The time, in seconds, that the current profile has been active for */
     private val profileTime get() = profileTimer.get()
 
@@ -322,11 +335,6 @@ object PivotSubsystem : SubsystemBase() {
     fun stop() {
         pivotMotor.stopMotor()
         setpoint = Double.NaN
-    }
-
-    override fun periodic() {
-        super.periodic()
-        update() // always be updating
     }
 
     // Command Factories
