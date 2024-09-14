@@ -272,63 +272,73 @@ object PivotSubsystem : SubsystemBase() {
        }
     }
 
-    /**
-     * Updates the PID controller using trapezoid profiles and feedforward.
-     */
-    private fun update(){
-        deltaTimer.reset()
+    private var cachedFeedForward = MutableMeasure.zero(Volts)
 
-        // If setpoint is NaN then things have been canceled
-        if(setpoint.isNaN()){
-            return
-        }
+    private var cachedTargetState: TrapezoidProfile.State = TrapezoidProfile.State()
 
-        val targetState: TrapezoidProfile.State = getTargetState()
-        pivotPID.setReference(
-            targetState.position,
-            CANSparkBase.ControlType.kPosition,
-            0,
-            feedforward.calculate(Math.toRadians(relativeEncoder.position + PivotConstants.HOME_DEGREES), targetState.velocity)
+    // In degrees, only one midpoint right now cause this is mostly a theory-craft
+    private var cachedMidpoint = 0.0
+
+    private fun calculateFeedForward() {
+        cachedFeedForward.mut_setMagnitude(
+                feedforward.calculate(
+                        Math.toRadians(relativeEncoder.position + PivotConstants.HOME_DEGREES),
+                        // cachedTargetState.velocity
+                    relativeEncoder.velocity
+                )
         )
-    }
-
-    /**
-     * Drives the arm to a position using a trapezoidal motion profile. This function is usually
-     * wrapped in a `RunCommand` which runs it repeatedly while the command is active.
-     *
-     *
-     * This function updates the motor position control loop using a setpoint from the trapezoidal
-     * motion profile. The target position is the last set position with `setTargetPosition`.
-     */
-    fun run() {
-        update();
     }
 
     /** The time, in seconds, that the current profile has been active for */
     private val profileTime get() = profileTimer.get()
 
-    /** The time, in seconds, since the last call to [update] */
-    private val deltaTime get() = deltaTimer.get()
-
-    private fun getTargetState(): TrapezoidProfile.State {
-        return if(profile.isFinished(profileTime))
-            TrapezoidProfile.State(setpoint, 0.0)
-        else
-            profile.calculate(profileTime, oldState, goalState)
+    private fun calculateTargetState() {
+        val t = profileTime
+        if(profile.isFinished(t)) {
+            cachedTargetState.position = setpoint
+            cachedTargetState.velocity = 0.0
+        } else {
+            cachedTargetState = profile.calculate(t, oldState, goalState)
+        }
     }
 
     private fun updateProfile() {
-        oldState.position = relativeEncoder.position
-        oldState.velocity = relativeEncoder.velocity
+        // FIXME I'm not smart right now
+        // Okay, I do not -- or never did -- understand exactly what it is we
+        // would like to accomplish with the trapezoid profiles. If we want to
+        // avoid periodic logic, these seem like a bust considering that the
+        // example you gave me did exactly that. Now, if we wanted constant
+        // updates to the feed forward and PID, that would require periodic
+        // logic.
+        // Currently, this is just going back to the way things were initially,
+        // without any trapezoidal profile calculations -- purely PID and feed
+        // forward.
+        // Call me stupid, but I think this is stupid.
 
-        goalState.position = setpoint
-        goalState.velocity = 0.0
+//        oldState.position = relativeEncoder.position
+//        oldState.velocity = relativeEncoder.velocity
+//
+//        goalState.position = setpoint
+//        goalState.velocity = 0.0
+//
+//
+//        // I am irrationally upset at the fact that these profiles are not able to be
+//        // reset.
+//        profile = TrapezoidProfile(PivotConstants.armConstraints)
+//
+//        profileTimer.reset()
+//
+//        // Do the calculations I guess
+//        calculateTargetState()
+        calculateFeedForward()
 
-        // I am irrationally upset at the fact that these profiles are not able to be
-        // reset.
-        profile = TrapezoidProfile(PivotConstants.armConstraints)
-
-        profileTimer.reset()
+        // Then PID
+        pivotPID.setReference(
+                setpoint,
+                CANSparkBase.ControlType.kPosition,
+                0,
+                cachedFeedForward into Volts
+        )
     }
 
     /** Stop the pivot */
@@ -364,50 +374,51 @@ object PivotSubsystem : SubsystemBase() {
         }, this)
     }
 
-    /**
-     * Gets a [Command] that will move the pivot by the change given by [changer]
-     * each cycle. The change will be scaled to "per second" -- i.e., a constant
-     * output of 45 degrees will move the pivot 45 degrees per second.
-     *
-     * @param changer The specified retrieval of change in position, scaled by delta
-     * time. This will run each cycle.
-     *
-     * @return A command that will modify the pivot position.
-     */
-    fun getChangeCommand(changer: Supplier<out Rotation>): Command {
-        return Commands.run({
-            val change = changer.get()
-
-            // Multiply by deltaTime to convert to a "per-second" basis
-            val raw: Double = deltaTime * (change into Degrees)
-            if (raw != 0.0) {
-                setpoint += raw
-                updateProfile()
-            }
-        }, this)
-    }
-
-    /**
-     * Gets a [Command] that will move the pivot by the change given by [changer]
-     * each cycle. The change will be scaled by the given ratio and then by delta
-     * time. The default value of 1.0 will result in a "per second" ratio.
-     *
-     * @param changer The specified retrieval of change in position, scaled by delta
-     * time. This will run each cycle.
-     *
-     * @return A command that will modify the pivot position.
-     */
-    fun getChangeCommand(ratio: Double, changer: Supplier<out Rotation>): Command {
-        return Commands.run({
-            val change = changer.get()
-
-            // Multiply by deltaTime to convert to a "per-second" basis, then also a predefined ratio
-            val raw: Double = ratio * deltaTime * (change into Degrees)
-            if (raw != 0.0) {
-                // Raw rotation because we have already converted to degrees
-                setpoint += raw
-                updateProfile()
-            }
-        }, this)
-    }
+    // FIXME I will fix this eventually
+//    /**
+//     * Gets a [Command] that will move the pivot by the change given by [changer]
+//     * each cycle. The change will be scaled to "per second" -- i.e., a constant
+//     * output of 45 degrees will move the pivot 45 degrees per second.
+//     *
+//     * @param changer The specified retrieval of change in position, scaled by delta
+//     * time. This will run each cycle.
+//     *
+//     * @return A command that will modify the pivot position.
+//     */
+//    fun getChangeCommand(changer: Supplier<out Rotation>): Command {
+//        return Commands.run({
+//            val change = changer.get()
+//
+//            // Multiply by deltaTime to convert to a "per-second" basis
+//            val raw: Double =  (change into Degrees)
+//            if (raw != 0.0) {
+//                setpoint += raw
+//                updateProfile()
+//            }
+//        }, this)
+//    }
+//
+//    /**
+//     * Gets a [Command] that will move the pivot by the change given by [changer]
+//     * each cycle. The change will be scaled by the given ratio and then by delta
+//     * time. The default value of 1.0 will result in a "per second" ratio.
+//     *
+//     * @param changer The specified retrieval of change in position, scaled by delta
+//     * time. This will run each cycle.
+//     *
+//     * @return A command that will modify the pivot position.
+//     */
+//    fun getChangeCommand(ratio: Double, changer: Supplier<out Rotation>): Command {
+//        return Commands.run({
+//            val change = changer.get()
+//
+//            // Multiply by deltaTime to convert to a "per-second" basis, then also a predefined ratio
+//            val raw: Double = ratio * deltaTime * (change into Degrees)
+//            if (raw != 0.0) {
+//                // Raw rotation because we have already converted to degrees
+//                setpoint += raw
+//                updateProfile()
+//            }
+//        }, this)
+//    }
 }
