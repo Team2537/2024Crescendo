@@ -1,15 +1,15 @@
 package frc.robot.subsystems
 
 import com.revrobotics.CANSparkBase
-import frc.robot.Constants
-
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.Constants
+import java.util.function.Supplier
 
-object ClimbSubsystem : SubsystemBase() {
+class Climb : SubsystemBase() {
 
     /** The spark max for the left motor */
     val leftMotor = CANSparkMax(Constants.ClimbConstants.LEFT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
@@ -17,17 +17,17 @@ object ClimbSubsystem : SubsystemBase() {
     /** The spark max for the right motor */
     val rightMotor = CANSparkMax(Constants.ClimbConstants.RIGHT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
 
-    init{
+    init {
         // Conversion ratio for encoders, so that the position is in rotations outside of the gearbox
-        leftMotor.encoder.setPositionConversionFactor(1.0/16.0)
-        rightMotor.encoder.setPositionConversionFactor(1.0/16.0)
+        leftMotor.encoder.setPositionConversionFactor(1.0 / 16.0)
+        rightMotor.encoder.setPositionConversionFactor(1.0 / 16.0)
 
         // Logging for Shuffleboard, position and velocity of the motors
         val driveTab: ShuffleboardTab = Shuffleboard.getTab("Climb Subsystem")
-        driveTab.addNumber("Left Climb Motor Velocity",) {leftMotor.encoder.velocity}
-        driveTab.addNumber("Right Climb Motor Velocity",) {rightMotor.encoder.velocity}
-        driveTab.addNumber("Left Climb Motor Position",) {leftMotor.encoder.position}
-        driveTab.addNumber("Right Climb Motor Position",) {rightMotor.encoder.position}
+        driveTab.addNumber("Left Climb Motor Velocity") { leftMotor.encoder.velocity }
+        driveTab.addNumber("Right Climb Motor Velocity") { rightMotor.encoder.velocity }
+        driveTab.addNumber("Left Climb Motor Position") { leftMotor.encoder.position }
+        driveTab.addNumber("Right Climb Motor Position") { rightMotor.encoder.position }
 
         // Reset encoders to 0, since that only gets rest on power cycle not code deploy
         rightMotor.encoder.setPosition(0.0)
@@ -80,4 +80,6 @@ object ClimbSubsystem : SubsystemBase() {
         leftMotor.set(speed)
         rightMotor.set(speed)
     }
+
+    fun climbCommand(speed: Supplier<Double>) = run { setRawSpeeds(speed.get()) }
 }

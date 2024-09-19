@@ -4,16 +4,13 @@ import com.pathplanner.lib.util.GeometryUtil
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
-import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Units
-import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.subsystems.SwerveSubsystem
+import frc.robot.subsystems.Drivebase
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import lib.zones.Zone
-import kotlinx.serialization.serializer
 import lib.math.units.Span
 import lib.math.units.into
 import lib.zones.Zones
@@ -66,7 +63,7 @@ inline fun <reified T> Json.encodeToString(data: T): String {
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
+inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Drivebase.getPose() }): Trigger {
     return zoneTrigger(Zones[tag], position)
 }
 
@@ -76,7 +73,7 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Swerv
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { SwerveSubsystem.getPose() }): Trigger {
+inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { Drivebase.getPose() }): Trigger {
     return Trigger { Zones[position.invoke()] == zone }
 }
 

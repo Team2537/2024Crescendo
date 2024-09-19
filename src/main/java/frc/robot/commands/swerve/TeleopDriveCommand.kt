@@ -6,9 +6,8 @@ package frc.robot.commands.swerve
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.subsystems.SwerveSubsystem
+import frc.robot.subsystems.Drivebase
 import swervelib.SwerveController
-import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 
 /**
@@ -18,28 +17,19 @@ import java.util.function.DoubleSupplier
  * @param omega The angular velocity of the robot.
  * @param driveMode Boolean supplier that returns true if the robot should drive in field-oriented mode.
  * @param slowMode Boolean supplier that returns true if the robot should drive in slow mode.
- * @see SwerveSubsystem
+ * @see Drivebase
  */
 class TeleopDriveCommand(
-    vForward: DoubleSupplier,
-    vStrafe: DoubleSupplier,
-    omega: DoubleSupplier,
-    slowMode: DoubleSupplier
-) : Command() {
-    private val vForward: DoubleSupplier
-    private val vStrafe: DoubleSupplier
-    private val omega: DoubleSupplier
+    private val swerve: Drivebase,
+    private val vForward: DoubleSupplier,
+    private val vStrafe: DoubleSupplier,
+    private val omega: DoubleSupplier,
     private val slowMode: DoubleSupplier
-    private val controller: SwerveController
-    private val swerve: SwerveSubsystem
+) : Command() {
+
+    private val controller: SwerveController = swerve.getSwerveController()
 
     init {
-        this.swerve = SwerveSubsystem
-        this.vForward = vForward
-        this.vStrafe = vStrafe
-        this.omega = omega
-        this.slowMode = slowMode
-        controller = swerve.getSwerveController()
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(swerve)
     }

@@ -3,14 +3,13 @@ package frc.robot.subsystems
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import lib.vision.Limelight
-import java.sql.Driver
 
 /**
  * The subsystem that controls the limelight.
  * This subsystem is heavily underdeveloped.
  * And may be removed in the future with the replacement of PhotonVision
  */
-object LimelightSubsystem : SubsystemBase() {
+class Limelight : SubsystemBase() {
     val odometryLimelight: Limelight = Limelight("limelight-odom")
     //val intakeLimelight: Limelight = Limelight("limelight-intake")
 

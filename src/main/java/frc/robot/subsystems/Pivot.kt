@@ -3,7 +3,6 @@ package frc.robot.subsystems
 import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
@@ -12,8 +11,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants.PivotConstants
 import lib.putMap
+import java.util.function.Supplier
 
-object PivotSubsystem : SubsystemBase() {
+class Pivot : SubsystemBase() {
 
     /** The motor for the pivot */
     val pivotMotor: CANSparkMax = CANSparkMax(PivotConstants.PIVOT_MOTOR_PORT,
@@ -173,5 +173,9 @@ object PivotSubsystem : SubsystemBase() {
     fun stop() {
         pivotMotor.stopMotor()
     }
+
+    fun manualControl(speed: Supplier<Double>) = run { setVoltage(speed.get()) }
+    fun home() = run { setRawSpeed(-0.2) }.until(::getHomingSensor)
+    fun setKnownPosition(position: Double) = runOnce { pivotMotor.encoder.position = position }
 
 }

@@ -1,15 +1,11 @@
 package frc.robot.commands.pivot
 
-import com.pathplanner.lib.util.GeometryUtil
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants
-import frc.robot.subsystems.LimelightSubsystem
-import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
-import lib.calculateAngle
+import frc.robot.subsystems.Limelight
+import frc.robot.subsystems.Pivot
 import lib.math.units.into
 import lib.math.units.meters
 import java.util.*
@@ -20,18 +16,12 @@ import java.util.*
  * @param auto does absolutely nothing
  * @param autoAim whether the angle should be calculated based on the limelight
  */
-class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Command() {
-    /** The subsystem that this command runs on. */
-    private val pivotSubsystem = PivotSubsystem
-    /** The target angle to pivot to */
-    private var target: Double
-    /** The direction the pivot should move */
-    private var direction: Boolean = false
-    /** Does absolutely nothing */
-    private val auto: Boolean
-    /** Whether the angle should be calculated based on the limelight */
+class QuickPivotCommand(
+    private val pivotSubsystem: Pivot,
+    private val target: Double,
+    private val auto: Boolean,
     private val autoAim: Boolean
-
+) : Command() {
     // These are used for an older version of the autoAim feature based on odometry
     /** @suppress */
     private var pose: Pose2d = Pose2d()
@@ -42,14 +32,13 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
     /** @suppress */
     var targetAngle: Double = Constants.PivotConstants.INTAKE_POSITION
 
+    private var direction: Boolean = false
+
 
 
     init {
         // each subsystem used by the command must be passed into the addRequirements() method
         addRequirements(pivotSubsystem)
-        this.target = target
-        this.auto = auto
-        this.autoAim = autoAim
     }
 
     /**
@@ -58,26 +47,6 @@ class QuickPivotCommand(target: Double, auto: Boolean, autoAim: Boolean) : Comma
      */
     override fun initialize() {
         // Set the target angle to the angle calculated based on the distance from the limelight if autoAim is true
-        if(autoAim) {
-//            pose = SwerveSubsystem.getPose()
-//            if (DriverStation.getAlliance() == Optional.of(DriverStation.Alliance.Red)) {
-//                speakerPose = GeometryUtil.flipFieldPose(Constants.FIELD_LOCATIONS.SUBWOOFER_POSE)
-//            } else {
-//                speakerPose = Constants.FIELD_LOCATIONS.SUBWOOFER_POSE
-//            }
-//
-//            xDistanceMeters = Math.abs(speakerPose.x - pose.x)
-//            println(xDistanceMeters)
-//            println(target)
-//
-//            target = calculateAngle(xDistanceMeters.meters)
-            // Distance from the speaker to the robot
-            val dist = LimelightSubsystem.odometryLimelight.distance2d.meters
-            // Get the angle from the autoAimTree based on the distance, set the target to that angle
-            target = pivotSubsystem.autoAimTree.get(dist into Units.Inches)
-            println(target)
-        }
-
         // Determine the direction to pivot
         direction = pivotSubsystem.getRelativePosition() > target
     }

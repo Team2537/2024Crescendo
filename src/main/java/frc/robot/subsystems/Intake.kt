@@ -2,19 +2,15 @@ package frc.robot.subsystems
 
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax
-import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Constants.IntakeConstants
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import edu.wpi.first.wpilibj2.command.button.Trigger
-import lib.toTrigger
 
 /**
  * The Intake subsystem contains methods and objects for controlling the under-the-bumper intake system,
  * as well as the transfer conveyor(?) to the launcher.
  */
-object IntakeSubsystem : SubsystemBase() {
+class Intake : SubsystemBase() {
     /** The motor for the intake */
     val intakeMotor : CANSparkMax = CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless)
     /** The motor for the transfer */
@@ -33,7 +29,7 @@ object IntakeSubsystem : SubsystemBase() {
         transferMotor.setSmartCurrentLimit(30)
     }
 
-    override fun periodic() {
-    }
+    fun feedLauncher() = runEnd({ transferMotor.set(1.0) }, { transferMotor.stopMotor() })
+    fun intakeNote() = runEnd({ intakeMotor.set(-1.0); transferMotor.set(1.0) }, { intakeMotor.stopMotor(); transferMotor.stopMotor() })
 
 }

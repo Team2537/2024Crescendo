@@ -17,7 +17,7 @@ import lib.math.units.RotationVelocity
 import lib.math.units.into
 import kotlin.math.min
 
-object LauncherSubsystem : SubsystemBase() {
+class Launcher : SubsystemBase() {
 
     /** Motor for the top flywheels */
     val topFlywheels: CANSparkFlex = CANSparkFlex(Constants.LauncherConstants.TOP_FLYWHEELS,

@@ -1,11 +1,14 @@
 package frc.robot
 
+import Launcher
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.commands.Autos
-import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
+import frc.robot.subsystems.Climb
+import frc.robot.subsystems.Drivebase
+import frc.robot.subsystems.Intake
+import frc.robot.subsystems.Pivot
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -19,21 +22,20 @@ import frc.robot.subsystems.SwerveSubsystem
  */
 object Robot : TimedRobot() {
 
-    /**
-     * The autonomous command to run. While a default value is set here,
-     * the [autonomousInit] method will set it to the value selected in
-     *the  AutoChooser on the dashboard.
-     */
-    /**
-     * This method is run when the robot is first started up and should be used for any
-     * initialization code.
-     */
-    override fun robotInit() {
-        // Access the RobotContainer object so that it is initialized. This will perform all our
-        // button bindings, and put our autonomous chooser on the dashboard.
-        RobotContainer
-        enableLiveWindowInTest(true)
+    val climb = Climb()
+    val pivot = Pivot()
+    val drivebase = Drivebase()
+    val intake = Intake()
+    val launcher = Launcher()
+
+
+    val driverController: CommandXboxController = CommandXboxController(0).apply {
+        // BINDINGS GO HERE
     }
+
+
+
+
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like
@@ -58,23 +60,14 @@ object Robot : TimedRobot() {
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
-    override fun autonomousInit() {
-        PivotSubsystem.stop()
-        Autos.selectedAutonomousCommand.cancel()
-        // We store the command as a Robot property in the rare event that the selector on the dashboard
-        // is modified while the command is running since we need to access it again in teleopInit()
-        Autos.selectedAutonomousCommand.schedule()
-    }
+    override fun autonomousInit() {}
 
     /** This method is called periodically during autonomous.  */
     override fun autonomousPeriodic() {
     }
 
     override fun teleopInit() {
-        PivotSubsystem.stop()
-        // This makes sure that the autonomous stops running when teleop starts running. If you want the
-        // autonomous to continue until interrupted by another command, remove this line or comment it out.
-        Autos.selectedAutonomousCommand.cancel()
+
     }
 
     /** This method is called periodically during operator control.  */

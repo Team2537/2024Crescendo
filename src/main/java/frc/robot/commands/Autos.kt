@@ -8,13 +8,11 @@ import frc.robot.Constants
 import frc.robot.commands.intake.ToggleIntakeCommand
 import frc.robot.commands.launcher.IntakeNoteCommand
 import frc.robot.commands.launcher.LaunchCommand
-import frc.robot.commands.pivot.HomePivotCommand
 import frc.robot.commands.pivot.QuickPivotCommand
-import frc.robot.commands.pivot.SetKnownPosition
 import frc.robot.commands.vision.RotateTowardsTargetCommand
-import frc.robot.subsystems.LimelightSubsystem
-import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
+import frc.robot.subsystems.Limelight
+import frc.robot.subsystems.Pivot
+import frc.robot.subsystems.Drivebase
 
 object Autos {
     private val autoModeChooser =
@@ -48,7 +46,7 @@ object Autos {
         NamedCommands.registerCommand("Shoot", LaunchCommand(
             { 1.0 },
             { true },
-            { PivotSubsystem.getRelativePosition() },
+            { Pivot.getRelativePosition() },
             { false }
         ))
         NamedCommands.registerCommand("Home", HomePivotCommand())
@@ -68,7 +66,7 @@ object Autos {
         )
         NamedCommands.registerCommand(
             "Rotate Towards Target",
-            RotateTowardsTargetCommand(LimelightSubsystem.odometryLimelight)
+            RotateTowardsTargetCommand(Limelight.odometryLimelight)
         )
     }
 
@@ -93,24 +91,24 @@ object Autos {
 //    }
 
     private fun testAuto(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Basic_Drive", true)
+        return Drivebase.getAutonomousCommand("Basic_Drive", true)
     }
 
 
     private fun shootDriveSource():Command {
-        return SwerveSubsystem.getAutonomousCommand("Shoot_Drive_Source", true)
+        return Drivebase.getAutonomousCommand("Shoot_Drive_Source", true)
     }
 
     private fun shootAndDriveRight(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Shoot_And_Drive_Right", true)
+        return Drivebase.getAutonomousCommand("Shoot_And_Drive_Right", true)
     }
 
     private fun shootAndSteal(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Steal_MidAmp", true)
+        return Drivebase.getAutonomousCommand("Steal_MidAmp", true)
     }
 
     private fun midToTopNote(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Mid_To_TopNote", true)
+        return Drivebase.getAutonomousCommand("Mid_To_TopNote", true)
     }
 
     private fun onlyShoot(): Command {
@@ -120,26 +118,26 @@ object Autos {
             LaunchCommand(
                 { 1.0 },
                 { true },
-                { PivotSubsystem.getRelativePosition() },
+                { Pivot.getRelativePosition() },
                 { false }
             ),
         )
     }
 
     private fun twoNote(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Two_Note", true)
+        return Drivebase.getAutonomousCommand("Two_Note", true)
     }
 
     private fun threeNoteCenter(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Three_Note", true)
+        return Drivebase.getAutonomousCommand("Three_Note", true)
     }
 
     private fun threeNoteAmp(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Three_Note_Amp", true)
+        return Drivebase.getAutonomousCommand("Three_Note_Amp", true)
     }
 
     private fun threeNoteSource(): Command {
-        return SwerveSubsystem.getAutonomousCommand("Source_ThreeNote", true)
+        return Drivebase.getAutonomousCommand("Source_ThreeNote", true)
     }
 
 //    private fun intakeTest(): Command {

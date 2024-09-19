@@ -48,7 +48,7 @@ import java.util.*
  * @author Falon Clark
  * @since 1/15/2024
  */
-object SwerveSubsystem : SubsystemBase() {
+class Drivebase : SubsystemBase() {
 
     /** The swerve drive object */
     private val swerveDrive: SwerveDrive
