@@ -63,7 +63,8 @@ inline fun <reified T> Json.encodeToString(data: T): String {
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Drivebase.getPose() }): Trigger {
+@Deprecated("It will be rewritten")
+inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d): Trigger {
     return zoneTrigger(Zones[tag], position)
 }
 
@@ -73,7 +74,8 @@ inline fun zoneTrigger(tag: String, crossinline position: () -> Pose2d = { Drive
  *
  * @return A trigger that checks against a specific zone
  */
-inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d = { Drivebase.getPose() }): Trigger {
+@Deprecated("It will be rewritten")
+inline fun zoneTrigger(zone: Zone, crossinline position: () -> Pose2d): Trigger {
     return Trigger { Zones[position.invoke()] == zone }
 }
 
