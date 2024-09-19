@@ -1,6 +1,7 @@
 package frc.robot
 
 import Launcher
+import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -48,6 +49,7 @@ object Robot : LoggedRobot() {
                 Logger.recordMetadata("Mode", "Real")
                 Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
+                PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
             Constants.RobotConstants.Mode.SIM -> {
                 Logger.recordMetadata("Mode", "Sim")
