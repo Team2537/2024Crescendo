@@ -9,6 +9,12 @@ import frc.robot.subsystems.Climb
 import frc.robot.subsystems.Drivebase
 import frc.robot.subsystems.Intake
 import frc.robot.subsystems.Pivot
+import org.littletonrobotics.junction.LogFileUtil
+import org.littletonrobotics.junction.LoggedRobot
+import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGReader
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -20,7 +26,7 @@ import frc.robot.subsystems.Pivot
  * the `Main.kt` file in the project. (If you use the IDE's Rename or Move refactorings when renaming the
  * object or package, it will get changed everywhere.)
  */
-object Robot : TimedRobot() {
+object Robot : LoggedRobot() {
 
     val climb = Climb()
     val pivot = Pivot()
@@ -34,7 +40,31 @@ object Robot : TimedRobot() {
     }
 
 
+    init {
+        Logger.recordMetadata("Project Name", "2024Crescendo")
 
+        when(Constants.RobotConstants.mode){
+            Constants.RobotConstants.Mode.REAL -> {
+                Logger.recordMetadata("Mode", "Real")
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+            }
+            Constants.RobotConstants.Mode.SIM -> {
+                Logger.recordMetadata("Mode", "Sim")
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+            }
+            Constants.RobotConstants.Mode.REPLAY -> {
+                setUseTiming(false)
+                Logger.recordMetadata("Mode", "Replay")
+                val logPath = LogFileUtil.findReplayLog()
+                Logger.setReplaySource(WPILOGReader(logPath))
+                Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
+            }
+        }
+
+        Logger.start()
+    }
 
 
     /**
