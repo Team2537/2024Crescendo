@@ -79,9 +79,4 @@ class PivotIONeos(
         pivotMotor.pidController.setI(i)
         pivotMotor.pidController.setD(d)
     }
-
-    override fun setFF(kS: Double, kG: Double, kV: Double, kA: Double) {
-        super.setFF(kS, kG, kV, kA)
-    }
-
 }
