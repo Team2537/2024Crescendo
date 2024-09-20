@@ -39,10 +39,10 @@ object Robot : LoggedRobot() {
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
         drivebase.defaultCommand = drivebase.driveCommand(
-            ::getLeftY,
             ::getLeftX,
+            ::getLeftY,
             ::getRightX,
-            leftBumper().negate()
+            leftBumper()
         )
     }
 
