@@ -18,10 +18,15 @@ interface PivotIO {
         var isAtHardstop: Boolean = false
 
         var pivotRelativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+            private set
         var pivotAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+            private set
         var pivotAngularVelocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RotationsPerSecond)
+            private set
         var pivotMotorAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
+            private set
         var pivotMotorAppliedCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
+            private set
 
 
         /**
