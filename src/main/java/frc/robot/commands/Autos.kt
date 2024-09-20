@@ -11,7 +11,7 @@ package frc.robot.commands
 //import frc.robot.commands.pivot.QuickPivotCommand
 //import frc.robot.commands.vision.RotateTowardsTargetCommand
 //import frc.robot.subsystems.Limelight
-//import frc.robot.subsystems.Pivot
+//import frc.robot.subsystems.pivot.Pivot
 //import frc.robot.subsystems.Drivebase
 
 @Deprecated("Oopsy doopsy, this file is deprecated. Please use the new Autos.kt file in the same directory.")
