@@ -82,18 +82,6 @@ interface ModuleIO {
         }
     }
 
-    data class ModuleConstants(
-        val driveID: Int,
-        val turnID: Int,
-        val absoluteEncoderID: Int,
-        val invertDrive: Boolean,
-        val invertTurn: Boolean,
-        val invertAbsoluteEncoder: Boolean,
-        val absoluteOffset: Rotation2d,
-        val turnRatio: Double,
-        val driveRatio: Double,
-    )
-
     /**
      * Update the inputs using the current state of the module
      * @param inputs The inputs to update (mutated in place)

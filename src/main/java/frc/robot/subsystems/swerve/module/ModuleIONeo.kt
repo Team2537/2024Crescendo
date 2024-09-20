@@ -8,50 +8,42 @@ import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.util.Units
-import lib.ControllerGains
 
 class ModuleIONeo(
-    private val configs: ModuleIO.ModuleConstants,
-    private val driveGains: ControllerGains,
-    private val turnGains: ControllerGains,
+    private val driveID: Int,
+    private val turnID: Int,
+    private val absoluteEncoderID: Int,
+    private val invertDrive: Boolean,
+    private val invertTurn: Boolean,
+    private val invertAbsoluteEncoder: Boolean,
+    private val absoluteOffset: Rotation2d,
+    private val driveRatio: Double,
+    private val turnRatio: Double,
 ) : ModuleIO {
 
-    private val driveMotor = CANSparkMax(configs.driveID, CANSparkLowLevel.MotorType.kBrushless).apply {
+    private val driveMotor = CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
-        inverted = configs.invertDrive
-        encoder.positionConversionFactor = 1 / configs.driveRatio
-        encoder.velocityConversionFactor = 1 / configs.driveRatio
-
-        pidController.p = driveGains.kP
-        pidController.i = driveGains.kI
-        pidController.d = driveGains.kD
-        pidController.ff = driveGains.kV
+        inverted = invertDrive
+        encoder.positionConversionFactor = driveRatio
+        encoder.velocityConversionFactor = driveRatio
     }
 
-    private val turnMotor = CANSparkMax(configs.turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
+    private val turnMotor = CANSparkMax(turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
-        inverted = configs.invertTurn
-        encoder.positionConversionFactor = 1 / configs.turnRatio
-        encoder.velocityConversionFactor = 1 / configs.turnRatio
-
-        pidController.p = turnGains.kP
-        pidController.i = turnGains.kI
-        pidController.d = turnGains.kD
-
-        pidController.setPositionPIDWrappingEnabled(true)
-        pidController.positionPIDWrappingMaxInput = 0.5
-        pidController.positionPIDWrappingMinInput = -0.5
+        inverted = invertTurn
+        encoder.positionConversionFactor = turnRatio
+        encoder.velocityConversionFactor = turnRatio
     }
 
-    private val absoluteEncoder: CANcoder = CANcoder(configs.absoluteEncoderID).apply {
+    private val absoluteEncoder: CANcoder = CANcoder(absoluteEncoderID).apply {
         val config = CANcoderConfiguration()
-        config.MagnetSensor.MagnetOffset = configs.absoluteOffset.rotations
+        config.MagnetSensor.MagnetOffset = absoluteOffset.rotations
         configurator.apply(config)
     }
     private val encoderPositionSignal: StatusSignal<Double> = absoluteEncoder.position.clone()
 
-    private var driveKs = driveGains.kS
-    private var turnKs = turnGains.kS
+    private var driveKs = 0.0
+    private var turnKs = 0.0
 
     /**
      * Update the inputs using the current state of the module
