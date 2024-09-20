@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.util.Units
+import lib.ControllerGains
 
 class ModuleIONeo(
     private val driveID: Int,
@@ -19,6 +20,8 @@ class ModuleIONeo(
     private val absoluteOffset: Rotation2d,
     private val driveRatio: Double,
     private val turnRatio: Double,
+    private val driveGains: ControllerGains,
+    private val turnGains: ControllerGains,
 ) : ModuleIO {
 
     private val driveMotor = CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless).apply {
@@ -26,6 +29,11 @@ class ModuleIONeo(
         inverted = invertDrive
         encoder.positionConversionFactor = driveRatio
         encoder.velocityConversionFactor = driveRatio
+
+        pidController.p = driveGains.kP
+        pidController.i = driveGains.kI
+        pidController.d = driveGains.kD
+        pidController.ff = driveGains.kV
     }
 
     private val turnMotor = CANSparkMax(turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
@@ -33,6 +41,10 @@ class ModuleIONeo(
         inverted = invertTurn
         encoder.positionConversionFactor = turnRatio
         encoder.velocityConversionFactor = turnRatio
+
+        pidController.p = turnGains.kP
+        pidController.i = turnGains.kI
+        pidController.d = turnGains.kD
     }
 
     private val absoluteEncoder: CANcoder = CANcoder(absoluteEncoderID).apply {
@@ -42,8 +54,8 @@ class ModuleIONeo(
     }
     private val encoderPositionSignal: StatusSignal<Double> = absoluteEncoder.position.clone()
 
-    private var driveKs = 0.0
-    private var turnKs = 0.0
+    private var driveKs = driveGains.kS
+    private var turnKs = turnGains.kS
 
     /**
      * Update the inputs using the current state of the module
