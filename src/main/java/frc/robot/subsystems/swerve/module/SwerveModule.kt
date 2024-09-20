@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.util.Units
 import frc.robot.Constants
+import lib.ControllerGains
 import kotlin.math.cos
 
 class SwerveModule(
@@ -48,7 +49,9 @@ class SwerveModule(
                 invertAbsoluteEncoder,
                 absoluteOffset,
                 driveRatio,
-                turnRatio
+                turnRatio,
+                ControllerGains(kP = 0.00023),
+                ControllerGains(kP = 0.004)
             )
             Constants.RobotConstants.Mode.SIM -> object : ModuleIO {}
             Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
