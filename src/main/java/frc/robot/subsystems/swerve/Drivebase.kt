@@ -50,10 +50,10 @@ class Drivebase : SubsystemBase("Drivebase") {
     val gyroInputs: GyroIO.GyroInputs = GyroIO.GyroInputs()
 
     private val modules: Array<SwerveModule> = arrayOf(
-        SwerveModule(1, 2, 3, false, false, false, Rotation2d()),
-        SwerveModule(4, 5, 6, false, false, false, Rotation2d()),
-        SwerveModule(7, 8, 9, false, false, false, Rotation2d()),
-        SwerveModule(10, 11, 12, false, false, false, Rotation2d()),
+        SwerveModule(1, 2, 3, true, true, false, Rotation2d.fromDegrees(49.5703125)),
+        SwerveModule(4, 5, 6, true, true, false, Rotation2d.fromDegrees(214.541015625)),
+        SwerveModule(7, 8, 9, true, true, false, Rotation2d.fromDegrees(316.93359375)),
+        SwerveModule(10, 11, 12, true, true, false, Rotation2d.fromDegrees(90.615234375)),
     )
 
     /**
