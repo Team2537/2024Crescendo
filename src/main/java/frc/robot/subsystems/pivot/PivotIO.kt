@@ -57,7 +57,7 @@ interface PivotIO {
 
     fun updateInputs(inputs: PivotInputs) {}
 
-    fun setRawVoltage(voltage: Measure<Voltage>) {}
+    fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean = false) {}
 
     fun setKnownPosition(position: Measure<Angle>) {}
 

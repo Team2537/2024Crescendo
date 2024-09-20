@@ -57,7 +57,7 @@ class PivotIONeos(
         inputs.pivotMotorAppliedCurrent.mut_replace(pivotMotor.outputCurrent, Units.Amps)
     }
 
-    override fun setRawVoltage(voltage: Measure<Voltage>) {
+    override fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean) {
         pivotMotor.setVoltage(voltage into Units.Volts)
     }
 
