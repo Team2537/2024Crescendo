@@ -7,8 +7,12 @@ import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Units
+import edu.wpi.first.units.Velocity
 import lib.ControllerGains
+import lib.math.units.into
 
 class ModuleIONeo(
     private val driveID: Int,
@@ -65,20 +69,20 @@ class ModuleIONeo(
         inputs.driveMotorConnected = true
         inputs.turnMotorConnected = true
 
-        inputs.drivePositionRads = Units.rotationsToRadians(driveMotor.encoder.position)
-        inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(driveMotor.encoder.velocity)
-        inputs.driveSupplyVolts = driveMotor.appliedOutput * driveMotor.busVoltage
-        inputs.driveMotorVolts = driveMotor.appliedOutput * driveMotor.busVoltage
-        inputs.driveStatorCurrent = driveMotor.outputCurrent
-        inputs.driveSupplyCurrent = driveMotor.outputCurrent
+        inputs.drivePosition.mut_replace(driveMotor.encoder.position, Units.Rotations)
+        inputs.driveVelocity.mut_replace(driveMotor.encoder.velocity, Units.RotationsPerSecond)
+        inputs.driveSupplyVolts.mut_replace(driveMotor.busVoltage, Units.Volts)
+        inputs.driveMotorVolts.mut_replace(driveMotor.appliedOutput * driveMotor.busVoltage, Units.Volts)
+        inputs.driveStatorCurrent.mut_replace(driveMotor.outputCurrent, Units.Amps)
+        inputs.driveSupplyCurrent.mut_replace(driveMotor.outputCurrent, Units.Amps)
 
         inputs.turnPosition = Rotation2d.fromRotations(turnMotor.encoder.position)
         inputs.absoluteTurnPosition = Rotation2d.fromRotations(encoderPositionSignal.value)
-        inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnMotor.encoder.velocity)
-        inputs.turnSupplyVolts = turnMotor.appliedOutput * turnMotor.busVoltage
-        inputs.turnMotorVolts = turnMotor.appliedOutput * turnMotor.busVoltage
-        inputs.turnStatorCurrent = turnMotor.outputCurrent
-        inputs.turnSupplyCurrent = turnMotor.outputCurrent
+        inputs.turnVelocity.mut_replace(turnMotor.encoder.velocity, Units.RotationsPerSecond)
+        inputs.turnSupplyVolts.mut_replace(turnMotor.busVoltage, Units.Volts)
+        inputs.turnMotorVolts.mut_replace(turnMotor.appliedOutput * turnMotor.busVoltage, Units.Volts)
+        inputs.turnStatorCurrent.mut_replace(turnMotor.outputCurrent, Units.Amps)
+        inputs.turnSupplyCurrent.mut_replace(turnMotor.outputCurrent, Units.Amps)
     }
 
     /**
@@ -104,10 +108,9 @@ class ModuleIONeo(
      *
      * @param positionRads The position to set the motor to in radians
      */
-    override fun runTurnPositionSetpoint(positionRads: Double) {
-        val positionRotations = Units.radiansToRotations(positionRads)
+    override fun runTurnPositionSetpoint(position: Rotation2d) {
         turnMotor.pidController.setReference(
-            positionRotations,
+            position.rotations,
             CANSparkBase.ControlType.kPosition,
             0,
             turnKs,
@@ -119,10 +122,9 @@ class ModuleIONeo(
      *
      * @param velocityRadPerSec The velocity to set the motor to in radians per second
      */
-    override fun runDriveVelocitySetpoint(velocityRadPerSec: Double) {
-        val velocityRPM = Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec)
+    override fun runDriveVelocitySetpoint(velocity: Measure<Velocity<Angle>>) {
         driveMotor.pidController.setReference(
-            velocityRPM,
+            velocity into Units.RotationsPerSecond,
             CANSparkBase.ControlType.kVelocity,
             0,
             driveKs,
