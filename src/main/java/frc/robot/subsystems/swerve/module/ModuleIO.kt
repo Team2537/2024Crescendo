@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.module
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Current
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units
 import edu.wpi.first.units.Velocity
@@ -111,16 +112,16 @@ interface ModuleIO {
     /**
      * Set the position setpoint for the turn motor
      *
-     * @param positionRads The position to set the motor to in radians
+     * @param position The position to set the motor to
      */
-    fun runTurnPositionSetpoint(positionRads: Double) {}
+    fun runTurnPositionSetpoint(position: Rotation2d) {}
 
     /**
      * Set the velocity setpoint for the drive motor
      *
      * @param velocityRadPerSec The velocity to set the motor to in radians per second
      */
-    fun runDriveVelocitySetpoint(velocityRadPerSec: Double) {}
+    fun runDriveVelocitySetpoint(velocity: Measure<Velocity<Angle>>) {}
 
     /**
      * Stop the module
