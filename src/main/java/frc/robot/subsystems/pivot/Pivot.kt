@@ -60,7 +60,7 @@ class Pivot : SubsystemBase() {
         io.updateInputs(inputs)
         Logger.processInputs("pivot", inputs)
 
-        arm.angle = inputs.pivotRelativePosition into Units.Degrees
+        arm.angle = inputs.relativePosition into Units.Degrees
 
 //        io.setRawVoltage(Units.Volts.of(0.0), false)
 
