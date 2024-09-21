@@ -5,119 +5,168 @@ import edu.wpi.first.units.Units.*
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
+/**
+ * An IO layer for the launcher module that can log with AdvantageKit.
+ */
 interface LauncherIO {
 
     /**
      * The set of data that a launcher module should log.
      */
-    data class LauncherInputs(
-        private val _position: MutableMeasure<Angle>,
-        private val _velocity: MutableMeasure<Velocity<Angle>>,
-        private val _applied: MutableMeasure<Voltage>,
-        private val _current: MutableMeasure<Current>,
-    ) : LoggableInputs {
-        // Default value for all will be zero
-        // this is fine cause zero is cached anyway,
-        // so the garbage immutable measure are not really
-        // garbage
-        constructor() : this(
-            Radians.zero().mutableCopy(),
-            RadiansPerSecond.zero().mutableCopy(),
-            Volt.zero().mutableCopy(),
-            Amps.zero().mutableCopy(),
-        )
+     class LauncherInputs : LoggableInputs {
 
-        // NOTE - *technically* one could get these and then cast
-        //  them to `MutableMeasure` to access the `.mut_` methods,
-        //  but that possibility is not worth making copies everytime
-        //  these are accessed. The solution, of course, would be a
-        //  wrapper delegate with a reference to the mutable measure,
-        //  but even I have limits on over-engineering for arbitrary
-        //  safety standards (which means I might do just that)
+        // Flywheel
+        /** The position of the flywheel motor(s), measured relatively by their encoder(s). */
+        @JvmField
+        val flywheelRelativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
-        /**
-         * The position input
-         */
-        var position: Measure<Angle>
-            get() = _position
-            set(value) {
-                _position.mut_replace(value)
-            }
+        /** The position of the flywheel motor(s), measured absolutely. */
+        @JvmField
+        val flywheelAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
-        /**
-         * The velocity input
-         */
-        var velocity: Measure<Velocity<Angle>>
-            get() = _velocity
-            set(value) {
-                _velocity.mut_replace(value)
-            }
+        /** The velocity of the flywheel motor(s)'s rotation. */
+        @JvmField
+        val flywheelVelocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RotationsPerSecond)
 
-        /**
-         * The applied voltage to the motor(s)
-         */
-        var applied: Measure<Voltage>
-            get() = _applied
-            set(value) {
-                _applied.mut_replace(value)
-            }
+        /** The voltage applied to the flywheel motor(s). */
+        @JvmField
+        val flywheelAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
 
-        /**
-         * The current going to the motor(s)
-         */
-        var current: Measure<Current>
-            get() = _current
-            set(value) {
-                _current.mut_replace(value)
-            }
+        /** The voltage applied to the flywheel motor(s). */
+        @JvmField
+        val flywheelAppliedCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
+
+        // Roller
+        /** The position of the flywheel motor(s), measured relatively by their encoder(s). */
+        @JvmField
+        val rollerRelativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+
+        /** The position of the flywheel motor(s), measured absolutely. */
+        @JvmField
+        val rollerAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+
+        /** The velocity of the flywheel motor(s)'s rotation. */
+        @JvmField
+        val rollerVelocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RotationsPerSecond)
+
+        /** The voltage applied to the flywheel motor(s). */
+        @JvmField
+        val rollerAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
+
+        /** The voltage applied to the flywheel motor(s). */
+        @JvmField
+        val rollerAppliedCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
+
+        /** Whether the launcher is holding a note or not. */
+        @JvmField
+        var hasNote: Boolean = false
+
+        /** Whether the launcher is ready/able to shoot. */
+        @JvmField
+        var canShoot: Boolean = false
 
         override fun toLog(table: LogTable) {
-            table.put("position", position)
-            table.put("velocity", velocity)
-            table.put("applied", applied)
-            table.put("current", current)
+            // NOTE - I actually am not sure on if name mangling is needed
+            table.put("flywheelRelativePosition", flywheelRelativePosition)
+            table.put("flywheelAbsolutePosition", flywheelAbsolutePosition)
+            table.put("flywheelVelocity", flywheelVelocity)
+            table.put("flywheelAppliedVoltage", flywheelAppliedVoltage)
+            table.put("flywheelAppliedCurrent", flywheelAppliedCurrent)
+
+            table.put("rollerRelativePosition", rollerRelativePosition)
+            table.put("rollerAbsolutePosition", rollerAbsolutePosition)
+            table.put("rollerVelocity", rollerVelocity)
+            table.put("rollerAppliedVoltage", rollerAppliedVoltage)
+            table.put("rollerAppliedCurrent", rollerAppliedCurrent)
+
+            table.put("hasNote", hasNote)
+            table.put("canShoot", canShoot)
         }
 
         override fun fromLog(table: LogTable) {
-            // All of these will default to 0 of their unit
-            position = table.get("position", position)
-            velocity = table.get("velocity", velocity)
-            applied = table.get("applied", applied)
-            current = table.get("current", current)
+            flywheelRelativePosition.mut_replace(table.get("flywheelRelativePosition", flywheelRelativePosition))
+            flywheelAbsolutePosition.mut_replace(table.get("flywheelAbsolutePosition", flywheelAbsolutePosition))
+            flywheelVelocity.mut_replace(table.get("flywheelVelocity", flywheelVelocity))
+            flywheelAppliedVoltage.mut_replace(table.get("flywheelAppliedVoltage", flywheelAppliedVoltage))
+            flywheelAppliedCurrent.mut_replace(table.get("flywheelAppliedCurrent", flywheelAppliedCurrent))
+
+            rollerRelativePosition.mut_replace(table.get("rollerRelativePosition", rollerRelativePosition))
+            rollerAbsolutePosition.mut_replace(table.get("rollerAbsolutePosition", rollerAbsolutePosition))
+            rollerVelocity.mut_replace(table.get("rollerVelocity", rollerVelocity))
+            rollerAppliedVoltage.mut_replace(table.get("rollerAppliedVoltage", rollerAppliedVoltage))
+            rollerAppliedCurrent.mut_replace(table.get("rollerAppliedCurrent", rollerAppliedCurrent))
+
+            hasNote = table.get("hasNote", hasNote)
+            canShoot = table.get("canShoot", canShoot)
         }
     }
 
     /**
      * Updates the given inputs with data from this IO layer
      */
-    fun updateInputs(inputs: LauncherInputs)
+    fun updateInputs(inputs: LauncherInputs) {}
 
     /**
-     * Runs the open loop with the specified voltage.
+     * Runs the flywheels with the specified voltage.
      *
-     * @param voltage The voltage to control the motor(s) with.
+     * @param voltage The voltage to control the flywheel motor(s) with.
      */
-    fun runOpen(voltage: Measure<Voltage>)
+    fun setFlywheelVoltage(voltage: Measure<Voltage>) {}
 
     /**
-     * Runs the closed loop at a specified velocity.
+     * Runs the flywheels at a specified velocity.
      *
-     * @param velocity The velocity to run the motor(s) at.
+     * @param velocity The velocity to run the flywheel motor(s) at.
      */
-    fun runClosed(velocity: Measure<Velocity<Angle>>)
+    fun setFlywheelVelocity(velocity: Measure<Velocity<Angle>>) {}
 
     /**
-     * Stops the loop.
-     */
-    fun stop()
-
-    /**
-     * Configures the PID controller for the motor(s)
+     * Runs the roller with the specified voltage.
      *
-     * @param p The polynomial constant
-     * @param i The integral constant
-     * @param d The derivative constant
+     * @param voltage The voltage to control the roller motor(s) with.
      */
-    fun configurePID(p: Double, i: Double, d: Double)
+    fun setRollerVoltage(voltage: Measure<Voltage>) {}
 
+    /**
+     * Runs the roller at a specified velocity.
+     *
+     * @param velocity The velocity to run the roller motor(s) at.
+     */
+    fun setRollerVelocity(velocity: Measure<Velocity<Angle>>) {}
+
+    /**
+     * Stops the motor(s).
+     */
+    fun stop() {
+        stopFlywheels()
+        stopRoller()
+    }
+
+    /**
+     * Stops the roller.
+     */
+    fun stopRoller() {}
+
+    /**
+     * Stops the flywheels
+     */
+    fun stopFlywheels() {}
+
+    /**
+     * Configures the PID controller for the flywheel motor(s)
+     *
+     * @param p The proportional gain
+     * @param i The integral gain
+     * @param d The derivative gain
+     */
+    fun setFlywheelPID(p: Double, i: Double, d: Double)
+
+    /**
+     * Configures the feed forward for the flywheel motor(s)
+     *
+     * @param s The static gain.
+     * @param v The velocity gain.
+     * @param a The acceleration gain.
+     */
+    fun setFlywheelFeedForward(s: Double, v: Double, a: Double) {}
 }
