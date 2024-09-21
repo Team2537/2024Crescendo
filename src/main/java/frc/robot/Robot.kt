@@ -36,6 +36,7 @@ object Robot : LoggedRobot() {
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
+        pivot.defaultCommand = pivot.manualControl { getRawAxis(1) }
     }
 
 
