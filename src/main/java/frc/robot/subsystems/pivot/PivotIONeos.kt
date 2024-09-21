@@ -31,7 +31,7 @@ class PivotIONeos(
         restoreFactoryDefaults()
         inverted = pivotInverted
         encoder.positionConversionFactor = rotorToArmRatio
-        encoder.velocityConversionFactor = rotorToArmRatio
+        encoder.velocityConversionFactor = rotorToArmRatio / 60.0
 
         pidController.setP(kP)
         pidController.setI(kI)
