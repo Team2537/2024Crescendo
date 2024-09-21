@@ -27,6 +27,8 @@ class PivotIONeos(
     private val kV: Double,
     private val kA: Double
 ) : PivotIO {
+
+    /** The motor for the pivot */
     private val pivotMotor: CANSparkMax = CANSparkMax(pivotID, CANSparkLowLevel.MotorType.kBrushless).apply {
         restoreFactoryDefaults()
         inverted = pivotInverted
@@ -40,14 +42,21 @@ class PivotIONeos(
         setSmartCurrentLimit(40)
     }
 
+    /** The absolute encoder for the pivot */
     private val absoluteEncoder: DutyCycleEncoder = DutyCycleEncoder(absoluteEncoderID).apply {
         distancePerRotation = encoderToArmRatio
     }
 
+    /** Feedforward controller for the pivot */
     private val feedforward: ArmFeedforward = ArmFeedforward(kS, kG, kV, kA)
 
+    /** The homing sensor for the pivot, to trigger when the pivot is upright */
     private val homingSensor: DigitalInput = DigitalInput(homingSensorID)
 
+    /**
+     * Updates the inputs with new data.
+     * @param inputs The data to update with the new sensor information, mutated in place.
+     */
     override fun updateInputs(inputs: PivotIO.PivotInputs) {
         inputs.isAtHardstop = homingSensor.get()
         inputs.relativePosition.mut_replace(pivotMotor.encoder.position, Units.Rotations)
@@ -57,14 +66,27 @@ class PivotIONeos(
         inputs.appliedCurrent.mut_replace(pivotMotor.outputCurrent, Units.Amps)
     }
 
+    /**
+     * Sets the raw voltage applied to the motor(s).
+     * @param voltage The voltage to apply.
+     * @param isPID Whether the voltage is being set by a PID controller. (Used for simulation purposes.)
+     */
     override fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean) {
         pivotMotor.setVoltage(voltage into Units.Volts)
     }
 
+    /**
+     * Reset the relative encoder to a known position.
+     * @param position The known position to reset to.
+     */
     override fun setKnownPosition(position: Measure<Angle>) {
         pivotMotor.encoder.position = position into Units.Rotations
     }
 
+    /**
+     * Set the target position of the pivot.
+     * @param position The target position to set.
+     */
     override fun setTargetPosition(position: Measure<Angle>) {
         pivotMotor.pidController.setReference(
             position into Units.Rotations,
@@ -74,6 +96,12 @@ class PivotIONeos(
         )
     }
 
+    /**
+     * Set the PID gains of the pivot.
+     * @param p The proportional gain.
+     * @param i The integral gain.
+     * @param d The derivative gain.
+     */
     override fun setPID(p: Double, i: Double, d: Double) {
         pivotMotor.pidController.setP(p)
         pivotMotor.pidController.setI(i)

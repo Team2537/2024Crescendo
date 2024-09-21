@@ -16,27 +16,21 @@ import org.littletonrobotics.junction.inputs.LoggableInputs
 interface PivotIO {
     class PivotInputs : LoggableInputs {
         /** Whether the pivot arm is at its hardstop. */
-        @JvmField
         var isAtHardstop: Boolean = false
 
         /** The position of the motor(s), measured relatively by the motor(s)'s encoder. */
-        @JvmField
         val relativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
         /** The position of the motor(s), measured absolutely. */
-        @JvmField
         val absolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
         /** The velocity of the motor(s)'s rotation. */
-        @JvmField
         val velocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RotationsPerSecond)
 
         /** The voltage applied to the motor(s). */
-        @JvmField
         val appliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
 
         /** The current applied to the motor(s). */
-        @JvmField
         val appliedCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
 
 
@@ -66,15 +60,45 @@ interface PivotIO {
 
     }
 
+    /**
+     * Updates the inputs with new data.
+     * @param inputs The data to update with the new sensor information, mutated in place.
+     */
     fun updateInputs(inputs: PivotInputs) {}
 
+    /**
+     * Sets the raw voltage applied to the motor(s).
+     * @param voltage The voltage to apply.
+     * @param isPID Whether the voltage is being set by a PID controller. (Used for simulation purposes.)
+     */
     fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean = false) {}
 
+    /**
+     * Reset the relative encoder to a known position.
+     * @param position The known position to reset to.
+     */
     fun setKnownPosition(position: Measure<Angle>) {}
 
+    /**
+     * Set the target position of the pivot.
+     * @param position The target position to set.
+     */
     fun setTargetPosition(position: Measure<Angle>) {}
 
+    /**
+     * Set the PID gains of the pivot.
+     * @param p The proportional gain.
+     * @param i The integral gain.
+     * @param d The derivative gain.
+     */
     fun setPID(p: Double, i: Double, d: Double) {}
 
+    /**
+     * Set the feedforward gains of the pivot.
+     * @param kS The static gain.
+     * @param kG The gravity gain.
+     * @param kV The velocity gain.
+     * @param kA The acceleration gain.
+     */
     fun setFF(kS: Double, kG: Double, kV: Double, kA: Double) {}
 }
