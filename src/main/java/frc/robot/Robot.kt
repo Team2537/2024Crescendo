@@ -1,11 +1,9 @@
 package frc.robot
 
-import Launcher
+import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
-import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.Autos
 import frc.robot.subsystems.Climb
 import frc.robot.subsystems.Drivebase
 import frc.robot.subsystems.Intake

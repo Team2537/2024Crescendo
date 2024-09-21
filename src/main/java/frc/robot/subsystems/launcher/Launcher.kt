@@ -1,3 +1,5 @@
+package frc.robot.subsystems.launcher
+
 import com.revrobotics.*
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.units.Measure
@@ -38,8 +40,8 @@ class Launcher : SubsystemBase() {
     /** The current stored setpoint for the roller */
     var setPoint: Double = 0.0
 
-    /** Shuffleboard tab for the Launcher subsystem */
-    val tab = Shuffleboard.getTab("Launcher")
+    /** Shuffleboard tab for the frc.robot.subsystems.launcher.Launcher subsystem */
+    val tab = Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher")
 
     /** PID Controller for the flywheel */
     val flywheelPIDController: SparkPIDController = topFlywheels.pidController
@@ -118,15 +120,15 @@ class Launcher : SubsystemBase() {
         }.debounce(0.1)
 
         // So much logging oh my god I forgot there was so much logging
-        Shuffleboard.getTab("Launcher").addBoolean("Note Detected") { noteTrigger.asBoolean }
-        Shuffleboard.getTab("Launcher").addDouble("Position") { getRollerPosition() }
-        Shuffleboard.getTab("Launcher").addDouble("Setpoint") { setPoint }
-        Shuffleboard.getTab("Launcher Sysid").addDouble("Top Flywheel Position") { topFlywheels.encoder.position }
-        Shuffleboard.getTab("Launcher Sysid").addDouble("Top Flywheel Velocity") { topFlywheels.encoder.velocity }
-        Shuffleboard.getTab("Launcher Sysid").addDouble("Bottom Flywheel Position") { bottomFlywheels.encoder.position }
-        Shuffleboard.getTab("Launcher Sysid").addDouble("Bottom Flywheel Velocity") { bottomFlywheels.encoder.velocity }
-        Shuffleboard.getTab("Launcher Sysid").addDouble("Top Flywheel Voltage") {topFlywheels.appliedOutput * topFlywheels.busVoltage }
-        Shuffleboard.getTab("Launcher Sysid").addDouble("Bottom Flywheel Voltage") {bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher").addBoolean("Note Detected") { noteTrigger.asBoolean }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher").addDouble("Position") { getRollerPosition() }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher").addDouble("Setpoint") { setPoint }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher Sysid").addDouble("Top Flywheel Position") { topFlywheels.encoder.position }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher Sysid").addDouble("Top Flywheel Velocity") { topFlywheels.encoder.velocity }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher Sysid").addDouble("Bottom Flywheel Position") { bottomFlywheels.encoder.position }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher Sysid").addDouble("Bottom Flywheel Velocity") { bottomFlywheels.encoder.velocity }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher Sysid").addDouble("Top Flywheel Voltage") {topFlywheels.appliedOutput * topFlywheels.busVoltage }
+        Shuffleboard.getTab("frc.robot.subsystems.launcher.Launcher Sysid").addDouble("Bottom Flywheel Voltage") {bottomFlywheels.appliedOutput * bottomFlywheels.busVoltage }
 
         // Burn the settings to the Spark Maxes so that they persist across power cycles
         topFlywheels.burnFlash()
