@@ -159,7 +159,7 @@ interface LauncherIO {
      * @param i The integral gain
      * @param d The derivative gain
      */
-    fun setFlywheelPID(p: Double, i: Double, d: Double)
+    fun setFlywheelPID(p: Double, i: Double, d: Double) {}
 
     /**
      * Configures the feed forward for the flywheel motor(s)
@@ -177,7 +177,7 @@ interface LauncherIO {
      * @param i The integral gain
      * @param d The derivative gain
      */
-    fun setRollerPID(p: Double, i: Double, d: Double)
+    fun setRollerPID(p: Double, i: Double, d: Double) {}
 
     /**
      * Configures the feed forward for the roller motor(s)
