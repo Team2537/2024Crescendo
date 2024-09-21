@@ -20,9 +20,9 @@ interface LauncherIO {
         @JvmField
         val flywheelRelativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
-        /** The position of the flywheel motor(s), measured absolutely. */
-        @JvmField
-        val flywheelAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+//        /** The position of the flywheel motor(s), measured absolutely. */
+//        @JvmField
+//        val flywheelAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
         /** The velocity of the flywheel motor(s)'s rotation. */
         @JvmField
@@ -41,9 +41,9 @@ interface LauncherIO {
         @JvmField
         val rollerRelativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
-        /** The position of the flywheel motor(s), measured absolutely. */
-        @JvmField
-        val rollerAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+//        /** The position of the flywheel motor(s), measured absolutely. */
+//        @JvmField
+//        val rollerAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
 
         /** The velocity of the flywheel motor(s)'s rotation. */
         @JvmField
@@ -68,13 +68,13 @@ interface LauncherIO {
         override fun toLog(table: LogTable) {
             // NOTE - I actually am not sure on if name mangling is needed
             table.put("flywheelRelativePosition", flywheelRelativePosition)
-            table.put("flywheelAbsolutePosition", flywheelAbsolutePosition)
+//            table.put("flywheelAbsolutePosition", flywheelAbsolutePosition)
             table.put("flywheelVelocity", flywheelVelocity)
             table.put("flywheelAppliedVoltage", flywheelAppliedVoltage)
             table.put("flywheelAppliedCurrent", flywheelAppliedCurrent)
 
             table.put("rollerRelativePosition", rollerRelativePosition)
-            table.put("rollerAbsolutePosition", rollerAbsolutePosition)
+//            table.put("rollerAbsolutePosition", rollerAbsolutePosition)
             table.put("rollerVelocity", rollerVelocity)
             table.put("rollerAppliedVoltage", rollerAppliedVoltage)
             table.put("rollerAppliedCurrent", rollerAppliedCurrent)
@@ -85,13 +85,13 @@ interface LauncherIO {
 
         override fun fromLog(table: LogTable) {
             flywheelRelativePosition.mut_replace(table.get("flywheelRelativePosition", flywheelRelativePosition))
-            flywheelAbsolutePosition.mut_replace(table.get("flywheelAbsolutePosition", flywheelAbsolutePosition))
+//            flywheelAbsolutePosition.mut_replace(table.get("flywheelAbsolutePosition", flywheelAbsolutePosition))
             flywheelVelocity.mut_replace(table.get("flywheelVelocity", flywheelVelocity))
             flywheelAppliedVoltage.mut_replace(table.get("flywheelAppliedVoltage", flywheelAppliedVoltage))
             flywheelAppliedCurrent.mut_replace(table.get("flywheelAppliedCurrent", flywheelAppliedCurrent))
 
             rollerRelativePosition.mut_replace(table.get("rollerRelativePosition", rollerRelativePosition))
-            rollerAbsolutePosition.mut_replace(table.get("rollerAbsolutePosition", rollerAbsolutePosition))
+//            rollerAbsolutePosition.mut_replace(table.get("rollerAbsolutePosition", rollerAbsolutePosition))
             rollerVelocity.mut_replace(table.get("rollerVelocity", rollerVelocity))
             rollerAppliedVoltage.mut_replace(table.get("rollerAppliedVoltage", rollerAppliedVoltage))
             rollerAppliedCurrent.mut_replace(table.get("rollerAppliedCurrent", rollerAppliedCurrent))
