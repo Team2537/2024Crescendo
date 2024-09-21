@@ -9,7 +9,6 @@ import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units.Amps
 import edu.wpi.first.units.Units.Meters
-import edu.wpi.first.units.Units.Radian
 import edu.wpi.first.units.Units.Radians
 import edu.wpi.first.units.Units.RadiansPerSecond
 import edu.wpi.first.units.Units.Volts
@@ -49,11 +48,11 @@ class PivotIOSim(
     override fun updateInputs(inputs: PivotIO.PivotInputs) {
         inputs.isAtHardstop = sim.hasHitUpperLimit()
 
-        inputs.pivotRelativePosition.mut_replace(sim.angleRads, Radians)
-        inputs.pivotAbsolutePosition.mut_replace(sim.angleRads, Radians)
-        inputs.pivotAngularVelocity.mut_replace(sim.velocityRadPerSec, RadiansPerSecond)
-        inputs.pivotMotorAppliedVoltage.mut_replace(cachedVoltage)
-        inputs.pivotMotorAppliedCurrent.mut_replace(Amps.of(sim.currentDrawAmps))
+        inputs.relativePosition.mut_replace(sim.angleRads, Radians)
+        inputs.absolutePosition.mut_replace(sim.angleRads, Radians)
+        inputs.velocity.mut_replace(sim.velocityRadPerSec, RadiansPerSecond)
+        inputs.appliedVoltage.mut_replace(cachedVoltage)
+        inputs.appliedCurrent.mut_replace(Amps.of(sim.currentDrawAmps))
 
         if(isPID){
             setRawVoltage(Volts.of(pid.calculate(sim.angleRads) + feedforward.calculate(pid.setpoint, 0.0)), true)

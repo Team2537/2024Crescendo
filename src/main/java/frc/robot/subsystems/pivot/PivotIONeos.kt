@@ -50,11 +50,11 @@ class PivotIONeos(
 
     override fun updateInputs(inputs: PivotIO.PivotInputs) {
         inputs.isAtHardstop = homingSensor.get()
-        inputs.pivotRelativePosition.mut_replace(pivotMotor.encoder.position, Units.Rotations)
-        inputs.pivotAbsolutePosition.mut_replace(absoluteEncoder.distance, Units.Rotations)
-        inputs.pivotAngularVelocity.mut_replace(pivotMotor.encoder.velocity, Units.RotationsPerSecond)
-        inputs.pivotMotorAppliedVoltage.mut_replace(pivotMotor.appliedOutput, Units.Volts)
-        inputs.pivotMotorAppliedCurrent.mut_replace(pivotMotor.outputCurrent, Units.Amps)
+        inputs.relativePosition.mut_replace(pivotMotor.encoder.position, Units.Rotations)
+        inputs.absolutePosition.mut_replace(absoluteEncoder.distance, Units.Rotations)
+        inputs.velocity.mut_replace(pivotMotor.encoder.velocity, Units.RotationsPerSecond)
+        inputs.appliedVoltage.mut_replace(pivotMotor.appliedOutput, Units.Volts)
+        inputs.appliedCurrent.mut_replace(pivotMotor.outputCurrent, Units.Amps)
     }
 
     override fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean) {

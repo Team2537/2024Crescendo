@@ -15,18 +15,29 @@ import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface PivotIO {
     class PivotInputs : LoggableInputs {
+        /** Whether the pivot arm is at its hardstop. */
+        @JvmField
         var isAtHardstop: Boolean = false
 
-        var pivotRelativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
-            private set
-        var pivotAbsolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
-            private set
-        var pivotAngularVelocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RotationsPerSecond)
-            private set
-        var pivotMotorAppliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
-            private set
-        var pivotMotorAppliedCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
-            private set
+        /** The position of the motor(s), measured relatively by the motor(s)'s encoder. */
+        @JvmField
+        val relativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+
+        /** The position of the motor(s), measured absolutely. */
+        @JvmField
+        val absolutePosition: MutableMeasure<Angle> = MutableMeasure.zero(Rotations)
+
+        /** The velocity of the motor(s)'s rotation. */
+        @JvmField
+        val velocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RotationsPerSecond)
+
+        /** The voltage applied to the motor(s). */
+        @JvmField
+        val appliedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
+
+        /** The current applied to the motor(s). */
+        @JvmField
+        val appliedCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
 
 
         /**
@@ -35,10 +46,10 @@ interface PivotIO {
         override fun toLog(table: LogTable) {
             table.put("isAtHardstop", isAtHardstop)
 
-            table.put("pivotRelativePosition", pivotRelativePosition)
-            table.put("pivotAbsolutePosition", pivotAbsolutePosition)
-            table.put("pivotMotorAppliedVoltage", pivotMotorAppliedVoltage)
-            table.put("pivotMotorAppliedCurrent", pivotMotorAppliedCurrent)
+            table.put("relativePosition", relativePosition)
+            table.put("absolutePosition", absolutePosition)
+            table.put("appliedVoltage", appliedVoltage)
+            table.put("appliedCurrent", appliedCurrent)
         }
 
         /**
@@ -47,10 +58,10 @@ interface PivotIO {
         override fun fromLog(table: LogTable) {
             table.get("isAtHardstop").let { isAtHardstop = it.boolean }
 
-            pivotRelativePosition.mut_replace(table.get("pivotRelativePosition", pivotRelativePosition))
-            pivotAbsolutePosition.mut_replace(table.get("pivotAbsolutePosition", pivotAbsolutePosition))
-            pivotMotorAppliedVoltage.mut_replace(table.get("pivotMotorAppliedVoltage", pivotMotorAppliedVoltage))
-            pivotMotorAppliedCurrent.mut_replace(table.get("pivotMotorAppliedCurrent", pivotMotorAppliedCurrent))
+            relativePosition.mut_replace(table.get("relativePosition", relativePosition))
+            absolutePosition.mut_replace(table.get("absolutePosition", absolutePosition))
+            appliedVoltage.mut_replace(table.get("appliedVoltage", appliedVoltage))
+            appliedCurrent.mut_replace(table.get("appliedCurrent", appliedCurrent))
         }
 
     }
