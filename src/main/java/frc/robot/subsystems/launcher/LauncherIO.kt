@@ -169,4 +169,22 @@ interface LauncherIO {
      * @param a The acceleration gain.
      */
     fun setFlywheelFeedForward(s: Double, v: Double, a: Double) {}
+
+    /**
+     * Configures the PID controller for the roller motor(s)
+     *
+     * @param p The proportional gain
+     * @param i The integral gain
+     * @param d The derivative gain
+     */
+    fun setRollerPID(p: Double, i: Double, d: Double)
+
+    /**
+     * Configures the feed forward for the roller motor(s)
+     *
+     * @param s The static gain.
+     * @param v The velocity gain.
+     * @param a The acceleration gain.
+     */
+    fun setRollerFeedForward(s: Double, v: Double, a: Double) {}
 }
