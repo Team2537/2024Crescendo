@@ -46,10 +46,10 @@ interface PivotIO {
         override fun toLog(table: LogTable) {
             table.put("isAtHardstop", isAtHardstop)
 
-            table.put("relativePosition", relativePosition)
-            table.put("absolutePosition", absolutePosition)
-            table.put("appliedVoltage", appliedVoltage)
-            table.put("appliedCurrent", appliedCurrent)
+            table.put("pivotRelativePosition", relativePosition)
+            table.put("pivotAbsolutePosition", absolutePosition)
+            table.put("pivotAppliedVoltage", appliedVoltage)
+            table.put("pivotAppliedCurrent", appliedCurrent)
         }
 
         /**
@@ -58,10 +58,10 @@ interface PivotIO {
         override fun fromLog(table: LogTable) {
             table.get("isAtHardstop").let { isAtHardstop = it.boolean }
 
-            relativePosition.mut_replace(table.get("relativePosition", relativePosition))
-            absolutePosition.mut_replace(table.get("absolutePosition", absolutePosition))
-            appliedVoltage.mut_replace(table.get("appliedVoltage", appliedVoltage))
-            appliedCurrent.mut_replace(table.get("appliedCurrent", appliedCurrent))
+            relativePosition.mut_replace(table.get("pivotRelativePosition", relativePosition))
+            absolutePosition.mut_replace(table.get("pivotAbsolutePosition", absolutePosition))
+            appliedVoltage.mut_replace(table.get("pivotAppliedVoltage", appliedVoltage))
+            appliedCurrent.mut_replace(table.get("pivotAppliedCurrent", appliedCurrent))
         }
 
     }
