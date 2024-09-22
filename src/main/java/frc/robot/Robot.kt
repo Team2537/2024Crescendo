@@ -1,6 +1,7 @@
 package frc.robot
 
 import Launcher
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -36,7 +37,10 @@ object Robot : LoggedRobot() {
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
-        pivot.defaultCommand = pivot.manualControl { getRawAxis(1) }
+        button(1).onTrue(pivot.sendToPosition(Units.Degrees.of(30.0)))
+        button(2).onTrue(pivot.sendToPosition(Units.Degrees.of(60.0)))
+        button(3).onTrue(pivot.home())
+        button(4).toggleOnTrue(pivot.manualControl { getRawAxis(1) })
     }
 
 
