@@ -1,28 +1,17 @@
 package frc.robot.subsystems.pivot
 
-import com.revrobotics.*
-import edu.wpi.first.math.controller.ArmFeedforward
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj.DigitalInput
-import edu.wpi.first.wpilibj.DutyCycleEncoder
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism
 import frc.robot.Constants
-import frc.robot.Constants.PivotConstants
 import lib.math.units.into
-import lib.putMap
 import org.littletonrobotics.junction.Logger
 import java.util.function.DoubleSupplier
-import java.util.function.Supplier
 
 class Pivot : SubsystemBase() {
-    private val io: PivotIO = when(Constants.RobotConstants.mode){
+    private val io: PivotIO = when (Constants.RobotConstants.mode) {
         Constants.RobotConstants.Mode.REAL -> PivotIONeos(
             PIVOT_MOTOR_PORT,
             INVERT,
@@ -33,6 +22,7 @@ class Pivot : SubsystemBase() {
             0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0
         )
+
         Constants.RobotConstants.Mode.SIM -> PivotIOSim(
             DCMotor.getNEO(1),
             GEARBOX_RATIO * PULLEY_RATIO,
@@ -44,6 +34,7 @@ class Pivot : SubsystemBase() {
             0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0
         )
+
         Constants.RobotConstants.Mode.REPLAY -> object : PivotIO {}
     }
 
@@ -53,8 +44,15 @@ class Pivot : SubsystemBase() {
     val root = mechanism.getRoot("pivot", 2.0, 1.0)
     val arm = root.append(MechanismLigament2d("arm", 0.5, 90.0))
 
-    fun manualControl(voltage: DoubleSupplier) = run { io.setRawVoltage(Units.Volts.of(voltage.asDouble), false); println("applied voltage: ${voltage.asDouble}") }
+    fun manualControl(voltage: DoubleSupplier) = run {
+        io.setRawVoltage(
+            Units.Volts.of(voltage.asDouble),
+            false
+        ); println("applied voltage: ${voltage.asDouble}")
+    }
 
+    fun home() = run { io.setRawVoltage(Units.Volts.of(-3.0), false) }.until(inputs::isAtHardstop)
+        .andThen(run { io.setKnownPosition(Units.Degrees.of(90.0)) })
 
     override fun periodic() {
         io.updateInputs(inputs)
@@ -68,8 +66,8 @@ class Pivot : SubsystemBase() {
     }
 
     companion object {
-        const val GEARBOX_RATIO: Double = 36.0/1.0
-        const val PULLEY_RATIO: Double = 40.0/18.0
+        const val GEARBOX_RATIO: Double = 36.0 / 1.0
+        const val PULLEY_RATIO: Double = 40.0 / 18.0
 
         const val ABSOLUTE_ENCODER_PORT = 1
         const val PIVOT_MOTOR_PORT = 16
