@@ -3,6 +3,7 @@ package frc.robot.subsystems.pivot
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
+import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
@@ -48,13 +49,26 @@ class Pivot : SubsystemBase() {
 
     fun manualControl(voltage: DoubleSupplier) = run {
         io.setRawVoltage(
-            Units.Volts.of(voltage.asDouble * 3),
+            Units.Volts.of(voltage.asDouble),
             false
         )
     }
 
     fun home() = run { io.setRawVoltage(Units.Volts.of(-3.0), false) }.until(inputs::isAtHardstop)
         .andThen(run { io.setKnownPosition(Units.Degrees.of(90.0)) })
+
+    private val lastCurrent = MutableMeasure.zero(Units.Amps)
+
+    fun homeSensorless() = runEnd(
+        {
+            io.setRawVoltage(Units.Volt.of(-1.0))
+            lastCurrent.mut_replace(inputs.appliedCurrent)
+        },
+        {
+            io.setKnownPosition(Units.Degrees.of(90.0))
+            io.stop()
+        }
+    ).until { inputs.appliedCurrent.minus(lastCurrent).gte(Units.Amp.of(10.0)) }
 
     fun sendToPosition(position: Measure<Angle>) = run { io.setTargetPosition(position) }
 
@@ -75,7 +89,7 @@ class Pivot : SubsystemBase() {
 
         const val ABSOLUTE_ENCODER_PORT = 1
         const val PIVOT_MOTOR_PORT = 16
-        const val HOMING_SENSOR_PORT = 2
+        const val HOMING_SENSOR_PORT = 3
 
         const val INVERT = false
     }
