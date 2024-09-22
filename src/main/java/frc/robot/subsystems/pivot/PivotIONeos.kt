@@ -103,8 +103,8 @@ class PivotIONeos(
      * @param d The derivative gain.
      */
     override fun setPID(p: Double, i: Double, d: Double) {
-        pivotMotor.pidController.setP(p)
-        pivotMotor.pidController.setI(i)
-        pivotMotor.pidController.setD(d)
+        pivotMotor.pidController.p = p
+        pivotMotor.pidController.i = i
+        pivotMotor.pidController.d = d
     }
 }
