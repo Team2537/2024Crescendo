@@ -1,4 +1,4 @@
-package frc.robot.subsystems
+package frc.robot.subsystems.pivot
 
 import com.revrobotics.*
 import edu.wpi.first.math.controller.ArmFeedforward

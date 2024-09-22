@@ -2,14 +2,12 @@ package frc.robot
 
 import Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
-import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.Autos
 import frc.robot.subsystems.Climb
 import frc.robot.subsystems.Drivebase
 import frc.robot.subsystems.Intake
-import frc.robot.subsystems.Pivot
+import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
