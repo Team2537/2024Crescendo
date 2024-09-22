@@ -107,4 +107,8 @@ class PivotIONeos(
         pivotMotor.pidController.i = i
         pivotMotor.pidController.d = d
     }
+
+    override fun stop() {
+        pivotMotor.stopMotor()
+    }
 }

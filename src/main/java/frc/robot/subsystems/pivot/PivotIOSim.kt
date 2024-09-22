@@ -70,6 +70,11 @@ class PivotIOSim(
         sim.update(0.02)
     }
 
+    override fun stop() {
+        isPID = false
+        sim.setInputVoltage(0.0)
+    }
+
     /**
      * Sets the raw voltage applied to the motor(s).
      * @param voltage The voltage to apply.
