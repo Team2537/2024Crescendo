@@ -33,8 +33,8 @@ class PivotIOSim(
         gearing,
         moi,
         armLength into Meters,
-        maxAngle into Radians,
         minAngle into Radians,
+        maxAngle into Radians,
         true,
         startAngle into Radians
     )
