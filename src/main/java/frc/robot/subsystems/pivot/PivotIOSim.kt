@@ -95,6 +95,7 @@ class PivotIOSim(
      */
     override fun setTargetPosition(position: Measure<Angle>) {
         pid.setpoint = position into Radians
+        isPID = true
     }
 
     /**
