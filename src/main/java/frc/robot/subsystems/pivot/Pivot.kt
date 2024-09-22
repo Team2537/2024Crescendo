@@ -48,7 +48,8 @@ class Pivot : SubsystemBase() {
         io.setRawVoltage(
             Units.Volts.of(voltage.asDouble),
             false
-        ); println("applied voltage: ${voltage.asDouble}")
+        )
+        println("applied voltage: ${voltage.asDouble}")
     }
 
     fun home() = run { io.setRawVoltage(Units.Volts.of(-3.0), false) }.until(inputs::isAtHardstop)
