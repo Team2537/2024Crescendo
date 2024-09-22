@@ -1,6 +1,8 @@
 package frc.robot.subsystems.pivot
 
 import edu.wpi.first.math.system.plant.DCMotor
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
@@ -31,8 +33,8 @@ class Pivot : SubsystemBase() {
             Units.Degrees.of(90.0),
             Units.Degrees.of(0.0),
             Units.Degrees.of(90.0),
-            0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0, 0.0
+            10.0, 0.5, 0.0,
+            0.0, 0.43, 1.34, 0.02
         )
 
         Constants.RobotConstants.Mode.REPLAY -> object : PivotIO {}
@@ -53,6 +55,8 @@ class Pivot : SubsystemBase() {
 
     fun home() = run { io.setRawVoltage(Units.Volts.of(-3.0), false) }.until(inputs::isAtHardstop)
         .andThen(run { io.setKnownPosition(Units.Degrees.of(90.0)) })
+
+    fun sendToPosition(position: Measure<Angle>) = run { io.setTargetPosition(position) }
 
     override fun periodic() {
         io.updateInputs(inputs)
