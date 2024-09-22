@@ -92,13 +92,4 @@ interface PivotIO {
      * @param d The derivative gain.
      */
     fun setPID(p: Double, i: Double, d: Double) {}
-
-    /**
-     * Set the feedforward gains of the pivot.
-     * @param kS The static gain.
-     * @param kG The gravity gain.
-     * @param kV The velocity gain.
-     * @param kA The acceleration gain.
-     */
-    fun setFF(kS: Double, kG: Double, kV: Double, kA: Double) {}
 }
