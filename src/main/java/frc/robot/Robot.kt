@@ -39,10 +39,10 @@ object Robot : LoggedRobot() {
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
         drivebase.defaultCommand = drivebase.driveCommand(
-            ::getLeftX,
             ::getLeftY,
+            ::getLeftX,
             ::getRightX,
-            leftBumper()
+            leftBumper().negate()
         )
     }
 
@@ -53,7 +53,7 @@ object Robot : LoggedRobot() {
         when(Constants.RobotConstants.mode){
             Constants.RobotConstants.Mode.REAL -> {
                 Logger.recordMetadata("Mode", "Real")
-                Logger.addDataReceiver(WPILOGWriter())
+//                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
