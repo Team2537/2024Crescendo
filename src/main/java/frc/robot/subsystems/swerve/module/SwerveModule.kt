@@ -3,13 +3,7 @@ package frc.robot.subsystems.swerve.module
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
-import edu.wpi.first.units.Angle
-import edu.wpi.first.units.Distance
-import edu.wpi.first.units.Measure
-import edu.wpi.first.units.MutableMeasure
-import edu.wpi.first.units.Units
-import edu.wpi.first.units.Velocity
-import edu.wpi.first.math.util.Units as Conversions
+import edu.wpi.first.math.util.Units
 import frc.robot.Constants
 import lib.ControllerGains
 import kotlin.math.cos
@@ -26,23 +20,23 @@ class SwerveModule(
     private val io: ModuleIO
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
 
-    val positionLinear: MutableMeasure<Distance>
-        get() = positionLinear.mut_replace(inputs.drivePosition.times(wheelRadiusScalar) as Measure<Distance>)
+    val positionMeters: Double
+        get() = inputs.drivePositionRads * Units.inchesToMeters(wheelRadiusInches)
 
-    val velocityLinear: MutableMeasure<Velocity<Distance>>
-        get() = velocityLinear.mut_replace(inputs.driveVelocity.times(wheelRadiusScalar) as Measure<Velocity<Distance>>)
+    val velocityMetersPerSecond: Double
+        get() = inputs.driveVelocityRadPerSec * Units.inchesToMeters(wheelRadiusInches)
 
-    val position: MutableMeasure<Angle>
-        get() = inputs.drivePosition
+    val positionRads: Double
+        get() = inputs.drivePositionRads
 
     val angle: Rotation2d
         get() = inputs.absoluteTurnPosition
 
     val state: SwerveModuleState
-        get() = SwerveModuleState(velocityLinear, angle)
+        get() = SwerveModuleState(velocityMetersPerSecond, angle)
 
     val modulePosition: SwerveModulePosition
-        get() = SwerveModulePosition(positionLinear, angle)
+        get() = SwerveModulePosition(positionMeters, angle)
 
     init {
         io = when (Constants.RobotConstants.mode) {
@@ -71,19 +65,19 @@ class SwerveModule(
 
 //        println(optimized.speedMetersPerSecond)
 
-        var speed = optimized.speedMetersPerSecond / Conversions.inchesToMeters(wheelRadiusInches)
+        var speed = optimized.speedMetersPerSecond / Units.inchesToMeters(wheelRadiusInches)
 
         val steerError: Rotation2d = optimized.angle.minus(inputs.absoluteTurnPosition)
         speed *= cos(steerError.radians)
 
 //        println("RadPerSec: $speed")
 
-        io.runDriveVelocitySetpoint(Units.RotationsPerSecond.of(speed))
-        io.runTurnPositionSetpoint(optimized.angle)
+        io.runDriveVelocitySetpoint(speed)
+        io.runTurnPositionSetpoint(optimized.angle.radians)
     }
 
     fun pointAt(angle: Rotation2d) {
-        io.runTurnPositionSetpoint(angle)
+        io.runTurnPositionSetpoint(angle.radians)
     }
 
     fun applyVoltage(voltage: Double) {
@@ -100,7 +94,6 @@ class SwerveModule(
 
     companion object {
         const val wheelRadiusInches: Double = 2.0
-        val wheelRadiusScalar = Units.Inches.of(wheelRadiusInches).per(Units.Radians)
         const val driveRatio: Double = 6.75
         const val turnRatio: Double = 150.0/7.0
     }
