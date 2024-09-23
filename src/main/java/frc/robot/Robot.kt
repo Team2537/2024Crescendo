@@ -30,7 +30,7 @@ object Robot : LoggedRobot() {
 
     val climb = Climb()
     val pivot = Pivot()
-//    val drivebase = Drivebase()
+    val drivebase = Drivebase()
     val intake = Intake()
 //    val launcher = Launcher()
 
