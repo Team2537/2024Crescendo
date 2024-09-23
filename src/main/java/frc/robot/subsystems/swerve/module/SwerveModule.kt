@@ -50,8 +50,8 @@ class SwerveModule(
                 absoluteOffset,
                 driveRatio,
                 turnRatio,
-                ControllerGains(kP = 0.00023),
-                ControllerGains(kP = 0.004)
+                ControllerGains(kP = 0.0),
+                ControllerGains(kP = 1.0)
             )
             Constants.RobotConstants.Mode.SIM -> object : ModuleIO {}
             Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
