@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot
 
+import edu.wpi.first.math.filter.LinearFilter
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation3d
 import edu.wpi.first.math.geometry.Translation3d
@@ -49,6 +50,8 @@ class Pivot : SubsystemBase() {
     val root = mechanism.getRoot("pivot", 2.0, 1.0)
     val arm = root.append(MechanismLigament2d("arm", 0.5, 90.0))
 
+    private val currentSpikeTracker = LinearFilter.highPass(0.1, 0.02)
+
     fun manualControl(voltage: DoubleSupplier) = run {
         io.setRawVoltage(
             Units.Volts.of(voltage.asDouble),
@@ -59,18 +62,15 @@ class Pivot : SubsystemBase() {
     fun home() = run { io.setRawVoltage(Units.Volts.of(-3.0), false) }.until(inputs::isAtHardstop)
         .andThen(run { io.setKnownPosition(Units.Degrees.of(90.0)) })
 
-    private val lastCurrent = MutableMeasure.zero(Units.Amps)
-
-    fun homeSensorless() = runEnd(
+    fun homeSensorless(threshold: Double = 5.5) = runEnd(
         {
             io.setRawVoltage(Units.Volt.of(-1.0))
-            lastCurrent.mut_replace(inputs.appliedCurrent)
         },
         {
             io.setKnownPosition(Units.Degrees.of(90.0))
             io.stop()
         }
-    ).until { inputs.appliedCurrent.minus(lastCurrent).gte(Units.Amp.of(10.0)) }
+    ).until { currentSpikeTracker.lastValue() > threshold }
 
     fun sendToPosition(position: Measure<Angle>) = run { io.setTargetPosition(position) }
 
