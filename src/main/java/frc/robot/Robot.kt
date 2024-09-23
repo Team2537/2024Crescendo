@@ -41,7 +41,7 @@ object Robot : LoggedRobot() {
 //        button(2).onTrue(pivot.sendToPosition(Units.Degrees.of(60.0)))
 //        button(3).onTrue(pivot.home())
         a().toggleOnTrue(pivot.manualControl { getRawAxis(1) })
-        b().onTrue(pivot.homeSensorless())
+        b().onTrue(pivot.homeSensorless(15.0))
     }
 
 

@@ -50,7 +50,7 @@ class Pivot : SubsystemBase() {
     val root = mechanism.getRoot("pivot", 2.0, 1.0)
     val arm = root.append(MechanismLigament2d("arm", 0.5, 90.0))
 
-    private val currentSpikeTracker = LinearFilter.highPass(0.1, 0.02)
+    private val currentSpikeTracker = LinearFilter.highPass(5.0, 0.02)
 
     fun manualControl(voltage: DoubleSupplier) = run {
         io.setRawVoltage(
@@ -64,10 +64,10 @@ class Pivot : SubsystemBase() {
 
     fun homeSensorless(threshold: Double = 5.5) = runEnd(
         {
-            io.setRawVoltage(Units.Volt.of(-1.0))
+            io.setRawVoltage(Units.Volt.of(1.0))
         },
         {
-            io.setKnownPosition(Units.Degrees.of(90.0))
+            io.setKnownPosition(Units.Degrees.of(0.0))
             io.stop()
         }
     ).until { currentSpikeTracker.lastValue() > threshold }
