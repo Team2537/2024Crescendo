@@ -32,8 +32,8 @@ class PivotIONeos(
     private val pivotMotor: CANSparkMax = CANSparkMax(pivotID, CANSparkLowLevel.MotorType.kBrushless).apply {
         restoreFactoryDefaults()
         inverted = pivotInverted
-        encoder.positionConversionFactor = rotorToArmRatio
-        encoder.velocityConversionFactor = rotorToArmRatio / 60.0
+        encoder.positionConversionFactor = 1 / rotorToArmRatio
+        encoder.velocityConversionFactor = 1 / rotorToArmRatio
 
         pidController.setP(kP)
         pidController.setI(kI)
@@ -61,7 +61,7 @@ class PivotIONeos(
         inputs.isAtHardstop = homingSensor.get()
         inputs.relativePosition.mut_replace(pivotMotor.encoder.position, Units.Rotations)
         inputs.absolutePosition.mut_replace(absoluteEncoder.distance, Units.Rotations)
-        inputs.velocity.mut_replace(pivotMotor.encoder.velocity, Units.RotationsPerSecond)
+        inputs.velocity.mut_replace(pivotMotor.encoder.velocity, Units.RPM)
         inputs.appliedVoltage.mut_replace(pivotMotor.appliedOutput, Units.Volts)
         inputs.appliedCurrent.mut_replace(pivotMotor.outputCurrent, Units.Amps)
     }
