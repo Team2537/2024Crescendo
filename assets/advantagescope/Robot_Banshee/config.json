@@ -1,0 +1,32 @@
+{
+  "name": "Banshee",
+  "rotations": [
+    {
+      "axis": "z",
+      "degrees": 90
+    },
+    {
+      "axis": "x",
+      "degrees": 180
+    }
+  ],
+  "position": [
+    0.0,
+    0.0,
+    0.093726
+  ],
+  "cameras": [],
+  "components": [
+    {
+      "zeroedRotations": [
+        {
+          "axis": "y",
+          "degrees": 150
+        }
+      ],
+      "zeroedPosition": [
+        0.0, 0.0, 0.0
+      ]
+    }
+  ]
+}

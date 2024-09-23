@@ -1,9 +1,11 @@
 package frc.robot.subsystems.pivot
 
+import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
-import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
@@ -80,7 +82,18 @@ class Pivot : SubsystemBase() {
 
 //        io.setRawVoltage(Units.Volts.of(0.0), false)
 
-        Logger.recordOutput("pivot/mechanism", mechanism)
+        Logger.recordOutput(
+            "pivot/mechanismPose",
+            Pose3d.struct,
+            Pose3d(
+                originToPivot,
+                Rotation3d(0.0, -(inputs.relativePosition into Units.Radians), 0.0)
+            )
+        )
+
+        Logger.recordOutput("pivot/mechanism2d", mechanism)
+
+        Logger.recordOutput("pivot/currentSpike", currentSpikeTracker.calculate(inputs.appliedCurrent into Units.Amps))
     }
 
     companion object {
@@ -92,5 +105,11 @@ class Pivot : SubsystemBase() {
         const val HOMING_SENSOR_PORT = 3
 
         const val INVERT = false
+
+        val originToPivot = Translation3d(
+            0.0,
+            0.0,
+            0.516847 + 0.042919
+        )
     }
 }
