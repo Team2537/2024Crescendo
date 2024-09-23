@@ -15,6 +15,7 @@ import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim
 import lib.math.units.into
+import lib.math.units.unaryMinus
 
 class PivotIOSim(
     private val motor: DCMotor,
@@ -82,7 +83,7 @@ class PivotIOSim(
      */
     override fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean) {
         cachedVoltage.mut_replace(voltage)
-        sim.setInputVoltage(voltage into Volts)
+        sim.setInputVoltage(-voltage into Volts)
         this.isPID = isPID
     }
 
