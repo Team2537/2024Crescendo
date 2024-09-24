@@ -23,12 +23,11 @@ import frc.robot.Robot
 import frc.robot.subsystems.swerve.gyro.GyroIO
 import frc.robot.subsystems.swerve.gyro.GyroIOPigeon2
 import frc.robot.subsystems.swerve.gyro.GyroIOSim
+import frc.robot.subsystems.swerve.module.ModuleIO
 import frc.robot.subsystems.swerve.module.SwerveModule
-import lib.near
 import org.littletonrobotics.junction.Logger
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
-import kotlin.math.max
 
 class Drivebase : SubsystemBase("Drivebase") {
 
@@ -50,10 +49,10 @@ class Drivebase : SubsystemBase("Drivebase") {
     val gyroInputs: GyroIO.GyroInputs = GyroIO.GyroInputs()
 
     private val modules: Array<SwerveModule> = arrayOf(
-        SwerveModule(1, 2, 3, true, true, false, Rotation2d.fromDegrees(49.5703125)),
-        SwerveModule(4, 5, 6, true, true, false, Rotation2d.fromDegrees(214.541015625)),
-        SwerveModule(7, 8, 9, true, true, false, Rotation2d.fromDegrees(316.93359375)),
-        SwerveModule(10, 11, 12, true, true, false, Rotation2d.fromDegrees(90.615234375)),
+        SwerveModule(flConfig),
+        SwerveModule(frConfig),
+        SwerveModule(blConfig),
+        SwerveModule(brConfig),
     )
 
     /**
@@ -258,5 +257,36 @@ class Drivebase : SubsystemBase("Drivebase") {
         )
 
         val maxSpeed = Units.feetToMeters(15.0)
+
+        const val driveRatio: Double = 6.75
+        const val turnRatio: Double = 150.0 / 7.0
+
+        val flConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
+            1, 2, 3,
+            true, true, false,
+            Rotation2d.fromDegrees(49.5703125),
+            driveRatio, turnRatio
+        )
+
+        val frConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
+            4, 5, 6,
+            true, true, false,
+            Rotation2d.fromDegrees(214.541015625),
+            driveRatio, turnRatio
+        )
+
+        val blConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
+            7, 8, 9,
+            true, true, false,
+            Rotation2d.fromDegrees(316.93359375),
+            driveRatio, turnRatio
+        )
+
+        val brConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
+            10, 11, 12,
+            true, true, false,
+            Rotation2d.fromDegrees(90.615234375),
+            driveRatio, turnRatio
+        )
     }
 }

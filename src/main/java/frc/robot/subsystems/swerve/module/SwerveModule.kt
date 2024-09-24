@@ -80,7 +80,5 @@ class SwerveModule(
 
     companion object {
         const val wheelRadiusInches: Double = 2.0
-        const val driveRatio: Double = 6.75
-        const val turnRatio: Double = 150.0/7.0
     }
 }
