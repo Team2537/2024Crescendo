@@ -27,8 +27,8 @@ class ModuleIONeo(
     private val driveMotor = CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
         inverted = invertDrive
-        encoder.positionConversionFactor = driveRatio
-        encoder.velocityConversionFactor = driveRatio
+        encoder.positionConversionFactor = 1 / driveRatio
+        encoder.velocityConversionFactor = 1 / driveRatio
 
         pidController.p = driveGains.kP
         pidController.i = driveGains.kI
@@ -39,8 +39,8 @@ class ModuleIONeo(
     private val turnMotor = CANSparkMax(turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
         inverted = invertTurn
-        encoder.positionConversionFactor = turnRatio
-        encoder.velocityConversionFactor = turnRatio
+        encoder.positionConversionFactor = 1 / turnRatio
+        encoder.velocityConversionFactor = 1 / turnRatio
 
         pidController.p = turnGains.kP
         pidController.i = turnGains.kI
