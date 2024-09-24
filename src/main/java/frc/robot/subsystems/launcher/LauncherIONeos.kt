@@ -69,19 +69,22 @@ class LauncherIONeos(
     override fun updateInputs(inputs: LauncherIO.LauncherInputs) {
         inputs.hasNote = noteDetector.get()
 
-        inputs.flywheelRelativePosition.mut_replace(topFlywheelsEncoder.position, Rotations)
-        inputs.flywheelVelocity.mut_replace(topFlywheelsEncoder.velocity, RPM)
-        inputs.flywheelAppliedVoltage.mut_replace(topFlywheels.appliedOutput, Volts)
-        inputs.flywheelAppliedCurrent.mut_replace(topFlywheels.outputCurrent, Amps)
+        inputs.topFlywheel.relativePosition.mut_replace(topFlywheelsEncoder.position, Rotations)
+        inputs.topFlywheel.velocity.mut_replace(topFlywheelsEncoder.velocity, RPM)
+        inputs.topFlywheel.appliedVoltage.mut_replace(topFlywheels.appliedOutput, Volts)
+        inputs.topFlywheel.appliedCurrent.mut_replace(topFlywheels.outputCurrent, Amps)
+
+        inputs.bottomFlywheel.relativePosition.mut_replace(bottomFlywheelsEncoder.position, Rotations)
+        inputs.bottomFlywheel.velocity.mut_replace(bottomFlywheelsEncoder.velocity, RPM)
+        inputs.bottomFlywheel.appliedVoltage.mut_replace(bottomFlywheels.appliedOutput, Volts)
+        inputs.bottomFlywheel.appliedCurrent.mut_replace(bottomFlywheels.outputCurrent, Amps)
     }
 
-    /**
-     * Runs the flywheels with the specified voltage.
-     *
-     * @param voltage The voltage to control the flywheel motor(s) with.
-     */
-    override fun setFlywheelVoltage(voltage: Measure<Voltage>) {
+    override fun setTopFlywheelVoltage(voltage: Measure<Voltage>) {
         topFlywheels.setVoltage(voltage into Volts)
+    }
+
+    override fun setBottomFlywheelVoltage(voltage: Measure<Voltage>) {
         bottomFlywheels.setVoltage(voltage into Volts)
     }
 
@@ -98,6 +101,26 @@ class LauncherIONeos(
                 0,
                 topFlywheelsFeedForward.calculate(setpoint)
         )
+        bottomFlywheelsPIDController.setReference(
+                setpoint,
+                CANSparkBase.ControlType.kVelocity,
+                0,
+                bottomFlywheelsFeedForward.calculate(setpoint)
+        )
+    }
+
+    override fun setTopFlywheelVelocity(velocity: Measure<Velocity<Angle>>) {
+        val setpoint = velocity into RPM
+        topFlywheelsPIDController.setReference(
+                setpoint,
+                CANSparkBase.ControlType.kVelocity,
+                0,
+                topFlywheelsFeedForward.calculate(setpoint)
+        )
+    }
+
+    override fun setBottomFlywheelVelocity(velocity: Measure<Velocity<Angle>>) {
+        val setpoint = velocity into RPM
         bottomFlywheelsPIDController.setReference(
                 setpoint,
                 CANSparkBase.ControlType.kVelocity,
