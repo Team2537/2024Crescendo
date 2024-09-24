@@ -9,13 +9,7 @@ import lib.ControllerGains
 import kotlin.math.cos
 
 class SwerveModule(
-    private val driveID: Int,
-    private val turnID: Int,
-    private val absoluteEncoderID: Int,
-    private val invertDrive: Boolean,
-    private val invertTurn: Boolean,
-    private val invertAbsoluteEncoder: Boolean,
-    private val absoluteOffset: Rotation2d,
+    private val configs: ModuleIO.ModuleConstants,
 ) {
     private val io: ModuleIO
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
@@ -41,15 +35,7 @@ class SwerveModule(
     init {
         io = when (Constants.RobotConstants.mode) {
             Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
-                driveID,
-                turnID,
-                absoluteEncoderID,
-                invertDrive,
-                invertTurn,
-                invertAbsoluteEncoder,
-                absoluteOffset,
-                driveRatio,
-                turnRatio,
+                configs,
                 ControllerGains(kP = 0.0),
                 ControllerGains(kP = 1.0)
             )
