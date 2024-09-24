@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve.module
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.math.util.Units
 import frc.robot.Constants
 import lib.ControllerGains
@@ -39,7 +40,12 @@ class SwerveModule(
                 ControllerGains(kP = 0.0),
                 ControllerGains(kP = 1.0)
             )
-            Constants.RobotConstants.Mode.SIM -> object : ModuleIO {}
+            Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
+                configs,
+                DCMotor.getNEO(1),
+                ControllerGains(),
+                ControllerGains(kP = 25.0)
+            )
             Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
         }
 
