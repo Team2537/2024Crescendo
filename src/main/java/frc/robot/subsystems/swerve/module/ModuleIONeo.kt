@@ -11,24 +11,16 @@ import edu.wpi.first.math.util.Units
 import lib.ControllerGains
 
 class ModuleIONeo(
-    private val driveID: Int,
-    private val turnID: Int,
-    private val absoluteEncoderID: Int,
-    private val invertDrive: Boolean,
-    private val invertTurn: Boolean,
-    private val invertAbsoluteEncoder: Boolean,
-    private val absoluteOffset: Rotation2d,
-    private val driveRatio: Double,
-    private val turnRatio: Double,
+    private val configs: ModuleIO.ModuleConstants,
     private val driveGains: ControllerGains,
     private val turnGains: ControllerGains,
 ) : ModuleIO {
 
-    private val driveMotor = CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless).apply {
+    private val driveMotor = CANSparkMax(configs.driveID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
-        inverted = invertDrive
-        encoder.positionConversionFactor = 1 / driveRatio
-        encoder.velocityConversionFactor = 1 / driveRatio
+        inverted = configs.invertDrive
+        encoder.positionConversionFactor = 1 / configs.driveRatio
+        encoder.velocityConversionFactor = 1 / configs.driveRatio
 
         pidController.p = driveGains.kP
         pidController.i = driveGains.kI
@@ -36,11 +28,11 @@ class ModuleIONeo(
         pidController.ff = driveGains.kV
     }
 
-    private val turnMotor = CANSparkMax(turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
+    private val turnMotor = CANSparkMax(configs.turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
-        inverted = invertTurn
-        encoder.positionConversionFactor = 1 / turnRatio
-        encoder.velocityConversionFactor = 1 / turnRatio
+        inverted = configs.invertTurn
+        encoder.positionConversionFactor = 1 / configs.turnRatio
+        encoder.velocityConversionFactor = 1 / configs.turnRatio
 
         pidController.p = turnGains.kP
         pidController.i = turnGains.kI
@@ -51,9 +43,9 @@ class ModuleIONeo(
         pidController.positionPIDWrappingMinInput = -0.5
     }
 
-    private val absoluteEncoder: CANcoder = CANcoder(absoluteEncoderID).apply {
+    private val absoluteEncoder: CANcoder = CANcoder(configs.absoluteEncoderID).apply {
         val config = CANcoderConfiguration()
-        config.MagnetSensor.MagnetOffset = absoluteOffset.rotations
+        config.MagnetSensor.MagnetOffset = configs.absoluteOffset.rotations
         configurator.apply(config)
     }
     private val encoderPositionSignal: StatusSignal<Double> = absoluteEncoder.position.clone()
