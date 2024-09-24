@@ -62,7 +62,6 @@ class LauncherIONeos(
 
     private val noteDetector = DigitalInput(noteDetectorID)
 
-
     /**
      * Updates the given inputs with data from this IO layer
      */
@@ -78,6 +77,11 @@ class LauncherIONeos(
         inputs.bottomFlywheel.velocity.mut_replace(bottomFlywheelsEncoder.velocity, RPM)
         inputs.bottomFlywheel.appliedVoltage.mut_replace(bottomFlywheels.appliedOutput, Volts)
         inputs.bottomFlywheel.appliedCurrent.mut_replace(bottomFlywheels.outputCurrent, Amps)
+
+        inputs.rollerRelativePosition.mut_replace(rollerEncoder.position, Rotations)
+        inputs.rollerVelocity.mut_replace(rollerEncoder.velocity, RPM)
+        inputs.rollerAppliedVoltage.mut_replace(roller.appliedOutput, Volts)
+        inputs.rollerAppliedCurrent.mut_replace(roller.outputCurrent, Amps)
     }
 
     override fun setTopFlywheelVoltage(voltage: Measure<Voltage>) {
@@ -168,30 +172,24 @@ class LauncherIONeos(
         bottomFlywheels.stopMotor()
     }
 
-    /**
-     * Configures the PID controller for the flywheel motor(s)
-     *
-     * @param p The proportional gain
-     * @param i The integral gain
-     * @param d The derivative gain
-     */
-    override fun setFlywheelPID(p: Double, i: Double, d: Double) {
+    override fun setTopFlywheelPID(p: Double, i: Double, d: Double) {
         topFlywheelsPIDController.p = p
-        topFlywheelsPIDController.i = p
-        topFlywheelsPIDController.d = p
+        topFlywheelsPIDController.i = i
+        topFlywheelsPIDController.d = d
     }
 
-    /**
-     * Configures the feed forward for the flywheel motor(s)
-     *
-     * @param s The static gain.
-     * @param v The velocity gain.
-     * @param a The acceleration gain.
-     */
-    override fun setFlywheelFeedForward(s: Double, v: Double, a: Double) {
+    override fun setBottomFlywheelPID(p: Double, i: Double, d: Double) {
+        bottomFlywheelsPIDController.p = p
+        bottomFlywheelsPIDController.i = i
+        bottomFlywheelsPIDController.d = d
+    }
+
+    override fun setTopFlywheelFeedForward(s: Double, v: Double, a: Double) {
         topFlywheelsFeedForward = SimpleMotorFeedforward(s, v, a)
-        // I don't care about separating the FF...yet
-        bottomFlywheelsFeedForward = topFlywheelsFeedForward
+    }
+
+    override fun setBottomFlywheelFeedForward(s: Double, v: Double, a: Double) {
+        bottomFlywheelsFeedForward = SimpleMotorFeedforward(s, v, a)
     }
 
     /**
@@ -217,5 +215,4 @@ class LauncherIONeos(
     override fun setRollerFeedForward(s: Double, v: Double, a: Double) {
         rollerFeedForward = SimpleMotorFeedforward(s, v, a)
     }
-
 }

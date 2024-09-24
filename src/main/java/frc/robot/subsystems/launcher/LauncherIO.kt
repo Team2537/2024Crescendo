@@ -211,13 +211,12 @@ interface LauncherIO {
      */
     fun stopRoller() {}
 
+    // Stop probably shouldn't be separated
     /**
      * Stops the flywheels
      */
     fun stopFlywheels() {}
-
-
-    // TODO separate the rest of these in the morning
+    
     /**
      * Configures the PID controller for the flywheel motor(s)
      *
@@ -225,7 +224,28 @@ interface LauncherIO {
      * @param i The integral gain
      * @param d The derivative gain
      */
-    fun setFlywheelPID(p: Double, i: Double, d: Double) {}
+    fun setFlywheelPID(p: Double, i: Double, d: Double) {
+        setTopFlywheelPID(p, i, d)
+        setBottomFlywheelPID(p, i, d)
+    }
+
+    /**
+     * Configures the PID controller for the top flywheel.
+     *
+     * @param p The proportional gain
+     * @param i The integral gain
+     * @param d The derivative gain
+     */
+    fun setTopFlywheelPID(p: Double, i: Double, d: Double) {}
+
+    /**
+     * Configures the PID controller for the bottom flywheel.
+     *
+     * @param p The proportional gain
+     * @param i The integral gain
+     * @param d The derivative gain
+     */
+    fun setBottomFlywheelPID(p: Double, i: Double, d: Double) {}
 
     /**
      * Configures the feed forward for the flywheel motor(s)
@@ -234,7 +254,28 @@ interface LauncherIO {
      * @param v The velocity gain.
      * @param a The acceleration gain.
      */
-    fun setFlywheelFeedForward(s: Double, v: Double, a: Double) {}
+    fun setFlywheelFeedForward(s: Double, v: Double, a: Double) {
+        setTopFlywheelFeedForward(s, v, a)
+        setBottomFlywheelFeedForward(s, v, a)
+    }
+
+    /**
+     * Configures the feed forward for the top flywheel.
+     *
+     * @param s The static gain.
+     * @param v The velocity gain.
+     * @param a The acceleration gain.
+     */
+    fun setTopFlywheelFeedForward(s: Double, v: Double, a: Double) {}
+
+    /**
+     * Configures the feed forward for the bottom flywheel.
+     *
+     * @param s The static gain.
+     * @param v The velocity gain.
+     * @param a The acceleration gain.
+     */
+    fun setBottomFlywheelFeedForward(s: Double, v: Double, a: Double) {}
 
     /**
      * Configures the PID controller for the roller motor(s)
