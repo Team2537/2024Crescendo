@@ -37,7 +37,7 @@ class ModuleIOSim(
     private val driveFeedback = PIDController(0.0, 0.0, 0.0, 0.02)
 
     /** PID controller for turn motor position control (crank that shiz) */
-    private val turnFeedback = PIDController(25.0, 0.0, 0.0, 0.02)
+    private val turnFeedback = PIDController(5.0, 0.0, 0.0, 0.02)
 
     /** Auto-generated kV for sim */
     private val driveKv = 12.0 / (4.0 / Units.inchesToMeters(2.0))
