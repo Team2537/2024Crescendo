@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
-import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.PrintCommand
@@ -25,9 +25,11 @@ import frc.robot.subsystems.swerve.gyro.GyroIOPigeon2
 import frc.robot.subsystems.swerve.gyro.GyroIOSim
 import frc.robot.subsystems.swerve.module.ModuleIO
 import frc.robot.subsystems.swerve.module.SwerveModule
+import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
+import edu.wpi.first.math.util.Units as Conversions
 
 class Drivebase : SubsystemBase("Drivebase") {
 
@@ -172,15 +174,15 @@ class Drivebase : SubsystemBase("Drivebase") {
         return this.run {
             val speeds = if (isFieldOriented.asBoolean) {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    forwards.asDouble * maxSpeed,
-                    strafe.asDouble * maxSpeed,
+                    forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
+                    strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
                     rotation.asDouble * (Math.PI),
                     gyroInputs.yaw.plus(driverOrientation),
                 )
             } else {
                 ChassisSpeeds(
-                    forwards.asDouble * maxSpeed,
-                    strafe.asDouble * maxSpeed,
+                    forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
+                    strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
                     rotation.asDouble * (Math.PI),
                 )
             }
@@ -250,13 +252,13 @@ class Drivebase : SubsystemBase("Drivebase") {
         private val robotToCam: Transform3d = Transform3d(
             Translation3d(
                 0.339736,
-                Units.inchesToMeters(0.0),
+                Conversions.inchesToMeters(0.0),
                 0.130902,
             ),
-            Rotation3d(0.0, Units.degreesToRadians(-20.0), 0.0),
+            Rotation3d(0.0, Conversions.degreesToRadians(-20.0), 0.0),
         )
 
-        val maxSpeed = Units.feetToMeters(15.0)
+        val maxSpeed = Units.FeetPerSecond.of(15.1)
 
         const val driveRatio: Double = 6.75
         const val turnRatio: Double = 150.0 / 7.0
