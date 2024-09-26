@@ -26,6 +26,9 @@ class ModuleIONeo(
         pidController.i = driveGains.kI
         pidController.d = driveGains.kD
         pidController.ff = driveGains.kV
+
+        setSmartCurrentLimit(40)
+        enableVoltageCompensation(12.0)
     }
 
     private val turnMotor = CANSparkMax(configs.turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
@@ -41,6 +44,9 @@ class ModuleIONeo(
         pidController.setPositionPIDWrappingEnabled(true)
         pidController.positionPIDWrappingMaxInput = 0.5
         pidController.positionPIDWrappingMinInput = -0.5
+
+        setSmartCurrentLimit(30)
+        enableVoltageCompensation(12.0)
     }
 
     private val absoluteEncoder: CANcoder = CANcoder(configs.absoluteEncoderID).apply {
