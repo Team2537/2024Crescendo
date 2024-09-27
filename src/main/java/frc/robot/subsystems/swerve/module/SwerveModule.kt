@@ -10,7 +10,8 @@ import lib.ControllerGains
 import kotlin.math.cos
 
 class SwerveModule(
-    private val configs: ModuleIO.ModuleConstants,
+    private val
+    configs: ModuleIO.ModuleConstants,
 ) {
     private val io: ModuleIO
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
@@ -37,15 +38,17 @@ class SwerveModule(
         io = when (Constants.RobotConstants.mode) {
             Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
                 configs,
-                ControllerGains(kP = 0.0),
-                ControllerGains(kP = 1.0)
+                ControllerGains(kV = 0.001684),
+                ControllerGains(kP = 5.0, kD = 0.1)
             )
+
             Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
                 configs,
                 DCMotor.getNEO(1),
                 ControllerGains(),
                 ControllerGains(kP = 25.0)
             )
+
             Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
         }
 

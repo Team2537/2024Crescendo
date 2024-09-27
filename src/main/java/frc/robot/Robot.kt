@@ -29,20 +29,20 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  */
 object Robot : LoggedRobot() {
 
-    val climb = Climb()
-    val pivot = Pivot()
+//    val climb = Climb()
+//    val pivot = Pivot()
     val drivebase = Drivebase()
-    val intake = Intake()
-    val launcher = Launcher()
+//    val intake = Intake()
+//    val launcher = Launcher()
 
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
         drivebase.defaultCommand = drivebase.driveCommand(
-            ::getLeftY,
-            ::getLeftX,
-            ::getRightX,
-            leftBumper().negate()
+            { -leftY },
+            { -leftX },
+            { -rightX },
+            leftBumper()
         )
     }
 
