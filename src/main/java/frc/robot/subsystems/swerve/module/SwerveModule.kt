@@ -56,14 +56,14 @@ class SwerveModule(
     }
 
     fun apply(state: SwerveModuleState) {
-        val optimized = SwerveModuleState.optimize(state, inputs.turnPosition)
+        val optimized = SwerveModuleState.optimize(state, inputs.absoluteTurnPosition)
 
 //        println(optimized.speedMetersPerSecond)
 
         var speed = optimized.speedMetersPerSecond / Units.inchesToMeters(wheelRadiusInches)
 
         val steerError: Rotation2d = optimized.angle.minus(inputs.absoluteTurnPosition)
-        speed *= cos(steerError.radians)
+        speed *= steerError.cos
 
 //        println("RadPerSec: $speed")
 

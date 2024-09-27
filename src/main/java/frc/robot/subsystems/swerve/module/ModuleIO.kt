@@ -23,6 +23,7 @@ interface ModuleIO {
     class ModuleInputs : LoggableInputs {
         var driveMotorConnected: Boolean = false
         var turnMotorConnected: Boolean = false
+        var absoluteEncoderConnected: Boolean = false
 
         var drivePositionRads: Double = 0.0
         var driveVelocityRadPerSec: Double = 0.0
@@ -43,6 +44,7 @@ interface ModuleIO {
         override fun toLog(table: LogTable?) {
             table?.put("driveMotorConnected", driveMotorConnected)
             table?.put("turnMotorConnected", turnMotorConnected)
+            table?.put("absoluteEncoderConnected", absoluteEncoderConnected)
 
             table?.put("drivePositionRads", drivePositionRads)
             table?.put("driveVelocityRadPerSec", driveVelocityRadPerSec)
@@ -64,6 +66,7 @@ interface ModuleIO {
         override fun fromLog(table: LogTable?) {
             table?.get("driveMotorConnected")?.let { driveMotorConnected = it.boolean }
             table?.get("turnMotorConnected")?.let { turnMotorConnected = it.boolean }
+            table?.get("absoluteEncoderConnected")?.let { absoluteEncoderConnected = it.boolean }
 
             table?.get("drivePositionRads")?.let { drivePositionRads = it.double }
             table?.get("driveVelocityRadPerSec")?.let { driveVelocityRadPerSec = it.double }
