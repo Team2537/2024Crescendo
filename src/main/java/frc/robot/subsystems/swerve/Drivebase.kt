@@ -13,11 +13,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction
 import frc.robot.Constants
 import frc.robot.Robot
 import frc.robot.subsystems.swerve.gyro.GyroIO
@@ -112,6 +116,22 @@ class Drivebase : SubsystemBase("Drivebase") {
 
     val pose: Pose2d
         get() = poseEstimator.estimatedPosition
+
+    private val driveSysID: SysIdRoutine = SysIdRoutine(
+        SysIdRoutine.Config(),
+        SysIdRoutine.Mechanism(
+            { volts: Measure<Voltage> ->
+                modules.forEach {
+                    it.pointAt(Rotation2d())
+                    it.applyVoltage(volts.into(Units.Volts))
+                }
+            },
+            null,
+            this
+        )
+    )
+
+    private val routineToUse = driveSysID
 
     /**
      * Method for getting the module positions from the module constants
@@ -246,6 +266,14 @@ class Drivebase : SubsystemBase("Drivebase") {
 
     fun setVisionSTDDevs(xMeters: Double, yMeters: Double, rotRads: Double) {
         poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xMeters, yMeters, rotRads))
+    }
+
+    fun quasistaticSysID(direction: Direction): Command {
+        return routineToUse.quasistatic(direction)
+    }
+
+    fun dynamicSysID(direction: Direction): Command {
+        return routineToUse.dynamic(direction)
     }
 
     companion object {
