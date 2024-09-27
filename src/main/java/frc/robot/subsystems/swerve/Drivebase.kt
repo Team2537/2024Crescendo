@@ -176,14 +176,14 @@ class Drivebase : SubsystemBase("Drivebase") {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
                     strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    rotation.asDouble * (Math.PI),
+                    rotation.asDouble * 1.5 * (Math.PI),
                     gyroInputs.yaw.plus(driverOrientation),
                 )
             } else {
                 ChassisSpeeds(
                     forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
                     strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    rotation.asDouble * (Math.PI),
+                    rotation.asDouble * 1.5 * (Math.PI),
                 )
             }
 
