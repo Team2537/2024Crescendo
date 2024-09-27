@@ -265,30 +265,31 @@ class Drivebase : SubsystemBase("Drivebase") {
 
         val flConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             1, 2, 3,
-            true, true, false,
-            Rotation2d.fromDegrees(49.5703125),
-            driveRatio, turnRatio
+            false, true, false,
+            Rotation2d.fromRotations(0.371),
+            turnRatio, driveRatio
         )
 
         val frConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             4, 5, 6,
             true, true, false,
-            Rotation2d.fromDegrees(214.541015625),
-            driveRatio, turnRatio
+            Rotation2d.fromRotations(0.39),
+            turnRatio, driveRatio
         )
 
         val blConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             7, 8, 9,
-            true, true, false,
-            Rotation2d.fromDegrees(316.93359375),
-            driveRatio, turnRatio
+            false, true, false,
+            Rotation2d.fromRotations(-0.386),
+            turnRatio, driveRatio
         )
+
 
         val brConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             10, 11, 12,
             true, true, false,
-            Rotation2d.fromDegrees(90.615234375),
-            driveRatio, turnRatio
+            Rotation2d.fromRotations(-0.247),
+            turnRatio, driveRatio
         )
     }
 }

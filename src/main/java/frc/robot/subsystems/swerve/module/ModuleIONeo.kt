@@ -3,9 +3,11 @@ package frc.robot.subsystems.swerve.module
 import com.ctre.phoenix6.StatusSignal
 import com.ctre.phoenix6.configs.CANcoderConfiguration
 import com.ctre.phoenix6.hardware.CANcoder
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
+import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.util.Units
 import lib.ControllerGains
@@ -25,11 +27,20 @@ class ModuleIONeo(
         pidController.p = driveGains.kP
         pidController.i = driveGains.kI
         pidController.d = driveGains.kD
-        pidController.ff = driveGains.kV
 
         setSmartCurrentLimit(40)
         enableVoltageCompensation(12.0)
     }
+
+
+    private val absoluteEncoder: CANcoder = CANcoder(configs.absoluteEncoderID).apply {
+        val config = CANcoderConfiguration()
+        config.MagnetSensor.MagnetOffset = configs.absoluteOffset.rotations
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf
+        configurator.apply(config)
+    }
+
+    private val encoderPositionSignal: StatusSignal<Double> = absoluteEncoder.absolutePosition.clone()
 
     private val turnMotor = CANSparkMax(configs.turnID, CANSparkLowLevel.MotorType.kBrushless).apply {
         idleMode = CANSparkBase.IdleMode.kBrake
@@ -45,18 +56,14 @@ class ModuleIONeo(
         pidController.positionPIDWrappingMaxInput = 0.5
         pidController.positionPIDWrappingMinInput = -0.5
 
+        encoder.setPosition(encoderPositionSignal.valueAsDouble)
+
         setSmartCurrentLimit(30)
         enableVoltageCompensation(12.0)
     }
 
-    private val absoluteEncoder: CANcoder = CANcoder(configs.absoluteEncoderID).apply {
-        val config = CANcoderConfiguration()
-        config.MagnetSensor.MagnetOffset = configs.absoluteOffset.rotations
-        configurator.apply(config)
-    }
-    private val encoderPositionSignal: StatusSignal<Double> = absoluteEncoder.position.clone()
 
-    private var driveKs = driveGains.kS
+    private val driveFF: SimpleMotorFeedforward = SimpleMotorFeedforward(driveGains.kS, driveGains.kV)
     private var turnKs = turnGains.kS
 
     /**
@@ -74,8 +81,8 @@ class ModuleIONeo(
         inputs.driveStatorCurrent = driveMotor.outputCurrent
         inputs.driveSupplyCurrent = driveMotor.outputCurrent
 
+        inputs.absoluteTurnPosition = Rotation2d.fromRotations(encoderPositionSignal.valueAsDouble)
         inputs.turnPosition = Rotation2d.fromRotations(turnMotor.encoder.position)
-        inputs.absoluteTurnPosition = Rotation2d.fromRotations(encoderPositionSignal.value)
         inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnMotor.encoder.velocity)
         inputs.turnSupplyVolts = turnMotor.appliedOutput * turnMotor.busVoltage
         inputs.turnMotorVolts = turnMotor.appliedOutput * turnMotor.busVoltage
@@ -127,7 +134,7 @@ class ModuleIONeo(
             velocityRPM,
             CANSparkBase.ControlType.kVelocity,
             0,
-            driveKs,
+            driveFF.calculate(velocityRPM),
         )
     }
 
@@ -165,27 +172,6 @@ class ModuleIONeo(
                 turnMotor.pidController.p = p
                 turnMotor.pidController.i = i
                 turnMotor.pidController.d = d
-            }
-        }
-    }
-
-    /**
-     * Set the feedforward constants for a motor
-     *
-     * @param kV The velocity feedforward constant
-     * @param kA The acceleration feedforward constant
-     * @param kS The static feedforward constant
-     * @param motor The motor to set the constants for
-     */
-    override fun setFF(kV: Double, kA: Double, kS: Double, motor: ModuleIO.ModuleMotor) {
-        when (motor) {
-            ModuleIO.ModuleMotor.DRIVE -> {
-                driveMotor.pidController.ff = kV
-                driveKs = kS
-            }
-            ModuleIO.ModuleMotor.TURN -> {
-                turnMotor.pidController.ff = kV
-                turnKs = kS
             }
         }
     }
