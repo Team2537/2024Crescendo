@@ -1,9 +1,11 @@
 package frc.robot.subsystems.swerve.module
 
+import com.ctre.phoenix6.BaseStatusSignal
 import com.ctre.phoenix6.StatusSignal
 import com.ctre.phoenix6.configs.CANcoderConfiguration
 import com.ctre.phoenix6.hardware.CANcoder
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue
+import com.fasterxml.jackson.databind.ser.Serializers.Base
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
@@ -73,6 +75,7 @@ class ModuleIONeo(
     override fun updateInputs(inputs: ModuleIO.ModuleInputs) {
         inputs.driveMotorConnected = true
         inputs.turnMotorConnected = true
+        inputs.absoluteEncoderConnected = BaseStatusSignal.refreshAll(encoderPositionSignal).isOK
 
         inputs.drivePositionRads = Units.rotationsToRadians(driveMotor.encoder.position)
         inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(driveMotor.encoder.velocity)
