@@ -72,6 +72,7 @@ class ModuleIOSim(
 
         inputs.driveMotorConnected = true
         inputs.turnMotorConnected = true
+        inputs.absoluteEncoderConnected = true
 
         inputs.drivePositionRads = driveMotorSim.angularPositionRad
         inputs.driveVelocityRadPerSec = driveMotorSim.angularVelocityRadPerSec
