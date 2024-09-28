@@ -12,8 +12,8 @@ import lib.ControllerGains
 class ModuleIOSim(
     private val configs: ModuleIO.ModuleConstants,
     private val motor: DCMotor,
-    private val turnGains: ControllerGains,
     private val driveGains: ControllerGains,
+    private val turnGains: ControllerGains,
 ) : ModuleIO {
     /**
      * Motor sim for the drive motor
