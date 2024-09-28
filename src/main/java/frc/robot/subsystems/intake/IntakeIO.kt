@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intake
 
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Voltage
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -37,6 +39,6 @@ interface IntakeIO {
         }
     }
     fun updateInputs(inputs: IntakeInputs) {}
-    fun applyVoltage(voltage: Double) {}
+    fun applyVoltage(voltage: Measure<Voltage>) {}
     fun stop() {}
 }

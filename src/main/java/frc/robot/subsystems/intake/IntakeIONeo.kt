@@ -4,7 +4,11 @@ import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Voltage
+import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj.DigitalInput
+import lib.math.units.into
 import kotlin.math.PI
 
 class IntakeIONeo(
@@ -32,8 +36,8 @@ class IntakeIONeo(
         inputs.intakeStatorCurrent = motor.outputCurrent
     }
 
-    override fun applyVoltage(voltage: Double) {
-        motor.setVoltage(voltage)
+    override fun applyVoltage(voltage: Measure<Voltage>) {
+        motor.setVoltage(voltage into Volts)
     }
 
     override fun stop() {
