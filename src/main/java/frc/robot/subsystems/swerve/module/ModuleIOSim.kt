@@ -32,10 +32,10 @@ class ModuleIOSim(
         DCMotorSim(motor, configs.turnRatio, 0.004)
 
     /** PID controller for drive motor velocity control */
-    private val driveFeedback = PIDController(0.0, 0.0, 0.0, 0.02)
+    private val driveFeedback = PIDController(driveGains.kP, driveGains.kI, driveGains.kD)
 
     /** PID controller for turn motor position control (crank that shiz) */
-    private val turnFeedback = PIDController(5.0, 0.0, 0.0, 0.02)
+    private val turnFeedback = PIDController(turnGains.kP, turnGains.kI, turnGains.kD)
 
     /** Auto-generated kV for sim */
     private val driveKv = 12.0 / 4.0
