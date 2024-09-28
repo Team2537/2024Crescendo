@@ -5,7 +5,6 @@ import com.ctre.phoenix6.StatusSignal
 import com.ctre.phoenix6.configs.CANcoderConfiguration
 import com.ctre.phoenix6.hardware.CANcoder
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue
-import com.fasterxml.jackson.databind.ser.Serializers.Base
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
@@ -77,8 +76,10 @@ class ModuleIONeo(
         inputs.turnMotorConnected = true
         inputs.absoluteEncoderConnected = BaseStatusSignal.refreshAll(encoderPositionSignal).isOK
 
-        inputs.drivePositionRads = Units.rotationsToRadians(driveMotor.encoder.position)
-        inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(driveMotor.encoder.velocity)
+        inputs.drivePositionMeters =
+            Units.rotationsToRadians(driveMotor.encoder.position) * configs.wheelRadiusInches
+        inputs.drivePositionMetersPerSec =
+            Units.rotationsPerMinuteToRadiansPerSecond(driveMotor.encoder.velocity) * configs.wheelRadiusInches
         inputs.driveSupplyVolts = driveMotor.appliedOutput * driveMotor.busVoltage
         inputs.driveMotorVolts = driveMotor.appliedOutput * driveMotor.busVoltage
         inputs.driveStatorCurrent = driveMotor.outputCurrent
@@ -86,7 +87,7 @@ class ModuleIONeo(
 
         inputs.absoluteTurnPosition = Rotation2d.fromRotations(encoderPositionSignal.valueAsDouble)
         inputs.turnPosition = Rotation2d.fromRotations(turnMotor.encoder.position)
-        inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnMotor.encoder.velocity)
+        inputs.turnVelocityRotationsPerSec = turnMotor.encoder.velocity / 60.0
         inputs.turnSupplyVolts = turnMotor.appliedOutput * turnMotor.busVoltage
         inputs.turnMotorVolts = turnMotor.appliedOutput * turnMotor.busVoltage
         inputs.turnStatorCurrent = turnMotor.outputCurrent
@@ -114,12 +115,11 @@ class ModuleIONeo(
     /**
      * Set the position setpoint for the turn motor
      *
-     * @param positionRads The position to set the motor to in radians
+     * @param position The position to set the motor to in radians
      */
-    override fun runTurnPositionSetpoint(positionRads: Double) {
-        val positionRotations = Units.radiansToRotations(positionRads)
+    override fun runTurnPositionSetpoint(position: Rotation2d) {
         turnMotor.pidController.setReference(
-            positionRotations,
+            position.rotations,
             CANSparkBase.ControlType.kPosition,
             0,
             turnKs,
@@ -129,15 +129,18 @@ class ModuleIONeo(
     /**
      * Set the velocity setpoint for the drive motor
      *
-     * @param velocityRadPerSec The velocity to set the motor to in radians per second
+     * @param velocityMetersPerSecond The velocity to set the motor to in radians per second
      */
-    override fun runDriveVelocitySetpoint(velocityRadPerSec: Double) {
-        val velocityRPM = Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec)
+    override fun runDriveVelocitySetpoint(velocityMetersPerSecond: Double) {
+        // Convert m/s to RPM
+        val velocityRPM = (velocityMetersPerSecond * 60) / (2 * Math.PI * configs.wheelRadiusInches)
+
+        // Set the reference for the motor's PID controller
         driveMotor.pidController.setReference(
             velocityRPM,
             CANSparkBase.ControlType.kVelocity,
             0,
-            driveFF.calculate(velocityRPM),
+            driveFF.calculate(velocityRPM)
         )
     }
 

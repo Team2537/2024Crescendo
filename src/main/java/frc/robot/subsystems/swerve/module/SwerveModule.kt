@@ -7,7 +7,6 @@ import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.math.util.Units
 import frc.robot.Constants
 import lib.ControllerGains
-import kotlin.math.cos
 
 class SwerveModule(
     private val
@@ -17,13 +16,10 @@ class SwerveModule(
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
 
     val positionMeters: Double
-        get() = inputs.drivePositionRads * Units.inchesToMeters(wheelRadiusInches)
+        get() = inputs.drivePositionMeters
 
     val velocityMetersPerSecond: Double
-        get() = inputs.driveVelocityRadPerSec * Units.inchesToMeters(wheelRadiusInches)
-
-    val positionRads: Double
-        get() = inputs.drivePositionRads
+        get() = inputs.drivePositionMetersPerSec
 
     val angle: Rotation2d
         get() = inputs.absoluteTurnPosition
@@ -60,7 +56,7 @@ class SwerveModule(
 
 //        println(optimized.speedMetersPerSecond)
 
-        var speed = optimized.speedMetersPerSecond / Units.inchesToMeters(wheelRadiusInches)
+        var speed = optimized.speedMetersPerSecond
 
         val steerError: Rotation2d = optimized.angle.minus(inputs.absoluteTurnPosition)
         speed *= steerError.cos
@@ -68,11 +64,11 @@ class SwerveModule(
 //        println("RadPerSec: $speed")
 
         io.runDriveVelocitySetpoint(speed)
-        io.runTurnPositionSetpoint(optimized.angle.radians)
+        io.runTurnPositionSetpoint(optimized.angle)
     }
 
     fun pointAt(angle: Rotation2d) {
-        io.runTurnPositionSetpoint(angle.radians)
+        io.runTurnPositionSetpoint(angle)
     }
 
     fun applyVoltage(voltage: Double) {
@@ -85,9 +81,5 @@ class SwerveModule(
 
     fun stop() {
         io.stop()
-    }
-
-    companion object {
-        const val wheelRadiusInches: Double = 2.0
     }
 }

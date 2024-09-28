@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve.module
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
@@ -8,7 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.simulation.DCMotorSim
-import frc.robot.subsystems.swerve.module.ModuleIO
 import lib.ControllerGains
 
 class ModuleIOSim(
@@ -40,7 +38,7 @@ class ModuleIOSim(
     private val turnFeedback = PIDController(5.0, 0.0, 0.0, 0.02)
 
     /** Auto-generated kV for sim */
-    private val driveKv = 12.0 / (4.0 / Units.inchesToMeters(2.0))
+    private val driveKv = 12.0 / 4.0
 
     // kV is just the slope of a linear regression on the Points 0,0 and 77.17 (Max speed in radians), 12 (Max voltage)
     /**
@@ -51,14 +49,15 @@ class ModuleIOSim(
     /**
      * Feedforward object for turn motor position control
      */
-    private val turnFeedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(turnGains.kS, turnGains.kV, turnGains.kA)
+    private val turnFeedforward: SimpleMotorFeedforward =
+        SimpleMotorFeedforward(turnGains.kS, turnGains.kV, turnGains.kA)
 
     private var driveAppliedVolts: Double = 0.0
     private var steerAppliedVolts: Double = 0.0
     private val turnAbsoluteInitPosition: Rotation2d = configs.absoluteOffset
 
     init {
-        turnFeedback.enableContinuousInput(-Math.PI, Math.PI)
+        turnFeedback.enableContinuousInput(-0.5, 0.5)
         println(driveKv)
     }
 
@@ -74,8 +73,9 @@ class ModuleIOSim(
         inputs.turnMotorConnected = true
         inputs.absoluteEncoderConnected = true
 
-        inputs.drivePositionRads = driveMotorSim.angularPositionRad
-        inputs.driveVelocityRadPerSec = driveMotorSim.angularVelocityRadPerSec
+        inputs.drivePositionMeters = Units.inchesToMeters(configs.wheelRadiusInches) * driveMotorSim.angularPositionRad
+        inputs.drivePositionMetersPerSec =
+            Units.inchesToMeters(configs.wheelRadiusInches) * driveMotorSim.angularVelocityRadPerSec
         inputs.driveSupplyVolts = driveAppliedVolts
         inputs.driveMotorVolts = driveAppliedVolts
         inputs.driveStatorCurrent = driveMotorSim.currentDrawAmps
@@ -83,7 +83,7 @@ class ModuleIOSim(
 
         inputs.turnPosition = Rotation2d.fromRadians(turnMotorSim.angularPositionRad)
         inputs.absoluteTurnPosition = Rotation2d.fromRadians(turnMotorSim.angularPositionRad)
-        inputs.turnVelocityRadPerSec = turnMotorSim.angularVelocityRadPerSec
+        inputs.turnVelocityRotationsPerSec = Units.radiansToRotations(turnMotorSim.angularVelocityRadPerSec)
         inputs.turnSupplyVolts = steerAppliedVolts
         inputs.turnMotorVolts = steerAppliedVolts
         inputs.turnStatorCurrent = turnMotorSim.currentDrawAmps
@@ -113,22 +113,27 @@ class ModuleIOSim(
     /**
      * Set the position setpoint for the turn motor
      *
-     * @param positionRads The position to set the motor to in radians
+     * @param position The position to set the motor to in radians
      */
-    override fun runTurnPositionSetpoint(positionRads: Double) {
+    override fun runTurnPositionSetpoint(position: Rotation2d) {
         runTurnVolts(
-            turnFeedback.calculate(turnMotorSim.angularPositionRad, positionRads) + turnFeedforward.calculate(positionRads),
+            turnFeedback.calculate(turnMotorSim.angularPositionRad, position.rotations) + turnFeedforward.calculate(
+                position.rotations
+            ),
         )
     }
 
     /**
      * Set the velocity setpoint for the drive motor
      *
-     * @param velocityRadPerSec The velocity to set the motor to in radians per second
+     * @param velocityMetersPerSecond The velocity to set the motor to in radians per second
      */
-    override fun runDriveVelocitySetpoint(velocityRadPerSec: Double) {
+    override fun runDriveVelocitySetpoint(velocityMetersPerSecond: Double) {
         runDriveVolts(
-            driveFeedback.calculate(driveMotorSim.angularVelocityRadPerSec, velocityRadPerSec) + driveFeedforward.calculate(velocityRadPerSec),
+            driveFeedback.calculate(
+                driveMotorSim.angularVelocityRadPerSec,
+                velocityMetersPerSecond
+            ) + driveFeedforward.calculate(velocityMetersPerSecond),
         )
     }
 

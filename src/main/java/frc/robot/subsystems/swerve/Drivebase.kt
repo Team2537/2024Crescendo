@@ -291,25 +291,30 @@ class Drivebase : SubsystemBase("Drivebase") {
         const val driveRatio: Double = 6.75
         const val turnRatio: Double = 150.0 / 7.0
 
+        const val wheelRadiusInches: Double = 2.0
+
         val flConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             1, 2, 3,
             false, true, false,
             Rotation2d.fromRotations(0.371),
-            turnRatio, driveRatio
+            turnRatio, driveRatio,
+            wheelRadiusInches
         )
 
         val frConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             4, 5, 6,
             true, true, false,
             Rotation2d.fromRotations(0.39),
-            turnRatio, driveRatio
+            turnRatio, driveRatio,
+            wheelRadiusInches
         )
 
         val blConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             7, 8, 9,
             false, true, false,
             Rotation2d.fromRotations(-0.386),
-            turnRatio, driveRatio
+            turnRatio, driveRatio,
+            wheelRadiusInches
         )
 
 
@@ -317,7 +322,8 @@ class Drivebase : SubsystemBase("Drivebase") {
             10, 11, 12,
             true, true, false,
             Rotation2d.fromRotations(-0.247),
-            turnRatio, driveRatio
+            turnRatio, driveRatio,
+            wheelRadiusInches
         )
     }
 }
