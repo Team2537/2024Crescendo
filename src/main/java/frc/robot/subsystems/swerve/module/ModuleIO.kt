@@ -25,8 +25,8 @@ interface ModuleIO {
         var turnMotorConnected: Boolean = false
         var absoluteEncoderConnected: Boolean = false
 
-        var drivePositionRads: Double = 0.0
-        var driveVelocityRadPerSec: Double = 0.0
+        var drivePositionMeters: Double = 0.0
+        var drivePositionMetersPerSec: Double = 0.0
         var driveSupplyVolts: Double = 0.0
         var driveMotorVolts: Double = 0.0
         var driveStatorCurrent: Double = 0.0
@@ -34,7 +34,7 @@ interface ModuleIO {
 
         var turnPosition: Rotation2d = Rotation2d()
         var absoluteTurnPosition: Rotation2d = Rotation2d()
-        var turnVelocityRadPerSec: Double = 0.0
+        var turnVelocityRotationsPerSec: Double = 0.0
         var turnSupplyVolts: Double = 0.0
         var turnMotorVolts: Double = 0.0
         var turnStatorCurrent: Double = 0.0
@@ -46,8 +46,8 @@ interface ModuleIO {
             table?.put("turnMotorConnected", turnMotorConnected)
             table?.put("absoluteEncoderConnected", absoluteEncoderConnected)
 
-            table?.put("drivePositionRads", drivePositionRads)
-            table?.put("driveVelocityRadPerSec", driveVelocityRadPerSec)
+            table?.put("drivePositionMeters", drivePositionMeters)
+            table?.put("drivePositionMetersPerSec", drivePositionMetersPerSec)
             table?.put("driveSupplyVolts", driveSupplyVolts)
             table?.put("driveMotorVolts", driveMotorVolts)
             table?.put("driveStatorCurrent", driveStatorCurrent)
@@ -55,7 +55,7 @@ interface ModuleIO {
 
             table?.put("turnPosition", Rotation2d.struct, turnPosition)
             table?.put("absoluteTurnPosition", Rotation2d.struct, absoluteTurnPosition)
-            table?.put("turnVelocityRadPerSec", turnVelocityRadPerSec)
+            table?.put("turnVelocityRotationsPerSec", turnVelocityRotationsPerSec)
             table?.put("turnSupplyVolts", turnSupplyVolts)
             table?.put("turnMotorVolts", turnMotorVolts)
             table?.put("turnStatorCurrent", turnStatorCurrent)
@@ -68,8 +68,8 @@ interface ModuleIO {
             table?.get("turnMotorConnected")?.let { turnMotorConnected = it.boolean }
             table?.get("absoluteEncoderConnected")?.let { absoluteEncoderConnected = it.boolean }
 
-            table?.get("drivePositionRads")?.let { drivePositionRads = it.double }
-            table?.get("driveVelocityRadPerSec")?.let { driveVelocityRadPerSec = it.double }
+            table?.get("drivePositionMeters")?.let { drivePositionMeters = it.double }
+            table?.get("drivePositionMetersPerSec")?.let { drivePositionMetersPerSec = it.double }
             table?.get("driveSupplyVolts")?.let { driveSupplyVolts = it.double }
             table?.get("driveMotorVolts")?.let { driveMotorVolts = it.double }
             table?.get("driveStatorCurrent")?.let { driveStatorCurrent = it.double }
@@ -77,7 +77,7 @@ interface ModuleIO {
 
             table?.get("turnPosition", Rotation2d.struct, Rotation2d())?.let { turnPosition = it }
             table?.get("absoluteTurnPosition", Rotation2d.struct, Rotation2d())?.let { absoluteTurnPosition = it }
-            table?.get("turnVelocityRadPerSec")?.let { turnVelocityRadPerSec = it.double }
+            table?.get("turnVelocityRotationsPerSec")?.let { turnVelocityRotationsPerSec = it.double }
             table?.get("turnSupplyVolts")?.let { turnSupplyVolts = it.double }
             table?.get("turnMotorVolts")?.let { turnMotorVolts = it.double }
             table?.get("turnStatorCurrent")?.let { turnStatorCurrent = it.double }
@@ -95,6 +95,7 @@ interface ModuleIO {
         val absoluteOffset: Rotation2d,
         val turnRatio: Double,
         val driveRatio: Double,
+        val wheelRadiusInches: Double,
     )
 
     /**
@@ -120,16 +121,16 @@ interface ModuleIO {
     /**
      * Set the position setpoint for the turn motor
      *
-     * @param positionRads The position to set the motor to in radians
+     * @param position The position to set the motor to in radians
      */
-    fun runTurnPositionSetpoint(positionRads: Double) {}
+    fun runTurnPositionSetpoint(position: Rotation2d) {}
 
     /**
      * Set the velocity setpoint for the drive motor
      *
-     * @param velocityRadPerSec The velocity to set the motor to in radians per second
+     * @param velocityMetersPerSecond The velocity to set the motor to in radians per second
      */
-    fun runDriveVelocitySetpoint(velocityRadPerSec: Double) {}
+    fun runDriveVelocitySetpoint(velocityMetersPerSecond: Double) {}
 
     /**
      * Stop the module
@@ -150,14 +151,4 @@ interface ModuleIO {
      * @param motor The motor to set the constants for
      */
     fun setPID(p: Double, i: Double, d: Double, motor: ModuleMotor) {}
-
-    /**
-     * Set the feedforward constants for a motor
-     *
-     * @param kV The velocity feedforward constant
-     * @param kA The acceleration feedforward constant
-     * @param kS The static feedforward constant
-     * @param motor The motor to set the constants for
-     */
-    fun setFF(kV: Double, kA: Double, kS: Double, motor: ModuleMotor) {}
 }
