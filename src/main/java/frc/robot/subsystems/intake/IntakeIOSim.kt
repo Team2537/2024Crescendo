@@ -2,20 +2,23 @@ package frc.robot.subsystems.intake
 
 import edu.wpi.first.hal.SimBoolean
 import edu.wpi.first.math.system.plant.DCMotor
-import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
+import edu.wpi.first.units.Units.Amps
+import edu.wpi.first.units.Units.Meter
+import edu.wpi.first.units.Units.MetersPerSecond
 import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.simulation.FlywheelSim
 import lib.math.units.into
 
-class IntakeIOSim : IntakeIO {
+class IntakeIOSim(gearing: Double, moi: Double, private val rollerDiameter: Measure<Distance>) : IntakeIO {
     private val intakeSim: FlywheelSim = FlywheelSim(
         DCMotor.getNeo550(1),
-        2.0,
-        0.0000719
+        gearing,
+        moi
     )
 
     private val intakeSensorBool: SimBoolean = SimBoolean(1)
@@ -24,20 +27,21 @@ class IntakeIOSim : IntakeIO {
     private var cachedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
 
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
-        inputs.intakeSensor = intakeSensorBool.get()
-        inputs.exitSensor = exitSensorBool.get()
-        inputs.intakeLinearVelocity = intakeSim.angularVelocityRadPerSec * (Units.inchesToMeters(0.84) / 2)
-        inputs.intakeSupplyVoltage = 12.0
-        inputs.intakeMotorVoltage = cachedVoltage into Volts
-        inputs.intakeStatorCurrent = intakeSim.currentDrawAmps
+        inputs.intakeSensorTriggered = intakeSensorBool.get()
+        inputs.exitSensorTriggered = exitSensorBool.get()
+        inputs.intakeLinearVelocity
+            .mut_replace(intakeSim.angularVelocityRadPerSec * ((rollerDiameter into Meter) / 2), MetersPerSecond) // Convert from rad/s to m/s
+        inputs.intakeSupplyVoltage.mut_replace(RobotController.getBatteryVoltage(), Volts)
+        inputs.intakeMotorVoltage.mut_replace(cachedVoltage)
+        inputs.intakeStatorCurrent.mut_replace(intakeSim.currentDrawAmps, Amps)
     }
 
-    override fun applyVoltage(voltage: Measure<Voltage>) {
+    override fun setVoltage(voltage: Measure<Voltage>) {
         cachedVoltage.mut_replace(voltage)
         intakeSim.setInputVoltage(voltage into Volts)
     }
 
     override fun stop() {
-        applyVoltage(Volts.of(0.0))
+        setVoltage(Volts.of(0.0))
     }
 }

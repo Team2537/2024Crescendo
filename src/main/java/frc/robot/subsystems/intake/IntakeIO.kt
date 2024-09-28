@@ -1,18 +1,23 @@
 package frc.robot.subsystems.intake
 
+import edu.wpi.first.units.Current
+import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
+import edu.wpi.first.units.MutableMeasure
+import edu.wpi.first.units.Units
+import edu.wpi.first.units.Velocity
 import edu.wpi.first.units.Voltage
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface IntakeIO {
     class IntakeInputs : LoggableInputs {
-        var intakeLinearVelocity: Double = 0.0
-        var intakeSupplyVoltage: Double = 0.0
-        var intakeMotorVoltage: Double = 0.0
-        var intakeStatorCurrent: Double = 0.0
-        var exitSensor: Boolean = false
-        var intakeSensor: Boolean = false
+        var intakeLinearVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
+        var intakeSupplyVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+        var intakeMotorVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+        var intakeStatorCurrent: MutableMeasure<Current> = MutableMeasure.zero(Units.Amps)
+        var exitSensorTriggered: Boolean = false
+        var intakeSensorTriggered: Boolean = false
 
         /**
          * Updates a LogTable with the data to log.
@@ -22,8 +27,8 @@ interface IntakeIO {
             table.put("intakeSupplyVoltage", intakeSupplyVoltage)
             table.put("intakeMotorVoltage", intakeMotorVoltage)
             table.put("intakeStatorCurrent", intakeStatorCurrent)
-            table.put("exitSensor", exitSensor)
-            table.put("intakeSensor", intakeSensor)
+            table.put("exitSensorTriggered", exitSensorTriggered)
+            table.put("intakeSensorTriggered", intakeSensorTriggered)
         }
 
         /**
@@ -34,11 +39,11 @@ interface IntakeIO {
             intakeSupplyVoltage = table.get("intakeSupplyVoltage", intakeSupplyVoltage)
             intakeMotorVoltage = table.get("intakeMotorVoltage", intakeMotorVoltage)
             intakeStatorCurrent = table.get("intakeStatorCurrent", intakeStatorCurrent)
-            exitSensor = table.get("exitSensor", exitSensor)
-            intakeSensor = table.get("intakeSensor", intakeSensor)
+            exitSensorTriggered = table.get("exitSensorTriggered", exitSensorTriggered)
+            intakeSensorTriggered = table.get("intakeSensorTriggered", intakeSensorTriggered)
         }
     }
     fun updateInputs(inputs: IntakeInputs) {}
-    fun applyVoltage(voltage: Measure<Voltage>) {}
+    fun setVoltage(voltage: Measure<Voltage>) {}
     fun stop() {}
 }
