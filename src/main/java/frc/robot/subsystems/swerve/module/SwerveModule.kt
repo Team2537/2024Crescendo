@@ -38,7 +38,7 @@ class SwerveModule(
         io = when (Constants.RobotConstants.mode) {
             Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
                 configs,
-                ControllerGains(kV = 0.001684),
+                ControllerGains(kV = 0.0113684210526),
                 ControllerGains(kP = 5.0, kD = 0.1)
             )
 
