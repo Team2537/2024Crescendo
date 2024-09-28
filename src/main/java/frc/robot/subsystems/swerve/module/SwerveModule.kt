@@ -42,7 +42,7 @@ class SwerveModule(
                 configs,
                 DCMotor.getNEO(1),
                 ControllerGains(),
-                ControllerGains(kP = 25.0)
+                ControllerGains(kP = 100.0)
             )
 
             Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
