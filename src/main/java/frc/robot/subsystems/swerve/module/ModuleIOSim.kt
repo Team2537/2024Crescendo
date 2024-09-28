@@ -117,7 +117,10 @@ class ModuleIOSim(
      */
     override fun runTurnPositionSetpoint(position: Rotation2d) {
         runTurnVolts(
-            turnFeedback.calculate(turnMotorSim.angularPositionRad, position.rotations) + turnFeedforward.calculate(
+            turnFeedback.calculate(
+                Units.radiansToRotations(turnMotorSim.angularPositionRad),
+                position.rotations
+            ) + turnFeedforward.calculate(
                 position.rotations
             ),
         )
