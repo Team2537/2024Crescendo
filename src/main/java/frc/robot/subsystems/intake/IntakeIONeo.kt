@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkLowLevel
 import com.revrobotics.CANSparkMax
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DigitalInput
+import kotlin.math.PI
 
 class IntakeIONeo(
     private val motorID: Int,
@@ -25,7 +26,7 @@ class IntakeIONeo(
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
         inputs.intakeSensor = intakeSensor.get()
         inputs.exitSensor = exitSensor.get()
-        inputs.intakeLinearVelocity = motor.encoder.velocity * (Units.inchesToMeters(0.84) / 60.0)
+        inputs.intakeLinearVelocity = motor.encoder.velocity * ((Units.inchesToMeters(0.84) * PI)/ 60.0)
         inputs.intakeSupplyVoltage = motor.busVoltage
         inputs.intakeMotorVoltage = motor.appliedOutput * motor.busVoltage
         inputs.intakeStatorCurrent = motor.outputCurrent
