@@ -37,13 +37,13 @@ class IntakeIONeo(
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
         inputs.intakeSensorTriggered = intakeSensor.get()
         inputs.exitSensorTriggered = exitSensor.get()
-        inputs.intakeLinearVelocity.mut_replace(
+        inputs.linearVelocity.mut_replace(
             motor.encoder.velocity * (((rollerDiameter into Meters) * PI) / 60.0), // Convert from RPM to m/s
             MetersPerSecond
         )
-        inputs.intakeSupplyVoltage.mut_replace(motor.busVoltage, Volts)
-        inputs.intakeMotorVoltage.mut_replace(motor.appliedOutput * motor.busVoltage, Volts)
-        inputs.intakeStatorCurrent.mut_replace(motor.outputCurrent, Amps)
+        inputs.supplyVoltage.mut_replace(motor.busVoltage, Volts)
+        inputs.motorVoltage.mut_replace(motor.appliedOutput * motor.busVoltage, Volts)
+        inputs.statorCurrent.mut_replace(motor.outputCurrent, Amps)
     }
 
     override fun setVoltage(voltage: Measure<Voltage>) {

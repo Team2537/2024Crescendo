@@ -12,10 +12,10 @@ import org.littletonrobotics.junction.inputs.LoggableInputs
 
 interface IntakeIO {
     class IntakeInputs : LoggableInputs {
-        var intakeLinearVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
-        var intakeSupplyVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
-        var intakeMotorVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
-        var intakeStatorCurrent: MutableMeasure<Current> = MutableMeasure.zero(Units.Amps)
+        var linearVelocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(Units.MetersPerSecond)
+        var supplyVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+        var motorVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Units.Volts)
+        var statorCurrent: MutableMeasure<Current> = MutableMeasure.zero(Units.Amps)
         var exitSensorTriggered: Boolean = false
         var intakeSensorTriggered: Boolean = false
 
@@ -23,10 +23,10 @@ interface IntakeIO {
          * Updates a LogTable with the data to log.
          */
         override fun toLog(table: LogTable) {
-            table.put("intakeLinearVelocity", intakeLinearVelocity)
-            table.put("intakeSupplyVoltage", intakeSupplyVoltage)
-            table.put("intakeMotorVoltage", intakeMotorVoltage)
-            table.put("intakeStatorCurrent", intakeStatorCurrent)
+            table.put("linearVelocity", linearVelocity)
+            table.put("supplyVoltage", supplyVoltage)
+            table.put("motorVoltage", motorVoltage)
+            table.put("statorCurrent", statorCurrent)
             table.put("exitSensorTriggered", exitSensorTriggered)
             table.put("intakeSensorTriggered", intakeSensorTriggered)
         }
@@ -35,10 +35,10 @@ interface IntakeIO {
          * Updates data based on a LogTable.
          */
         override fun fromLog(table: LogTable) {
-            intakeLinearVelocity = table.get("intakeLinearVelocity", intakeLinearVelocity)
-            intakeSupplyVoltage = table.get("intakeSupplyVoltage", intakeSupplyVoltage)
-            intakeMotorVoltage = table.get("intakeMotorVoltage", intakeMotorVoltage)
-            intakeStatorCurrent = table.get("intakeStatorCurrent", intakeStatorCurrent)
+            linearVelocity = table.get("linearVelocity", linearVelocity)
+            supplyVoltage = table.get("supplyVoltage", supplyVoltage)
+            motorVoltage = table.get("motorVoltage", motorVoltage)
+            statorCurrent = table.get("statorCurrent", statorCurrent)
             exitSensorTriggered = table.get("exitSensorTriggered", exitSensorTriggered)
             intakeSensorTriggered = table.get("intakeSensorTriggered", intakeSensorTriggered)
         }
