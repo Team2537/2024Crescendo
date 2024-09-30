@@ -55,10 +55,10 @@ class Drivebase : SubsystemBase("Drivebase") {
     val gyroInputs: GyroIO.GyroInputs = GyroIO.GyroInputs()
 
     private val modules: Array<SwerveModule> = arrayOf(
-        SwerveModule(flConfig, 1),
-        SwerveModule(frConfig, 2),
-        SwerveModule(blConfig, 3),
-        SwerveModule(brConfig, 4),
+        SwerveModule(flConfig),
+        SwerveModule(frConfig),
+        SwerveModule(blConfig),
+        SwerveModule(brConfig),
     )
 
     /**

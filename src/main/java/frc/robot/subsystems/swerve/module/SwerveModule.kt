@@ -4,14 +4,13 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.system.plant.DCMotor
+import edu.wpi.first.math.util.Units
 import frc.robot.Constants
 import lib.ControllerGains
-import lib.math.LoggedTunableNumber
 
 class SwerveModule(
     private val
     configs: ModuleIO.ModuleConstants,
-    private val ID: Int
 ) {
     private val io: ModuleIO
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
@@ -30,13 +29,6 @@ class SwerveModule(
 
     val modulePosition: SwerveModulePosition
         get() = SwerveModulePosition(positionMeters, angle)
-
-    private val driveKp = LoggedTunableNumber("module[$ID]/drive/kP", 5.0)
-    private val driveKi = LoggedTunableNumber("module[$ID]/drive/kI", 0.0)
-    private val driveKd = LoggedTunableNumber("module[$ID]/drive/kD", 0.1)
-    private val turnKp = LoggedTunableNumber("module[$ID]/turn/kP", 100.0)
-    private val turnKi = LoggedTunableNumber("module[$ID]/turn/kI", 0.0)
-    private val turnKd = LoggedTunableNumber("module[$ID]/turn/kD", 0.0)
 
     init {
         io = when (Constants.RobotConstants.mode) {
@@ -85,17 +77,6 @@ class SwerveModule(
 
     fun updateInputs() {
         io.updateInputs(inputs)
-
-        LoggedTunableNumber.ifChanged(
-            hashCode(),
-            { pid -> io.setPID(pid[0], pid[1], pid[2], ModuleIO.ModuleMotor.DRIVE); println("Set PID: $pid") },
-            driveKp, driveKi, driveKd
-        )
-        LoggedTunableNumber.ifChanged(
-            hashCode(),
-            { pid -> io.setPID(pid[0], pid[1], pid[2], ModuleIO.ModuleMotor.TURN); println("Set PID: $pid") },
-            turnKp, turnKi, turnKd
-        )
     }
 
     fun stop() {
