@@ -32,7 +32,7 @@ class LauncherIOSim private constructor(
         rollerMoiKgm2: Double,
         rollerP: Double, rollerI: Double, rollerD: Double,
         rollerS: Double, rollerV: Double, rollerA: Double,
-        noteDetector: SimBoolean,
+        noteDetectorId: Int,
 ) : LauncherIO {
     class SimNotConfiguredException(msg: String) : Exception(msg)
 
@@ -67,7 +67,7 @@ class LauncherIOSim private constructor(
         private var rollerV: Double = 0.0
         private var rollerA: Double = 0.0
 
-        private var noteDetectorId: Int = 0;
+        private var noteDetectorId: Int = 0
 
         fun configureTopFlywheel(motor: DCMotor, gearing: Double, moi: Measure<RotationalInertia>): LauncherIOSimBuilder {
             this.topMotor = motor
@@ -80,6 +80,13 @@ class LauncherIOSim private constructor(
             topP = p
             topI = i
             topD = d
+            return this
+        }
+
+        fun configureTopFlywheelFeedforward(s: Double, v: Double, a: Double): LauncherIOSimBuilder {
+            topS = s
+            topV = v
+            topA = a
             return this
         }
 
@@ -97,6 +104,13 @@ class LauncherIOSim private constructor(
             return this
         }
 
+        fun configureBottomFlywheelFeedforward(s: Double, v: Double, a: Double): LauncherIOSimBuilder {
+            bottomS = s
+            bottomV = v
+            bottomA = a
+            return this
+        }
+
         fun configureRoller(motor: DCMotor, gearing: Double, moi: Measure<RotationalInertia>): LauncherIOSimBuilder {
             this.rollerMotor = motor
             this.rollerGearing = gearing
@@ -111,10 +125,15 @@ class LauncherIOSim private constructor(
             return this
         }
 
-        // TODO: ff configure methods
+        fun configureRollerFeedforward(s: Double, v: Double, a: Double): LauncherIOSimBuilder {
+            rollerS = s
+            rollerV = v
+            rollerA = a
+            return this
+        }
 
         fun configureNoteDetector(id: Int) {
-            this.noteDetectorId = id;
+            this.noteDetectorId = id
         }
 
         /**
@@ -145,7 +164,7 @@ class LauncherIOSim private constructor(
                     rollerMoiKgm2,
                     rollerP, rollerI, rollerD,
                     rollerS, rollerV, rollerA,
-                    SimBoolean(noteDetectorId),
+                    noteDetectorId,
             )
         }
 
@@ -198,13 +217,14 @@ class LauncherIOSim private constructor(
     ) : DCMotorSim(motor, gearing, moi) {
 
         val pidController: PIDController = PIDController(p, i, d)
-        val feedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(s, v, a)
+        var feedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(s, v, a)
+            private set
 
         // cache for logging
         val cachedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
 
         /** Whether to run with pid or not */
-        var runClose: Boolean = false
+        var runClosed: Boolean = false
 
         fun setInputVoltage(voltage: Measure<Voltage>) {
             super.setInputVoltage(voltage into Volts)
@@ -214,6 +234,10 @@ class LauncherIOSim private constructor(
         override fun setInputVoltage(volts: Double) {
             super.setInputVoltage(volts)
             cachedVoltage.mut_replace(volts, Volts)
+        }
+
+        fun setFeedforward(s: Double, v: Double, a: Double) {
+            feedforward = SimpleMotorFeedforward(s, v, a)
         }
     }
 
@@ -225,7 +249,8 @@ class LauncherIOSim private constructor(
         s: Double, v: Double, a: Double,
     ) : FlywheelSim(motor, gearing, moi) {
         val pidController: PIDController = PIDController(p, i, d)
-        val feedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(s, v, a)
+        var feedforward: SimpleMotorFeedforward = SimpleMotorFeedforward(s, v, a)
+            private set
 
         val cachedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
 
@@ -240,6 +265,10 @@ class LauncherIOSim private constructor(
         override fun setInputVoltage(volts: Double) {
             super.setInputVoltage(volts)
             cachedVoltage.mut_replace(volts, Volts)
+        }
+
+        fun setFeedforward(s: Double, v: Double, a: Double) {
+            feedforward = SimpleMotorFeedforward(s, v, a)
         }
     }
 
@@ -267,7 +296,7 @@ class LauncherIOSim private constructor(
         rollerS, rollerV, rollerA,
     )
 
-    private val noteDetector: SimBoolean
+    private val noteDetector: SimBoolean = SimBoolean(noteDetectorId)
 
     /**
      * Initial builder for Launcher sim. Calling any method will instantiate an instance of
@@ -288,10 +317,6 @@ class LauncherIOSim private constructor(
         fun configureRoller(motor: DCMotor, gearing: Double, moi: Measure<RotationalInertia>): LauncherIOSimBuilder {
             return LauncherIOSimBuilder().configureRoller(motor, gearing, moi)
         }
-    }
-
-    init {
-        this.noteDetector = noteDetector
     }
 
     override fun updateInputs(inputs: LauncherIO.LauncherInputs) {
@@ -332,43 +357,44 @@ class LauncherIOSim private constructor(
     }
 
     override fun setTopFlywheelVoltage(voltage: Measure<Voltage>) {
-        runClosed = false
+        topFlywheelSim.runClosed = false
         topFlywheelSim.setInputVoltage(voltage)
     }
 
     override fun setBottomFlywheelVoltage(voltage: Measure<Voltage>) {
-        runClosed = false
+        bottomFlywheelSim.runClosed = false
         bottomFlywheelSim.setInputVoltage(voltage)
     }
 
     override fun setTopFlywheelVelocity(velocity: Measure<Velocity<Angle>>) {
-        runClosed = true
+        topFlywheelSim.runClosed = true
         topFlywheelSim.pidController.setpoint = velocity into RadiansPerSecond
     }
 
     override fun setBottomFlywheelVelocity(velocity: Measure<Velocity<Angle>>) {
-        runClosed = true
+        bottomFlywheelSim.runClosed = true
         bottomFlywheelSim.pidController.setpoint = velocity into RadiansPerSecond
     }
 
     override fun setRollerVoltage(voltage: Measure<Voltage>) {
-        runClosed = false
+        rollerSim.runClosed = false
         rollerSim.setInputVoltage(voltage)
     }
 
     override fun setRollerVelocity(velocity: Measure<Velocity<Angle>>) {
-        runClosed = true
+        rollerSim.runClosed = true
         rollerSim.pidController.setpoint = velocity into RadiansPerSecond
     }
 
     override fun stopRoller() {
-        runClosed = false
+        rollerSim.runClosed = false
         rollerSim.setInputVoltage(0.0)
     }
 
     override fun stopFlywheels() {
-        runClosed = false
+        topFlywheelSim.runClosed = false
         topFlywheelSim.setInputVoltage(0.0)
+        bottomFlywheelSim.runClosed = false
         bottomFlywheelSim.setInputVoltage(0.0)
     }
 
@@ -389,11 +415,11 @@ class LauncherIOSim private constructor(
     }
 
     override fun setTopFlywheelFeedForward(s: Double, v: Double, a: Double) {
-
+        topFlywheelSim.setFeedforward(s, v, a)
     }
 
     override fun setBottomFlywheelFeedForward(s: Double, v: Double, a: Double) {
-        super.setBottomFlywheelFeedForward(s, v, a)
+        bottomFlywheelSim.setFeedforward(s, v, a)
     }
 
     override fun setRollerPID(p: Double, i: Double, d: Double) {
@@ -405,6 +431,6 @@ class LauncherIOSim private constructor(
     }
 
     override fun setRollerFeedForward(s: Double, v: Double, a: Double) {
-        super.setRollerFeedForward(s, v, a)
+        rollerSim.setFeedforward(s, v, a)
     }
 }
