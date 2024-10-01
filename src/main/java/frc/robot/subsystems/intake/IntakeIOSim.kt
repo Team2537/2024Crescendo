@@ -29,6 +29,7 @@ class IntakeIOSim(gearing: Double, moi: Double, private val rollerDiameter: Meas
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
         inputs.intakeSensorTriggered = intakeSensorBool.get()
         inputs.exitSensorTriggered = exitSensorBool.get()
+        intakeSim.update(0.02)
         inputs.linearVelocity
             .mut_replace(intakeSim.angularVelocityRadPerSec * ((rollerDiameter into Meter) / 2), MetersPerSecond) // Convert from rad/s to m/s
         inputs.supplyVoltage.mut_replace(RobotController.getBatteryVoltage(), Volts)
