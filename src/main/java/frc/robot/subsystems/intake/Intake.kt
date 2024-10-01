@@ -77,7 +77,9 @@ class Intake : SubsystemBase() {
         intakeEdgeDetector.update(inputs.intakeSensorTriggered)
 
         io.updateInputs(inputs)
-        Logger.processInputs("Intake", inputs)
+        Logger.processInputs("intake", inputs)
+
+        Logger.recordOutput("intake/State", state)
     }
 
     enum class IntakeState {

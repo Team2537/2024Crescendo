@@ -1,6 +1,8 @@
 package frc.robot
 
 import Launcher
+import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -39,10 +41,15 @@ object Robot : LoggedRobot() {
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
+        a().and(intake.isFull.negate()).onTrue(intake.intake())
+        a().and(intake.isFull).onFalse(intake.transfer())
+        b().and(intake.isFull).onTrue(intake.eject())
     }
 
 
     init {
+        DriverStation.silenceJoystickConnectionWarning(true)
+
         Logger.recordMetadata("Project Name", "2024Crescendo")
 
         when(Constants.RobotConstants.mode){
