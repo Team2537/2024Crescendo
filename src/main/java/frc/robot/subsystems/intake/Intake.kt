@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
+import frc.robot.Robot
 import lib.math.EdgeDetector
 import org.littletonrobotics.junction.Logger
 
@@ -25,7 +26,9 @@ class Intake : SubsystemBase() {
         Constants.RobotConstants.Mode.SIM -> IntakeIOSim(
             1.0,
             rollerMOI,
-            rollerDiameter
+            rollerDiameter,
+            { Robot.keyboard.getRawButton(1) },
+            { Robot.keyboard.getRawButton(2) }
         )
 
         Constants.RobotConstants.Mode.REPLAY -> object : IntakeIO {}
