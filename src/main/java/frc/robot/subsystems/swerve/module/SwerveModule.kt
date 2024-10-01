@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.system.plant.DCMotor
-import edu.wpi.first.math.util.Units
 import frc.robot.Constants
 import lib.ControllerGains
 
@@ -19,7 +18,7 @@ class SwerveModule(
         get() = inputs.drivePositionMeters
 
     val velocityMetersPerSecond: Double
-        get() = inputs.drivePositionMetersPerSec
+        get() = inputs.driveVelocityMetersPerSec
 
     val angle: Rotation2d
         get() = inputs.absoluteTurnPosition
