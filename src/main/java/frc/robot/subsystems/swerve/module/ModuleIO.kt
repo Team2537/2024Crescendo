@@ -43,47 +43,47 @@ interface ModuleIO {
         var turnSupplyCurrent: Double = 0.0
 
         /** @suppress */
-        override fun toLog(table: LogTable?) {
-            table?.put("driveMotorConnected", driveMotorConnected)
-            table?.put("turnMotorConnected", turnMotorConnected)
-            table?.put("absoluteEncoderConnected", absoluteEncoderConnected)
+        override fun toLog(table: LogTable) {
+            table.put("driveMotorConnected", driveMotorConnected)
+            table.put("turnMotorConnected", turnMotorConnected)
+            table.put("absoluteEncoderConnected", absoluteEncoderConnected)
 
-            table?.put("drivePositionMeters", drivePositionMeters)
-            table?.put("drivePositionMetersPerSec", driveVelocityMetersPerSec)
-            table?.put("driveSupplyVolts", driveSupplyVolts)
-            table?.put("driveMotorVolts", driveMotorVolts)
-            table?.put("driveStatorCurrent", driveStatorCurrent)
-            table?.put("driveSupplyCurrent", driveSupplyCurrent)
+            table.put("drivePositionMeters", drivePositionMeters)
+            table.put("drivePositionMetersPerSec", driveVelocityMetersPerSec)
+            table.put("driveSupplyVolts", driveSupplyVolts)
+            table.put("driveMotorVolts", driveMotorVolts)
+            table.put("driveStatorCurrent", driveStatorCurrent)
+            table.put("driveSupplyCurrent", driveSupplyCurrent)
 
-            table?.put("turnPosition", Rotation2d.struct, turnPosition)
-            table?.put("absoluteTurnPosition", Rotation2d.struct, absoluteTurnPosition)
-            table?.put("turnVelocityRotationsPerSec", turnVelocityRotationsPerSec)
-            table?.put("turnSupplyVolts", turnSupplyVolts)
-            table?.put("turnMotorVolts", turnMotorVolts)
-            table?.put("turnStatorCurrent", turnStatorCurrent)
-            table?.put("turnSupplyCurrent", turnSupplyCurrent)
+            table.put("turnPosition", Rotation2d.struct, turnPosition)
+            table.put("absoluteTurnPosition", Rotation2d.struct, absoluteTurnPosition)
+            table.put("turnVelocityRotationsPerSec", turnVelocityRotationsPerSec)
+            table.put("turnSupplyVolts", turnSupplyVolts)
+            table.put("turnMotorVolts", turnMotorVolts)
+            table.put("turnStatorCurrent", turnStatorCurrent)
+            table.put("turnSupplyCurrent", turnSupplyCurrent)
         }
 
         /** @suppress */
-        override fun fromLog(table: LogTable?) {
-            table?.get("driveMotorConnected")?.let { driveMotorConnected = it.boolean }
-            table?.get("turnMotorConnected")?.let { turnMotorConnected = it.boolean }
-            table?.get("absoluteEncoderConnected")?.let { absoluteEncoderConnected = it.boolean }
+        override fun fromLog(table: LogTable) {
+            table.get("driveMotorConnected")?.let { driveMotorConnected = it.boolean }
+            table.get("turnMotorConnected")?.let { turnMotorConnected = it.boolean }
+            table.get("absoluteEncoderConnected")?.let { absoluteEncoderConnected = it.boolean }
 
-            table?.get("drivePositionMeters")?.let { drivePositionMeters = it.double }
-            table?.get("drivePositionMetersPerSec")?.let { driveVelocityMetersPerSec = it.double }
-            table?.get("driveSupplyVolts")?.let { driveSupplyVolts = it.double }
-            table?.get("driveMotorVolts")?.let { driveMotorVolts = it.double }
-            table?.get("driveStatorCurrent")?.let { driveStatorCurrent = it.double }
-            table?.get("driveSupplyCurrent")?.let { driveSupplyCurrent = it.double }
+            table.get("drivePositionMeters")?.let { drivePositionMeters = it.double }
+            table.get("drivePositionMetersPerSec")?.let { driveVelocityMetersPerSec = it.double }
+            table.get("driveSupplyVolts")?.let { driveSupplyVolts = it.double }
+            table.get("driveMotorVolts")?.let { driveMotorVolts = it.double }
+            table.get("driveStatorCurrent")?.let { driveStatorCurrent = it.double }
+            table.get("driveSupplyCurrent")?.let { driveSupplyCurrent = it.double }
 
-            table?.get("turnPosition", Rotation2d.struct, Rotation2d())?.let { turnPosition = it }
-            table?.get("absoluteTurnPosition", Rotation2d.struct, Rotation2d())?.let { absoluteTurnPosition = it }
-            table?.get("turnVelocityRotationsPerSec")?.let { turnVelocityRotationsPerSec = it.double }
-            table?.get("turnSupplyVolts")?.let { turnSupplyVolts = it.double }
-            table?.get("turnMotorVolts")?.let { turnMotorVolts = it.double }
-            table?.get("turnStatorCurrent")?.let { turnStatorCurrent = it.double }
-            table?.get("turnSupplyCurrent")?.let { turnSupplyCurrent = it.double }
+            table.get("turnPosition", Rotation2d.struct, Rotation2d())?.let { turnPosition = it }
+            table.get("absoluteTurnPosition", Rotation2d.struct, Rotation2d())?.let { absoluteTurnPosition = it }
+            table.get("turnVelocityRotationsPerSec")?.let { turnVelocityRotationsPerSec = it.double }
+            table.get("turnSupplyVolts")?.let { turnSupplyVolts = it.double }
+            table.get("turnMotorVolts")?.let { turnMotorVolts = it.double }
+            table.get("turnStatorCurrent")?.let { turnStatorCurrent = it.double }
+            table.get("turnSupplyCurrent")?.let { turnSupplyCurrent = it.double }
         }
     }
 
