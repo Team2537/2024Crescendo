@@ -6,8 +6,10 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Units.Meter
 import edu.wpi.first.wpilibj.simulation.DCMotorSim
 import lib.ControllerGains
+import lib.math.units.into
 
 class ModuleIOSim(
     private val configs: ModuleIO.ModuleConstants,
@@ -73,9 +75,9 @@ class ModuleIOSim(
         inputs.turnMotorConnected = true
         inputs.absoluteEncoderConnected = true
 
-        inputs.drivePositionMeters = Units.inchesToMeters(configs.wheelRadiusInches) * driveMotorSim.angularPositionRad
-        inputs.drivePositionMetersPerSec =
-            Units.inchesToMeters(configs.wheelRadiusInches) * driveMotorSim.angularVelocityRadPerSec
+        inputs.drivePositionMeters = (configs.wheelRadius into Meter) * driveMotorSim.angularPositionRad
+        inputs.driveVelocityMetersPerSec =
+            (configs.wheelRadius into Meter) * driveMotorSim.angularVelocityRadPerSec
         inputs.driveSupplyVolts = driveAppliedVolts
         inputs.driveMotorVolts = driveAppliedVolts
         inputs.driveStatorCurrent = driveMotorSim.currentDrawAmps

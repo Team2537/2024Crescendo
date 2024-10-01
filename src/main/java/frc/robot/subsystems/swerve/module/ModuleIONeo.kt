@@ -12,6 +12,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.util.Units
 import lib.ControllerGains
+import edu.wpi.first.units.Units.Meters
+import lib.math.units.into
 
 class ModuleIONeo(
     private val configs: ModuleIO.ModuleConstants,
@@ -77,9 +79,9 @@ class ModuleIONeo(
         inputs.absoluteEncoderConnected = BaseStatusSignal.refreshAll(encoderPositionSignal).isOK
 
         inputs.drivePositionMeters =
-            Units.rotationsToRadians(driveMotor.encoder.position) * configs.wheelRadiusInches
-        inputs.drivePositionMetersPerSec =
-            Units.rotationsPerMinuteToRadiansPerSecond(driveMotor.encoder.velocity) * configs.wheelRadiusInches
+            Units.rotationsToRadians(driveMotor.encoder.position) * (configs.wheelRadius into Meters)
+        inputs.driveVelocityMetersPerSec =
+            Units.rotationsPerMinuteToRadiansPerSecond(driveMotor.encoder.velocity) * (configs.wheelRadius into Meters)
         inputs.driveSupplyVolts = driveMotor.appliedOutput * driveMotor.busVoltage
         inputs.driveMotorVolts = driveMotor.appliedOutput * driveMotor.busVoltage
         inputs.driveStatorCurrent = driveMotor.outputCurrent
@@ -133,7 +135,7 @@ class ModuleIONeo(
      */
     override fun runDriveVelocitySetpoint(velocityMetersPerSecond: Double) {
         // Convert m/s to RPM
-        val velocityRPM = (velocityMetersPerSecond * 60) / (2 * Math.PI * configs.wheelRadiusInches)
+        val velocityRPM = (velocityMetersPerSecond * 60) / (2 * Math.PI * (configs.wheelRadius into Meters))
 
         // Set the reference for the motor's PID controller
         driveMotor.pidController.setReference(

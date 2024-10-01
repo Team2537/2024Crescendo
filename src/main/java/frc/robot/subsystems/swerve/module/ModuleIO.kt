@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve.module
 
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.units.Distance
+import edu.wpi.first.units.Measure
 import org.littletonrobotics.junction.LogTable
 import org.littletonrobotics.junction.inputs.LoggableInputs
 
@@ -26,7 +28,7 @@ interface ModuleIO {
         var absoluteEncoderConnected: Boolean = false
 
         var drivePositionMeters: Double = 0.0
-        var drivePositionMetersPerSec: Double = 0.0
+        var driveVelocityMetersPerSec: Double = 0.0
         var driveSupplyVolts: Double = 0.0
         var driveMotorVolts: Double = 0.0
         var driveStatorCurrent: Double = 0.0
@@ -47,7 +49,7 @@ interface ModuleIO {
             table?.put("absoluteEncoderConnected", absoluteEncoderConnected)
 
             table?.put("drivePositionMeters", drivePositionMeters)
-            table?.put("drivePositionMetersPerSec", drivePositionMetersPerSec)
+            table?.put("drivePositionMetersPerSec", driveVelocityMetersPerSec)
             table?.put("driveSupplyVolts", driveSupplyVolts)
             table?.put("driveMotorVolts", driveMotorVolts)
             table?.put("driveStatorCurrent", driveStatorCurrent)
@@ -69,7 +71,7 @@ interface ModuleIO {
             table?.get("absoluteEncoderConnected")?.let { absoluteEncoderConnected = it.boolean }
 
             table?.get("drivePositionMeters")?.let { drivePositionMeters = it.double }
-            table?.get("drivePositionMetersPerSec")?.let { drivePositionMetersPerSec = it.double }
+            table?.get("drivePositionMetersPerSec")?.let { driveVelocityMetersPerSec = it.double }
             table?.get("driveSupplyVolts")?.let { driveSupplyVolts = it.double }
             table?.get("driveMotorVolts")?.let { driveMotorVolts = it.double }
             table?.get("driveStatorCurrent")?.let { driveStatorCurrent = it.double }
@@ -95,7 +97,7 @@ interface ModuleIO {
         val absoluteOffset: Rotation2d,
         val turnRatio: Double,
         val driveRatio: Double,
-        val wheelRadiusInches: Double,
+        val wheelRadius: Measure<Distance>,
     )
 
     /**
