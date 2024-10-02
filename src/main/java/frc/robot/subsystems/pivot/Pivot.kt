@@ -11,6 +11,7 @@ import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.Constants
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
@@ -59,18 +60,15 @@ class Pivot : SubsystemBase() {
         )
     }
 
-    fun home() = run { io.setRawVoltage(Units.Volts.of(-3.0), false) }.until(inputs::isAtHardstop)
-        .andThen(run { io.setKnownPosition(Units.Degrees.of(90.0)) })
+    fun home() =
+        runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) }
+            .andThen(WaitUntilCommand { inputs.isAtHardstop })
+            .andThen(runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() })
 
-    fun homeSensorless(threshold: Double = 5.5) = runEnd(
-        {
-            io.setRawVoltage(Units.Volt.of(1.0))
-        },
-        {
-            io.setKnownPosition(Units.Degrees.of(0.0))
-            io.stop()
-        }
-    ).until { currentSpikeTracker.lastValue() > threshold }
+    fun homeSensorless(threshold: Double = 5.5) =
+        runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) }
+            .andThen(WaitUntilCommand { currentSpikeTracker.lastValue() > threshold })
+            .andThen(runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() })
 
     fun sendToPosition(position: Measure<Angle>) = run { io.setTargetPosition(position) }
 
