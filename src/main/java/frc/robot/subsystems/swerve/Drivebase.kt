@@ -13,8 +13,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.units.Angle
+import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.units.Units.Meters
+import edu.wpi.first.units.Units.Radians
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.Command
@@ -151,7 +155,7 @@ class Drivebase : SubsystemBase("Drivebase") {
      * Method for resetting the heading of the robot
      */
     fun resetHeading() {
-        gyro.setYaw(0.0)
+        gyro.setYaw(Rotation2d())
     }
 
     /**
@@ -264,8 +268,8 @@ class Drivebase : SubsystemBase("Drivebase") {
         }
     }
 
-    fun setVisionSTDDevs(xMeters: Double, yMeters: Double, rotRads: Double) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xMeters, yMeters, rotRads))
+    fun setVisionSTDDevs(x: Measure<Distance>, y: Measure<Distance>, rot: Measure<Angle>) {
+        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(x into Meters, y into Meters, rot into Radians))
     }
 
     fun quasistaticSysID(direction: Direction): Command {
