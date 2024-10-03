@@ -1,6 +1,12 @@
 package frc.robot.subsystems.swerve
 
+import choreo.Choreo
+import choreo.Choreo.ControlFunction
+import choreo.Choreo.TrajectoryLogger
+import choreo.auto.AutoFactory
+import choreo.trajectory.SwerveSample
 import edu.wpi.first.math.VecBuilder
+import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
@@ -33,10 +39,14 @@ import frc.robot.subsystems.swerve.gyro.GyroIOPigeon2
 import frc.robot.subsystems.swerve.gyro.GyroIOSim
 import frc.robot.subsystems.swerve.module.ModuleIO
 import frc.robot.subsystems.swerve.module.SwerveModule
+import lib.LoggedTunableNumber
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
+import java.sql.Driver
+import java.util.function.BiFunction
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
+import kotlin.jvm.optionals.getOrDefault
 import edu.wpi.first.math.util.Units as Conversions
 
 class Drivebase : SubsystemBase("Drivebase") {
@@ -137,6 +147,51 @@ class Drivebase : SubsystemBase("Drivebase") {
 
     private val routineToUse = driveSysID
 
+    private val xControlP = LoggedTunableNumber("swerve/xControlP", 5.0)
+    private val xControlI = LoggedTunableNumber("swerve/xControlI", 0.0)
+    private val xControlD = LoggedTunableNumber("swerve/xControlD", 0.0)
+
+    private val yControlP = LoggedTunableNumber("swerve/yControlP", 5.0)
+    private val yControlI = LoggedTunableNumber("swerve/yControlI", 0.0)
+    private val yControlD = LoggedTunableNumber("swerve/yControlD", 0.0)
+
+    private val rotControlP = LoggedTunableNumber("swerve/rotControlP", 0.0)
+    private val rotControlI = LoggedTunableNumber("swerve/rotControlI", 0.0)
+    private val rotControlD = LoggedTunableNumber("swerve/rotControlD", 0.0)
+
+    private val xControl = PIDController(xControlP.get(), xControlI.get(), xControlD.get())
+    private val yControl = PIDController(yControlP.get(), yControlI.get(), yControlD.get())
+    private val rotControl = PIDController(rotControlP.get(), rotControlI.get(), rotControlD.get())
+
+    private val controller: ControlFunction<SwerveSample> =
+        ControlFunction { currPose: Pose2d, sample: SwerveSample ->
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                xControl.calculate(currPose.translation.x, sample.x) + sample.vx,
+                yControl.calculate(currPose.translation.y, sample.y) + sample.vy,
+                rotControl.calculate(currPose.rotation.radians, sample.heading) + sample.omega,
+                pose.rotation
+            )
+        }
+
+    private val trajLogger: TrajectoryLogger<SwerveSample> =
+        TrajectoryLogger { sample, _ ->
+            if(DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red){
+                Logger.recordOutput("swerve/AutoTraj", *sample.flipped().poses)
+            } else {
+                Logger.recordOutput("swerve/AutoTraj", *sample.poses)
+            }
+        }
+
+    val factory: AutoFactory = Choreo.createAutoFactory(
+        this,
+        ::pose,
+        controller,
+        ::applyChassisSpeeds,
+        { DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red },
+        AutoFactory.ChoreoAutoBindings(),
+        trajLogger
+    )
+
     /**
      * Method for getting the module positions from the module constants
      *
@@ -235,6 +290,25 @@ class Drivebase : SubsystemBase("Drivebase") {
      * This method updates the gyro inputs, module inputs, and pose estimator
      */
     override fun periodic() {
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> xControl.setPID(pid[0], pid[1], pid[2]) },
+            xControlP, xControlI, xControlD
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> yControl.setPID(pid[0], pid[1], pid[2]) },
+            yControlP, yControlI, yControlD
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> rotControl.setPID(pid[0], pid[1], pid[2]) },
+            rotControlP, rotControlI, rotControlD
+        )
+
         gyro.updateInputs(gyroInputs)
         Logger.processInputs("swerve/gyro", gyroInputs)
         modules.forEachIndexed { index, it ->
