@@ -1,13 +1,14 @@
 package frc.robot
 
 import Launcher
+import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.Climb
-import frc.robot.subsystems.Drivebase
+import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
@@ -32,11 +33,11 @@ object Robot : LoggedRobot() {
     // This is so awful, but it's the best way to test DIO in simulation that I can think of
     val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
 
-    val climb = Climb()
-    val pivot = Pivot()
+//    val climb = Climb()
+//    val pivot = Pivot()
     val drivebase = Drivebase()
-    val intake = Intake()
-    val launcher = Launcher()
+//    val intake = Intake()
+//    val launcher = Launcher()
 
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
@@ -44,6 +45,12 @@ object Robot : LoggedRobot() {
         a().and(intake.isFull.negate()).onTrue(intake.intake())
         a().and(intake.isFull).onFalse(intake.transfer())
         b().and(intake.isFull).onTrue(intake.eject())
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -leftY },
+            { -leftX },
+            { -rightX },
+            leftBumper()
+        )
     }
 
 
@@ -55,7 +62,7 @@ object Robot : LoggedRobot() {
         when(Constants.RobotConstants.mode){
             Constants.RobotConstants.Mode.REAL -> {
                 Logger.recordMetadata("Mode", "Real")
-                Logger.addDataReceiver(WPILOGWriter())
+//                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
