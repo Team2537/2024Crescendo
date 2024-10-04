@@ -3,7 +3,6 @@ package frc.robot
 import Launcher
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
-import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -36,7 +35,7 @@ object Robot : LoggedRobot() {
 //    val climb = Climb()
 //    val pivot = Pivot()
     val drivebase = Drivebase()
-//    val intake = Intake()
+    val intake = Intake()
 //    val launcher = Launcher()
 
 
