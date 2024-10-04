@@ -7,13 +7,19 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.units.*
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.wpilibj.DigitalInput
+import frc.robot.Constants
 import lib.math.units.into
+import lib.math.units.radiansPerSecond
 
 class LauncherIONeos(
         topFlywheelsId: Int,
         bottomFlywheelsId: Int,
         rollerId: Int,
         noteDetectorID: Int,
+        /**
+         * The radius of the flywheels, used for converting rotational to linear velocity
+         */
+        private val flywheelRadius: Measure<Distance>,
 ) : LauncherIO {
 
     private val topFlywheels: CANSparkFlex = CANSparkFlex(topFlywheelsId, CANSparkLowLevel.MotorType.kBrushless).apply {
@@ -133,6 +139,11 @@ class LauncherIONeos(
         )
     }
 
+    override fun setFlywheelLinearVelocity(velocity: Measure<Velocity<Distance>>) {
+        // Convert from linear to angular
+        setFlywheelVelocity(((velocity into MetersPerSecond) / (flywheelRadius into Meters)).radiansPerSecond)
+    }
+
     /**
      * Runs the roller with the specified voltage.
      *
@@ -155,6 +166,10 @@ class LauncherIONeos(
                 0,
                 rollerFeedForward.calculate(setpoint)
         )
+    }
+
+    override fun setRollerPosition(position: Measure<Angle>) {
+        rollerPIDController.setReference(position into Rotations, CANSparkBase.ControlType.kPosition)
     }
 
     /**

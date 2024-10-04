@@ -4,17 +4,14 @@ import edu.wpi.first.hal.SimBoolean
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.system.plant.DCMotor
-import edu.wpi.first.units.Angle
-import edu.wpi.first.units.Measure
-import edu.wpi.first.units.MutableMeasure
+import edu.wpi.first.units.*
 import edu.wpi.first.units.Units.*
-import edu.wpi.first.units.Velocity
-import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.simulation.DCMotorSim
 import edu.wpi.first.wpilibj.simulation.FlywheelSim
 import lib.math.units.KilogramMetersSquared
 import lib.math.units.RotationalInertia
 import lib.math.units.into
+import lib.math.units.radiansPerSecond
 
 class LauncherIOSim private constructor(
         topMotor: DCMotor,
@@ -33,6 +30,7 @@ class LauncherIOSim private constructor(
         rollerP: Double, rollerI: Double, rollerD: Double,
         rollerS: Double, rollerV: Double, rollerA: Double,
         noteDetectorId: Int,
+        private val flywheelRadiusMeters: Double,
 ) : LauncherIO {
     class SimNotConfiguredException(msg: String) : Exception(msg)
 
@@ -68,6 +66,8 @@ class LauncherIOSim private constructor(
         private var rollerA: Double = 0.0
 
         private var noteDetectorId: Int = 0
+
+        private var flywheelRadiusMeters: Double = 0.0
 
         fun configureTopFlywheel(motor: DCMotor, gearing: Double, moi: Measure<RotationalInertia>): LauncherIOSimBuilder {
             this.topMotor = motor
@@ -109,6 +109,10 @@ class LauncherIOSim private constructor(
             bottomV = v
             bottomA = a
             return this
+        }
+
+        fun configureFlywheelRadius(radius: Measure<Distance>) {
+            flywheelRadiusMeters = radius into Meters
         }
 
         fun configureRoller(motor: DCMotor, gearing: Double, moi: Measure<RotationalInertia>): LauncherIOSimBuilder {
@@ -165,6 +169,7 @@ class LauncherIOSim private constructor(
                     rollerP, rollerI, rollerD,
                     rollerS, rollerV, rollerA,
                     noteDetectorId,
+                    flywheelRadiusMeters,
             )
         }
 
@@ -225,6 +230,7 @@ class LauncherIOSim private constructor(
 
         /** Whether to run with pid or not */
         var runClosed: Boolean = false
+        var setpointIsVelocity: Boolean = false
 
         fun setInputVoltage(voltage: Measure<Voltage>) {
             super.setInputVoltage(voltage into Volts)
@@ -351,8 +357,12 @@ class LauncherIOSim private constructor(
         inputs.rollerAppliedCurrent.mut_replace(rollerSim.currentDrawAmps, Amps)
         inputs.rollerAppliedVoltage.mut_replace(rollerSim.cachedVoltage)
 
-        if (rollerSim.runClosed)
-            rollerSim.run { setInputVoltage(pidController.calculate(angularVelocityRadPerSec) + feedforward.calculate(pidController.setpoint, 0.0)) }
+        if (rollerSim.runClosed) {
+            if(rollerSim.setpointIsVelocity)
+                rollerSim.run { setInputVoltage(pidController.calculate(angularVelocityRadPerSec) + feedforward.calculate(pidController.setpoint, 0.0)) }
+            else
+                rollerSim.run { setInputVoltage(pidController.calculate(angularPositionRad)) }
+        }
         rollerSim.update(0.02) // 20ms
     }
 
@@ -376,6 +386,11 @@ class LauncherIOSim private constructor(
         bottomFlywheelSim.pidController.setpoint = velocity into RadiansPerSecond
     }
 
+    override fun setFlywheelLinearVelocity(velocity: Measure<Velocity<Distance>>) {
+        // Convert from linear to angular
+        setFlywheelVelocity(((velocity into MetersPerSecond) / flywheelRadiusMeters).radiansPerSecond)
+    }
+
     override fun setRollerVoltage(voltage: Measure<Voltage>) {
         rollerSim.runClosed = false
         rollerSim.setInputVoltage(voltage)
@@ -383,7 +398,15 @@ class LauncherIOSim private constructor(
 
     override fun setRollerVelocity(velocity: Measure<Velocity<Angle>>) {
         rollerSim.runClosed = true
+        rollerSim.setpointIsVelocity = true
         rollerSim.pidController.setpoint = velocity into RadiansPerSecond
+    }
+
+
+    override fun setRollerPosition(position: Measure<Angle>) {
+        rollerSim.runClosed = true
+        rollerSim.setpointIsVelocity = false
+        rollerSim.pidController.setpoint = position into Radians
     }
 
     override fun stopRoller() {

@@ -156,6 +156,14 @@ interface LauncherIO {
     fun setBottomFlywheelVoltage(voltage: Measure<Voltage>) {}
 
     /**
+     * Runs the flywheels so that they may launch the note at the
+     * given exit velocity.
+     *
+     * @param velocity The desired exit velocity of the note.
+     */
+    fun setFlywheelLinearVelocity(velocity: Measure<Velocity<Distance>>) {}
+
+    /**
      * Runs the flywheels at a specified velocity.
      *
      * @param velocity The velocity to run the flywheel motor(s) at.
@@ -197,6 +205,13 @@ interface LauncherIO {
      * @param velocity The velocity to run the roller motor(s) at.
      */
     fun setRollerVelocity(velocity: Measure<Velocity<Angle>>) {}
+
+    /**
+     * Moves the roller to a specified position.
+     *
+     * @param position The desired position.
+     */
+    fun setRollerPosition(position: Measure<Angle>) {}
 
     /**
      * Stops the motor(s).
