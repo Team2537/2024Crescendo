@@ -147,13 +147,13 @@ class Drivebase : SubsystemBase("Drivebase") {
 
     private val routineToUse = driveSysID
 
-    private val xControlP = LoggedTunableNumber("swerve/xControlP", 5.0)
-    private val xControlI = LoggedTunableNumber("swerve/xControlI", 0.0)
-    private val xControlD = LoggedTunableNumber("swerve/xControlD", 0.0)
+    private val xControlP = LoggedTunableNumber("swerve/xControlP", 4.0)
+    private val xControlI = LoggedTunableNumber("swerve/xControlI", 0.1)
+    private val xControlD = LoggedTunableNumber("swerve/xControlD", 1.5)
 
-    private val yControlP = LoggedTunableNumber("swerve/yControlP", 5.0)
-    private val yControlI = LoggedTunableNumber("swerve/yControlI", 0.0)
-    private val yControlD = LoggedTunableNumber("swerve/yControlD", 0.0)
+    private val yControlP = LoggedTunableNumber("swerve/yControlP", 4.0)
+    private val yControlI = LoggedTunableNumber("swerve/yControlI", 0.1)
+    private val yControlD = LoggedTunableNumber("swerve/yControlD", 1.5)
 
     private val rotControlP = LoggedTunableNumber("swerve/rotControlP", 0.0)
     private val rotControlI = LoggedTunableNumber("swerve/rotControlI", 0.0)
