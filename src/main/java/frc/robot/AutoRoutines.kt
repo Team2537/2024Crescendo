@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 import java.util.function.Supplier
+import kotlin.jvm.optionals.getOrElse
 
 class AutoRoutines(val factory: AutoFactory) {
     private fun waitPrintCommand(time: Double, message: String) = Commands.parallel(
@@ -18,14 +19,14 @@ class AutoRoutines(val factory: AutoFactory) {
 
 
     private val chooser = LoggedDashboardChooser<Supplier<Command>>("auto").apply {
-        addDefaultOption("Four Note", Supplier { fourNote() })
-        addOption("A3_CS", Supplier { A3_CS() })
+        addDefaultOption("Four Note (Dumb)", Supplier { dumbFourNoteA1_A3() })
+        addOption("Four Note (Smart)", Supplier { smartMaxNotesA1_A3() })
     }
 
     val selectedRoutine: Command
-            get() = chooser.get().get()
+        get() = chooser.get().get()
 
-    fun fourNote(): Command {
+    fun dumbFourNoteA1_A3(): Command {
         val CS_A1 = factory.trajectory("CS_A1", factory.voidLoop())
         val A1_CS = factory.trajectoryCommand("A1_CS")
         val CS_A2 = factory.trajectoryCommand("CS_A2")
@@ -60,16 +61,96 @@ class AutoRoutines(val factory: AutoFactory) {
         )
     }
 
-    fun A3_CS(): Command {
-        val A3_CS = factory.trajectory("A3_CS", factory.voidLoop())
+    fun smartMaxNotesA1_A3(): Command {
+        val loop = factory.newLoop("smartMaxNotesA1_A3")
 
-        var startPose: Pose2d = Pose2d()
-        A3_CS.initialPose.ifPresent { startPose = it }
+        val CS_A1 = factory.trajectory("CS_A1", loop)
+        val CS_A2 = factory.trajectory("CS_A2", loop)
+        val CS_A3 = factory.trajectory("CS_A3", loop)
 
-        return Commands.sequence(
-            InstantCommand({ Robot.drivebase.resetOdometry(startPose) }),
-            A3_CS.cmd()
-        )
+        val A1_CS = factory.trajectory("A1_CS", loop)
+        val A2_CS = factory.trajectory("A2_CS", loop)
+        val A3_CS = factory.trajectory("A3_CS", loop)
+
+        val A1_A2 = factory.trajectory("A1_A2", loop)
+        val A2_A3 = factory.trajectory("A2_A3", loop)
+
+        loop.enabled()
+            .onTrue(
+                InstantCommand({ Robot.drivebase.resetOdometry(CS_A1.initialPose.getOrElse { loop.kill(); return@getOrElse Pose2d() }) })
+                    .andThen(waitPrintCommand(2.0, "Launching first note"))
+                    .andThen(
+                        Commands.parallel(
+                            waitPrintCommand(2.0, "Intaking second note"),
+                            CS_A1.cmd()
+                        )
+                    ).withName("fourNoteA1_A3 Entry")
+            )
+
+        // Either try to get the next note if you didn't pick one up, or go shoot the stored one
+        CS_A1.done()
+            .and( { false } ) // TODO: Add a condition for the next note
+            .onTrue(
+                A1_CS.cmd()
+                    .andThen(waitPrintCommand(2.0, "Launching second note"))
+                    .andThen(
+                        Commands.parallel(
+                            waitPrintCommand(2.0, "Intaking third note"),
+                            CS_A2.cmd()
+                        )
+                    )
+            )
+            .onFalse(
+                A1_A2.cmd()
+            )
+
+        CS_A2.done()
+            .and( { false } ) // TODO: Add a condition for the next note
+            .onTrue(
+                A2_CS.cmd()
+                    .andThen(waitPrintCommand(2.0, "Launching third note"))
+                    .andThen(
+                        Commands.parallel(
+                            waitPrintCommand(2.0, "Intaking fourth note"),
+                            CS_A3.cmd()
+                        )
+                    )
+            )
+            .onFalse(
+                A2_A3.cmd()
+            )
+
+        CS_A3.done()
+            .and( { false } ) // TODO: Add a condition for the next note
+            .onTrue(
+                A3_CS.cmd()
+                    .andThen(waitPrintCommand(2.0, "Launching fourth note"))
+            )
+
+        A1_A2.done()
+            .and({ false }) // TODO: Add a condition for the next note
+            .onTrue(
+                A2_CS.cmd()
+                    .andThen(waitPrintCommand(2.0, "Launching second note"))
+                    .andThen(
+                        Commands.parallel(
+                            waitPrintCommand(2.0, "Intaking third note"),
+                            CS_A3.cmd()
+                        )
+                    )
+            )
+            .onFalse(
+                A1_CS.cmd()
+            )
+
+        A2_A3.done()
+            .and({ false }) // TODO: Add a condition for the next note
+            .onTrue(
+                A3_CS.cmd()
+                    .andThen(waitPrintCommand(2.0, "Launching third note"))
+            )
+
+        return loop.cmd()
     }
 }
 
