@@ -2,10 +2,12 @@ package frc.robot
 
 import Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import frc.robot.commands.Autos
 import frc.robot.subsystems.Climb
-import frc.robot.subsystems.Drivebase
+import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
@@ -27,15 +29,21 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  */
 object Robot : LoggedRobot() {
 
-    val climb = Climb()
-    val pivot = Pivot()
+//    val climb = Climb()
+//    val pivot = Pivot()
     val drivebase = Drivebase()
-    val intake = Intake()
-    val launcher = Launcher()
+//    val intake = Intake()
+//    val launcher = Launcher()
 
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -leftY },
+            { -leftX },
+            { -rightX },
+            leftBumper()
+        )
     }
 
 
@@ -45,7 +53,7 @@ object Robot : LoggedRobot() {
         when(Constants.RobotConstants.mode){
             Constants.RobotConstants.Mode.REAL -> {
                 Logger.recordMetadata("Mode", "Real")
-                Logger.addDataReceiver(WPILOGWriter())
+//                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
