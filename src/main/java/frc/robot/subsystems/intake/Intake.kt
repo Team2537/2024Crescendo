@@ -1,4 +1,4 @@
-package frc.robot.subsystems
+package frc.robot.subsystems.intake
 
 import com.revrobotics.CANSparkLowLevel.MotorType
 import com.revrobotics.CANSparkMax

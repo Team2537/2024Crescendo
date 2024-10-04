@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.Climb
-import frc.robot.subsystems.Drivebase
-import frc.robot.subsystems.Intake
+import frc.robot.subsystems.swerve.Drivebase
+import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
@@ -28,15 +28,21 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  */
 object Robot : LoggedRobot() {
 
-    val climb = Climb()
-    val pivot = Pivot()
+//    val climb = Climb()
+//    val pivot = Pivot()
     val drivebase = Drivebase()
-    val intake = Intake()
+//    val intake = Intake()
 //    val launcher = Launcher()
 
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -leftY },
+            { -leftX },
+            { -rightX },
+            leftBumper()
+        )
 //        button(1).onTrue(pivot.sendToPosition(Units.Degrees.of(30.0)))
 //        button(2).onTrue(pivot.sendToPosition(Units.Degrees.of(60.0)))
 //        button(3).onTrue(pivot.home())
