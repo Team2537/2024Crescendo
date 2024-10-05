@@ -42,8 +42,6 @@ import frc.robot.subsystems.swerve.module.SwerveModule
 import lib.LoggedTunableNumber
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
-import java.sql.Driver
-import java.util.function.BiFunction
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 import kotlin.jvm.optionals.getOrDefault
@@ -93,6 +91,36 @@ class Drivebase : SubsystemBase("Drivebase") {
         Translation2d(9.7859, -9.7859),
         Translation2d(-9.7859, 9.7859),
         Translation2d(-9.7859, -9.7859),
+    )
+
+    private val driveKp = LoggedTunableNumber(
+        "swerve/modules/driveKp",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 5.0 else 0.0
+    )
+
+    private val driveKi = LoggedTunableNumber(
+        "swerve/modules/driveKi",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
+    )
+
+    private val driveKd = LoggedTunableNumber(
+        "swerve/modules/driveKd",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.1 else 0.0
+    )
+
+    private val turnKp = LoggedTunableNumber(
+        "swerve/modules/turnKp",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 5.0 else 10.0
+    )
+
+    private val turnKi = LoggedTunableNumber(
+        "swerve/modules/turnKi",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
+    )
+
+    private val turnKd = LoggedTunableNumber(
+        "swerve/modules/turnKd",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
     )
 
     /**
@@ -147,17 +175,17 @@ class Drivebase : SubsystemBase("Drivebase") {
 
     private val routineToUse = driveSysID
 
-    private val xControlP = LoggedTunableNumber("swerve/xControlP", 4.0)
-    private val xControlI = LoggedTunableNumber("swerve/xControlI", 0.1)
-    private val xControlD = LoggedTunableNumber("swerve/xControlD", 1.5)
+    private val xControlP = LoggedTunableNumber("swerve/choreo/xControlP", 4.0)
+    private val xControlI = LoggedTunableNumber("swerve/choreo/xControlI", 0.1)
+    private val xControlD = LoggedTunableNumber("swerve/choreo/xControlD", 1.5)
 
-    private val yControlP = LoggedTunableNumber("swerve/yControlP", 4.0)
-    private val yControlI = LoggedTunableNumber("swerve/yControlI", 0.1)
-    private val yControlD = LoggedTunableNumber("swerve/yControlD", 1.5)
+    private val yControlP = LoggedTunableNumber("swerve/choreo/yControlP", 4.0)
+    private val yControlI = LoggedTunableNumber("swerve/choreo/yControlI", 0.1)
+    private val yControlD = LoggedTunableNumber("swerve/choreo/yControlD", 1.5)
 
-    private val rotControlP = LoggedTunableNumber("swerve/rotControlP", 0.0)
-    private val rotControlI = LoggedTunableNumber("swerve/rotControlI", 0.0)
-    private val rotControlD = LoggedTunableNumber("swerve/rotControlD", 0.0)
+    private val rotControlP = LoggedTunableNumber("swerve/choreo/rotControlP", 0.0)
+    private val rotControlI = LoggedTunableNumber("swerve/choreo/rotControlI", 0.0)
+    private val rotControlD = LoggedTunableNumber("swerve/choreo/rotControlD", 0.0)
 
     private val xControl = PIDController(xControlP.get(), xControlI.get(), xControlD.get())
     private val yControl = PIDController(yControlP.get(), yControlI.get(), yControlD.get())
@@ -174,8 +202,14 @@ class Drivebase : SubsystemBase("Drivebase") {
         }
 
     private val trajLogger: TrajectoryLogger<SwerveSample> =
-        TrajectoryLogger { sample, _ ->
-            if(DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red){
+        TrajectoryLogger { sample, isStart ->
+            if (!isStart) {
+                Logger.recordOutput("swerve/AutoTraj", *emptyArray<Pose2d>())
+                return@TrajectoryLogger
+            }
+
+
+            if (DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
                 Logger.recordOutput("swerve/AutoTraj", *sample.flipped().poses)
             } else {
                 Logger.recordOutput("swerve/AutoTraj", *sample.poses)
@@ -191,6 +225,13 @@ class Drivebase : SubsystemBase("Drivebase") {
         AutoFactory.ChoreoAutoBindings(),
         trajLogger
     )
+
+    init {
+        modules.forEach {
+            it.setDrivePID(driveKp.get(), driveKi.get(), driveKd.get())
+            it.setTurnPID(turnKp.get(), turnKi.get(), turnKd.get())
+        }
+    }
 
     /**
      * Method for getting the module positions from the module constants
@@ -307,6 +348,18 @@ class Drivebase : SubsystemBase("Drivebase") {
             hashCode(),
             { pid -> rotControl.setPID(pid[0], pid[1], pid[2]) },
             rotControlP, rotControlI, rotControlD
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> modules.forEach { it.setDrivePID(pid[0], pid[1], pid[2]) }; println("Drive PID: $pid") },
+            driveKp, driveKi, driveKd
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> modules.forEach { it.setTurnPID(pid[0], pid[1], pid[2]) }; println("Turn PID: $pid") },
+            turnKp, turnKi, turnKd
         )
 
         gyro.updateInputs(gyroInputs)
