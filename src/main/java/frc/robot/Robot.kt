@@ -1,15 +1,12 @@
 package frc.robot
 
-import Launcher
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.subsystems.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
-import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -41,9 +38,9 @@ object Robot : LoggedRobot() {
 
     val driverController: CommandXboxController = CommandXboxController(0).apply {
         // BINDINGS GO HERE
-        a().and(intake.isFull.negate()).onTrue(intake.intake())
-        a().and(intake.isFull).onFalse(intake.transfer())
-        b().and(intake.isFull).onTrue(intake.eject())
+        a().and(intake.isFull.negate()).onTrue(intake.getIntakeCommand())
+        a().and(intake.isFull).onFalse(intake.getTransferCommand())
+        b().and(intake.isFull).onTrue(intake.getEjectCommand())
         drivebase.defaultCommand = drivebase.driveCommand(
             { -leftY },
             { -leftX },

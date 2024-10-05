@@ -42,7 +42,7 @@ class Intake : SubsystemBase() {
     private var state: IntakeState = IntakeState.EMPTY
     val isFull: Trigger = Trigger { state == IntakeState.STORED }
 
-    fun moveNote(
+    fun getMoveNoteCommand(
         direction: Direction,
         sensor: Sensor,
         endState: IntakeState,
@@ -66,11 +66,11 @@ class Intake : SubsystemBase() {
 
     }
 
-    fun intake() = moveNote(Direction.IN, Sensor.INTAKE, IntakeState.STORED)
+    fun getIntakeCommand() = getMoveNoteCommand(Direction.IN, Sensor.INTAKE, IntakeState.STORED)
 
-    fun eject() = moveNote(Direction.OUT, Sensor.INTAKE, IntakeState.EMPTY)
+    fun getEjectCommand() = getMoveNoteCommand(Direction.OUT, Sensor.INTAKE, IntakeState.EMPTY)
 
-    fun transfer() = moveNote(Direction.IN, Sensor.EXIT, IntakeState.EMPTY)
+    fun getTransferCommand() = getMoveNoteCommand(Direction.IN, Sensor.EXIT, IntakeState.EMPTY)
 
     override fun periodic() {
         exitEdgeDetector.update(inputs.exitSensorTriggered)
