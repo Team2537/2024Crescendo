@@ -62,17 +62,17 @@ class Pivot : SubsystemBase() {
         )
     }
 
-    fun home() =
+    fun getHomeCommand() =
         runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) }
             .andThen(WaitUntilCommand { inputs.isAtHardstop })
             .andThen(runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() })
 
-    fun homeSensorless(threshold: Double = 5.5) =
+    fun getSensorlessHomeCommand(threshold: Double = 5.5) =
         runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) }
             .andThen(WaitUntilCommand { currentSpikeTracker.lastValue() > threshold })
             .andThen(runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() })
 
-    fun sendToPosition(position: Measure<Angle>) = run { io.setTargetPosition(position) }
+    fun getSendToPositionCommand(position: Measure<Angle>) = run { io.setTargetPosition(position) }
 
     override fun periodic() {
         io.updateInputs(inputs)
