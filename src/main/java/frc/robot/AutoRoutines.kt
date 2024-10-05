@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 import java.util.function.Supplier
 import kotlin.jvm.optionals.getOrElse
@@ -31,13 +32,9 @@ class AutoRoutines(val factory: AutoFactory) {
     val selectedRoutine: Command
         get() = chooser.get().get()
 
-    init {
-        if(RobotBase.isSimulation()){
-            SmartDashboard.putBoolean("notes/A1", false)
-            SmartDashboard.putBoolean("notes/A2", false)
-            SmartDashboard.putBoolean("notes/A3", false)
-        }
-    }
+    val allianceNote1: LoggedDashboardBoolean by lazy { LoggedDashboardBoolean("notes/A1") }
+    val allianceNote2: LoggedDashboardBoolean by lazy { LoggedDashboardBoolean("notes/A2") }
+    val allianceNote3: LoggedDashboardBoolean by lazy { LoggedDashboardBoolean("notes/A3") }
 
     fun dumbFourNoteA1_A3(): Command {
         val CS_A1 = factory.trajectory("CS_A1", factory.voidLoop())
@@ -113,7 +110,7 @@ class AutoRoutines(val factory: AutoFactory) {
                             )
                         ),
                     A1_A2.cmd()
-                ) { SmartDashboard.getBoolean("notes/A1", false) }
+                ) { if (RobotBase.isSimulation()) allianceNote1.get() else false }
             )
 
 
@@ -129,10 +126,10 @@ class AutoRoutines(val factory: AutoFactory) {
                             )
                         ),
                     A2_A3.cmd()
-                ) { SmartDashboard.getBoolean("notes/A2", false) }
+                ) { if (RobotBase.isSimulation()) allianceNote2.get() else false }
             )
 
-        CS_A3.done().and { SmartDashboard.getBoolean("notes/A3", false) }
+        CS_A3.done().and { if (RobotBase.isSimulation()) allianceNote3.get() else false }
             .onTrue(
                 A3_CS.cmd()
                     .andThen(waitPrintCommand(2.0, "Launching fourth note"))
@@ -150,12 +147,12 @@ class AutoRoutines(val factory: AutoFactory) {
                             )
                         ),
                     A2_A3.cmd()
-                ) { SmartDashboard.getBoolean("notes/A2", false) }
+                ) { if (RobotBase.isSimulation()) allianceNote2.get() else false }
             )
 
 
 
-        A2_A3.done().and { SmartDashboard.getBoolean("notes/A3", false) }
+        A2_A3.done().and { if (RobotBase.isSimulation()) allianceNote3.get() else false }
             .onTrue(
                 A3_CS.cmd()
                     .andThen(waitPrintCommand(2.0, "Launching third note"))
