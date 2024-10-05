@@ -10,6 +10,7 @@ import edu.wpi.first.units.Units
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DutyCycleEncoder
+import lib.ControllerGains
 import lib.math.units.into
 
 class PivotIONeos(
@@ -19,13 +20,7 @@ class PivotIONeos(
     private val rotorToArmRatio: Double,
     private val encoderToArmRatio: Double,
     private val homingSensorID: Int,
-    private val kP: Double,
-    private val kI: Double,
-    private val kD: Double,
-    private val kS: Double,
-    private val kG: Double,
-    private val kV: Double,
-    private val kA: Double
+    private val gains: ControllerGains
 ) : PivotIO {
 
     /** The motor for the pivot */
@@ -35,9 +30,9 @@ class PivotIONeos(
         encoder.positionConversionFactor = 1 / rotorToArmRatio
         encoder.velocityConversionFactor = 1 / rotorToArmRatio
 
-        pidController.setP(kP)
-        pidController.setI(kI)
-        pidController.setD(kD)
+        pidController.setP(gains.kP)
+        pidController.setI(gains.kI)
+        pidController.setD(gains.kD)
 
         setSmartCurrentLimit(40)
     }
@@ -48,7 +43,7 @@ class PivotIONeos(
     }
 
     /** Feedforward controller for the pivot */
-    private val feedforward: ArmFeedforward = ArmFeedforward(kS, kG, kV, kA)
+    private val feedforward: ArmFeedforward = ArmFeedforward(gains.kS, gains.kG, gains.kV, gains.kA)
 
     /** The homing sensor for the pivot, to trigger when the pivot is upright */
     private val homingSensor: DigitalInput = DigitalInput(homingSensorID)

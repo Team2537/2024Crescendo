@@ -14,6 +14,7 @@ import edu.wpi.first.units.Units.RadiansPerSecond
 import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim
+import lib.ControllerGains
 import lib.math.units.into
 import lib.math.units.unaryMinus
 
@@ -25,8 +26,7 @@ class PivotIOSim(
     private val maxAngle: Measure<Angle>,
     private val minAngle: Measure<Angle>,
     private val startAngle: Measure<Angle>,
-    private val kP: Double, private val kI: Double, private val kD: Double,
-    private val kS: Double, private val kG: Double, private val kV: Double, private val kA: Double,
+    private val gains: ControllerGains
 ) : PivotIO {
     /** Simulation class for the pivot arm. */
     private val sim: SingleJointedArmSim = SingleJointedArmSim(
@@ -41,9 +41,9 @@ class PivotIOSim(
     )
 
     /** PID controller for the pivot arm. */
-    private val pid: PIDController = PIDController(kP, kI, kD)
+    private val pid: PIDController = PIDController(gains.kP, gains.kI, gains.kD)
     /** Feedforward controller for the pivot arm. */
-    private val feedforward: ArmFeedforward = ArmFeedforward(kS, kG, kV, kA)
+    private val feedforward: ArmFeedforward = ArmFeedforward(gains.kS, gains.kG, gains.kV, gains.kA)
 
     /** Voltage being applied to the motor, stored for logging purposes. */
     private val cachedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)

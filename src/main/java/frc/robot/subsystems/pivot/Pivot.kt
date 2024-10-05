@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.Constants
+import lib.ControllerGains
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import java.util.function.DoubleSupplier
@@ -26,8 +27,7 @@ class Pivot : SubsystemBase() {
             GEARBOX_RATIO * PULLEY_RATIO,
             PULLEY_RATIO,
             HOMING_SENSOR_PORT,
-            0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0, 0.0
+            ControllerGains()
         )
 
         Constants.RobotConstants.Mode.SIM -> PivotIOSim(
@@ -38,8 +38,10 @@ class Pivot : SubsystemBase() {
             Units.Degrees.of(90.0),
             Units.Degrees.of(0.0),
             Units.Degrees.of(90.0),
-            10.0, 0.5, 0.0,
-            0.0, 0.43, 1.34, 0.02
+            ControllerGains(
+                kP = 10.0, kI = 0.5, kD = 0.0,
+                kS = 0.0, kG = 0.43, kV = 1.34, kA = 0.02
+            )
         )
 
         Constants.RobotConstants.Mode.REPLAY -> object : PivotIO {}
