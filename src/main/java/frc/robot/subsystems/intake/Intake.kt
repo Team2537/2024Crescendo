@@ -66,11 +66,11 @@ class Intake : SubsystemBase() {
 
     }
 
-    fun getIntakeCommand() = getMoveNoteCommand(Direction.IN, Sensor.INTAKE, IntakeState.STORED)
+    fun getIntakeCommand() = getMoveNoteCommand(Direction.IN, Sensor.INTAKE, IntakeState.STORED).withName("Intake")
 
-    fun getEjectCommand() = getMoveNoteCommand(Direction.OUT, Sensor.INTAKE, IntakeState.EMPTY)
+    fun getEjectCommand() = getMoveNoteCommand(Direction.OUT, Sensor.INTAKE, IntakeState.EMPTY).withName("Eject")
 
-    fun getTransferCommand() = getMoveNoteCommand(Direction.IN, Sensor.EXIT, IntakeState.EMPTY)
+    fun getTransferCommand() = getMoveNoteCommand(Direction.IN, Sensor.EXIT, IntakeState.EMPTY).withName("Transfer")
 
     override fun periodic() {
         exitEdgeDetector.update(inputs.exitSensorTriggered)
