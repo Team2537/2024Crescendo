@@ -43,7 +43,7 @@ object Robot : LoggedRobot() {
         )
     }
 
-    private val routines: AutoRoutines = AutoRoutines(drivebase.factory)
+    private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase)
 
     init {
         Logger.recordMetadata("Project Name", "2024Crescendo")

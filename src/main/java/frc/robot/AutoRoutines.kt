@@ -12,12 +12,16 @@ import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
+import frc.robot.subsystems.swerve.Drivebase
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 import java.util.function.Supplier
 import kotlin.jvm.optionals.getOrElse
 
-class AutoRoutines(val factory: AutoFactory) {
+class AutoRoutines(
+    val factory: AutoFactory,
+    val drivebase: Drivebase,
+) {
     private fun waitPrintCommand(time: Double, message: String) = parallel(
         WaitCommand(time),
         PrintCommand(message)
@@ -48,7 +52,7 @@ class AutoRoutines(val factory: AutoFactory) {
         CS_A1.initialPose.ifPresent { startPose = it }
 
         return sequence(
-            InstantCommand({ Robot.drivebase.resetOdometry(startPose) }),
+            InstantCommand({ drivebase.resetOdometry(startPose) }),
             waitPrintCommand(2.0, "Launching first note"),
             parallel(
                 CS_A1.cmd(),
@@ -87,7 +91,7 @@ class AutoRoutines(val factory: AutoFactory) {
 
         loop.enabled()
             .onTrue(
-                InstantCommand({ Robot.drivebase.resetOdometry(CS_A1.initialPose.getOrElse { loop.kill(); return@getOrElse Pose2d() }) })
+                InstantCommand({ drivebase.resetOdometry(CS_A1.initialPose.getOrElse { loop.kill(); return@getOrElse Pose2d() }) })
                     .andThen(waitPrintCommand(2.0, "Launching first note"))
                     .andThen(
                         parallel(
