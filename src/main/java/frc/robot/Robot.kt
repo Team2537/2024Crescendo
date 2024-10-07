@@ -1,7 +1,6 @@
 package frc.robot
 
-import Launcher
-import edu.wpi.first.units.Units
+import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -35,20 +34,7 @@ object Robot : LoggedRobot() {
 //    val launcher = Launcher()
 
 
-    val driverController: CommandXboxController = CommandXboxController(0).apply {
-        // BINDINGS GO HERE
-        drivebase.defaultCommand = drivebase.driveCommand(
-            { -leftY },
-            { -leftX },
-            { -rightX },
-            leftBumper()
-        )
-//        button(1).onTrue(pivot.sendToPosition(Units.Degrees.of(30.0)))
-//        button(2).onTrue(pivot.sendToPosition(Units.Degrees.of(60.0)))
-//        button(3).onTrue(pivot.home())
-        a().toggleOnTrue(pivot.manualControl { getRawAxis(1) })
-        b().onTrue(pivot.homeSensorless(15.0))
-    }
+    val driverController: CommandXboxController = CommandXboxController(0)
 
 
     init {
@@ -76,8 +62,17 @@ object Robot : LoggedRobot() {
         }
 
         Logger.start()
+        configureBindings()
     }
 
+    private fun configureBindings() {
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -driverController.leftY },
+            { -driverController.leftX },
+            { -driverController.rightX },
+            driverController.leftBumper()
+        )
+    }
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like
