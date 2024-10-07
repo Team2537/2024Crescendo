@@ -22,7 +22,49 @@
 
 package lib.math.units
 
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units
+import edu.wpi.first.units.Unit
+
+infix fun <U : Unit<U>> Double.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this)
+}
+
+infix fun <U : Unit<U>> Float.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> Int.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> UInt.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> Long.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> ULong.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> Short.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> UShort.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> Byte.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
+
+infix fun <U : Unit<U>> UByte.measuredIn(unit: Unit<U>): Measure<U> {
+    return unit.of(this.toDouble())
+}
 
 inline val Double.meters: Span
     get() = Units.Meters.of(this)
