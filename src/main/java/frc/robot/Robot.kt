@@ -36,15 +36,7 @@ object Robot : LoggedRobot() {
 //    val launcher = Launcher()
 
 
-    val driverController: CommandXboxController = CommandXboxController(0).apply {
-        // BINDINGS GO HERE
-        drivebase.defaultCommand = drivebase.driveCommand(
-            { -leftY },
-            { -leftX },
-            { -rightX },
-            leftBumper()
-        )
-    }
+    val driverController: CommandXboxController = CommandXboxController(0)
 
 
     init {
@@ -72,8 +64,17 @@ object Robot : LoggedRobot() {
         }
 
         Logger.start()
+        configureBindings()
     }
 
+    private fun configureBindings() {
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -driverController.leftY },
+            { -driverController.leftX },
+            { -driverController.rightX },
+            driverController.leftBumper()
+        )
+    }
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like
