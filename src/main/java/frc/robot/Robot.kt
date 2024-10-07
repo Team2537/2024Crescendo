@@ -1,6 +1,6 @@
 package frc.robot
 
-import Launcher
+import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
