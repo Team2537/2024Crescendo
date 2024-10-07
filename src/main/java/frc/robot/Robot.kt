@@ -2,6 +2,7 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
+import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
@@ -36,19 +37,7 @@ object Robot : LoggedRobot() {
 //    val launcher = Launcher()
 
 
-    val driverController: CommandXboxController = CommandXboxController(0).apply {
-        // BINDINGS GO HERE
-        a().and(intake.isFull.negate()).onTrue(intake.getIntakeCommand())
-        a().and(intake.isFull).onFalse(intake.getTransferCommand())
-        b().and(intake.isFull).onTrue(intake.getEjectCommand())
-        drivebase.defaultCommand = drivebase.driveCommand(
-            { -leftY },
-            { -leftX },
-            { -rightX },
-            leftBumper()
-        )
-    }
-
+    val driverController: CommandXboxController = CommandXboxController(0)
 
     init {
         DriverStation.silenceJoystickConnectionWarning(true)
@@ -77,8 +66,17 @@ object Robot : LoggedRobot() {
         }
 
         Logger.start()
+        configureBindings()
     }
 
+    private fun configureBindings() {
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -driverController.leftY },
+            { -driverController.leftX },
+            { -driverController.rightX },
+            driverController.leftBumper()
+        )
+    }
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like
