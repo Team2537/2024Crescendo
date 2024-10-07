@@ -2,10 +2,15 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.DriverStation.Alliance
+import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.swerve.Drivebase
+import frc.robot.subsystems.Climb
+import frc.robot.subsystems.intake.Intake
+import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -26,22 +31,15 @@ import kotlin.jvm.optionals.getOrDefault
  */
 object Robot : LoggedRobot() {
 
-    //    val climb = Climb()
+//    val climb = Climb()
 //    val pivot = Pivot()
     val drivebase = Drivebase()
 //    val intake = Intake()
 //    val launcher = Launcher()
 
 
-    val driverController: CommandXboxController = CommandXboxController(0).apply {
-        // BINDINGS GO HERE
-        drivebase.defaultCommand = drivebase.driveCommand(
-            { -leftY },
-            { -leftX },
-            { -rightX },
-            leftBumper()
-        )
-    }
+
+    val driverController: CommandXboxController = CommandXboxController(0)
 
     private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase)
 
@@ -72,10 +70,18 @@ object Robot : LoggedRobot() {
         }
 
         Logger.start()
-
         DriverStation.silenceJoystickConnectionWarning(true)
+        configureBindings()
     }
 
+    private fun configureBindings() {
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -driverController.leftY },
+            { -driverController.leftX },
+            { -driverController.rightX },
+            driverController.leftBumper()
+        )
+    }
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like
