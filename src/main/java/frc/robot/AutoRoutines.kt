@@ -29,8 +29,8 @@ class AutoRoutines(
 
 
     private val chooser = LoggedDashboardChooser<Supplier<Command>>("auto").apply {
-        addDefaultOption("Four Note (Dumb)", Supplier { dumbFourNoteA1_A3() })
-        addOption("Four Note (Smart)", Supplier { smartMaxNotesA1_A3() })
+        addOption("Four Note (Dumb)", Supplier { dumbFourNoteA1_A3() })
+        addDefaultOption("Four Note (Smart)", Supplier { smartMaxNotesA1_A3() })
     }
 
     val selectedRoutine: Command
