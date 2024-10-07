@@ -28,6 +28,13 @@ import edu.wpi.first.units.*
 import edu.wpi.first.units.Unit
 import edu.wpi.first.units.Units.*
 
+/**
+ * Gets an immutable view into this measure.
+ *
+ * @see MeasureView
+ */
+val <U : Unit<U>> Measure<U>.view: MeasureView<U> get() = MeasureView(this)
+
 @JvmField
 val SquareMeters: Area = Area(1.0, "Square Meters", "m^2")
 
