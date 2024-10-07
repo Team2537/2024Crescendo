@@ -48,11 +48,13 @@ object Robot : LoggedRobot() {
 //                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
+                initRealSubsystems()
             }
             Constants.RobotConstants.Mode.SIM -> {
                 Logger.recordMetadata("Mode", "Sim")
                 Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
+                initSimSubsystems()
             }
             Constants.RobotConstants.Mode.REPLAY -> {
                 setUseTiming(false)
@@ -60,12 +62,19 @@ object Robot : LoggedRobot() {
                 val logPath = LogFileUtil.findReplayLog()
                 Logger.setReplaySource(WPILOGReader(logPath))
                 Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
+                initReplaySubsystems()
             }
         }
 
         Logger.start()
         configureBindings()
     }
+
+    private fun initRealSubsystems() {}
+
+    private fun initSimSubsystems() {}
+
+    private fun initReplaySubsystems() {}
 
     private fun configureBindings() {
         drivebase.defaultCommand = drivebase.driveCommand(
