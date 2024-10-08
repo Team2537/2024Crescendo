@@ -2,12 +2,10 @@ package frc.robot
 
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
-import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.subsystems.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
@@ -39,6 +37,8 @@ object Robot : LoggedRobot() {
     val intake = Intake()
 //    val launcher = Launcher()
 
+    val robotPose
+        get() = drivebase.pose
 
     val driverController: CommandXboxController = CommandXboxController(0)
 
@@ -68,6 +68,18 @@ object Robot : LoggedRobot() {
             }
         }
 
+        CommandScheduler.getInstance().onCommandInitialize { command ->
+            Logger.recordOutput("commands/${command.name}", true)
+        }
+
+        CommandScheduler.getInstance().onCommandFinish { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
+        CommandScheduler.getInstance().onCommandInterrupt { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
         Logger.start()
         configureBindings()
     }
@@ -81,12 +93,26 @@ object Robot : LoggedRobot() {
         )
 
         driverController.a().onTrue(
-            Commands.either(
-                intake.getEjectCommand(),
-                intake.getIntakeCommand(),
+            either(
+                sequence(
+                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+                    parallel(
+                        intake.getEjectCommand(),
+                        print("Ejecting Launcher") // Replace with actual launcher eject command
+                    )
+                ),
+                sequence(
+                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+                    parallel(
+                        intake.getIntakeCommand(),
+                        print("Intaking Launcher") // Replace with actual launcher intake command
+                    )
+                ),
                 intake.isFull
-            )
+            ).withName("Intake Auto Command")
         )
+
+        driverController.y().onTrue(pivot.getHomeCommand())
     }
 
     /**
