@@ -12,23 +12,30 @@ import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.simulation.FlywheelSim
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim
 import lib.math.units.into
+import java.util.function.BooleanSupplier
 
-class IntakeIOSim(gearing: Double, moi: Double, private val rollerDiameter: Measure<Distance>) : IntakeIO {
+class IntakeIOSim(
+    gearing: Double,
+    moi: Double,
+    private val rollerDiameter: Measure<Distance>,
+    private val intakeSensorBool: BooleanSupplier,
+    private val exitSensorBool: BooleanSupplier
+) : IntakeIO {
     private val intakeSim: FlywheelSim = FlywheelSim(
         DCMotor.getNeo550(1),
         gearing,
         moi
     )
 
-    private val intakeSensorBool: SimBoolean = SimBoolean(1)
-    private val exitSensorBool: SimBoolean = SimBoolean(2)
-
     private var cachedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
 
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
-        inputs.intakeSensorTriggered = intakeSensorBool.get()
-        inputs.exitSensorTriggered = exitSensorBool.get()
+        intakeSim.update(0.02)
+
+        inputs.intakeSensorTriggered = intakeSensorBool.asBoolean
+        inputs.exitSensorTriggered = exitSensorBool.asBoolean
         inputs.linearVelocity
             .mut_replace(intakeSim.angularVelocityRadPerSec * ((rollerDiameter into Meter) / 2), MetersPerSecond) // Convert from rad/s to m/s
         inputs.supplyVoltage.mut_replace(RobotController.getBatteryVoltage(), Volts)
