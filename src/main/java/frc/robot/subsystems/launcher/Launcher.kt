@@ -1,14 +1,14 @@
 package frc.robot.subsystems.launcher
 
 import edu.wpi.first.math.system.plant.DCMotor
-import edu.wpi.first.units.Angle
-import edu.wpi.first.units.Measure
-import edu.wpi.first.units.Units.Inches
-import edu.wpi.first.units.Voltage
+import edu.wpi.first.units.*
+import edu.wpi.first.units.Units.*
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction
@@ -18,6 +18,7 @@ import frc.robot.subsystems.pivot.Pivot
 import lib.math.units.*
 import org.littletonrobotics.junction.Logger
 import kotlin.Double.Companion.NaN
+import kotlin.time.times
 
 // IO is passed in to avoid hard dependency/to decouple.
 /**
@@ -38,7 +39,7 @@ import kotlin.Double.Companion.NaN
  *
  * @see LauncherIO
  */
-class Launcher(private val io: LauncherIO) : SubsystemBase() {
+class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance> = 2.0 measuredIn Inches) : SubsystemBase() {
 
     private val inputs: LauncherIO.LauncherInputs = LauncherIO.LauncherInputs()
 
@@ -47,6 +48,20 @@ class Launcher(private val io: LauncherIO) : SubsystemBase() {
         Logger.processInputs("Launcher", inputs)
 
     }
+
+    val flywheelLinearVelocity: Measure<Velocity<Distance>>
+        get() = angularToLinear(flywheelVelocity, flywheelRadius)
+
+    /**
+     * Gets the average velocity of the flywheels.
+     *
+     * @return The average velocity of the flywheels.
+     */
+    val flywheelVelocity: Measure<Velocity<Angle>>
+        get() {
+            return (inputs.topFlywheel.velocity + inputs.bottomFlywheel.velocity) * 0.5
+        }
+
 
     val noteTrigger: Trigger by lazy {
         Trigger {
@@ -116,4 +131,29 @@ class Launcher(private val io: LauncherIO) : SubsystemBase() {
      * @return Whether the note is being detected
      */
     val noteDetected: Boolean get() = inputs.hasNote
+
+    /**
+     * Gets a command that, when run, will power the flywheels and feed the note
+     * into them. If no note is present when the command is run, nothing happens.
+     */
+    fun getLaunchCommand(desiredVelocity: Measure<Velocity<Distance>>): Command {
+        val desiredFlywheelVelocity = linearToAngular(desiredVelocity, flywheelRadius)
+        val errorTolerance = 0.05 // percent
+
+        return Commands.either(
+            // Only tun if we have a note.
+            Commands.sequence(
+                runOnce { io.setFlywheelLinearVelocity(desiredVelocity) },
+
+                WaitUntilCommand {
+                    inputs.topFlywheel.velocity.isNear(desiredFlywheelVelocity, errorTolerance) &&
+                    inputs.bottomFlywheel.velocity.isNear(desiredFlywheelVelocity, errorTolerance)
+                },
+
+                runOnce { io.setRollerVelocity(desiredFlywheelVelocity) } // speed is key
+            ),
+            Commands.none(),
+            inputs::hasNote,
+        )
+    }
 }
