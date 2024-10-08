@@ -83,7 +83,7 @@ class PivotIOSim(
      */
     override fun setRawVoltage(voltage: Measure<Voltage>, isPID: Boolean) {
         cachedVoltage.mut_replace(voltage)
-        sim.setInputVoltage(-voltage into Volts)
+        sim.setInputVoltage(voltage into Volts)
         this.isPID = isPID
     }
 
