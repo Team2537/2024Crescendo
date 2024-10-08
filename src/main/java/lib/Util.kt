@@ -6,6 +6,9 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Units
+import edu.wpi.first.wpilibj2.command.Subsystem
+import edu.wpi.first.wpilibj2.command.WaitCommand
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
@@ -113,4 +116,25 @@ fun calculateAngle(distance: Span): Double {
     val gx = distance into Units.Inches
     return (-0.33 * gx) + 78.5
 }
+
+/**
+ * Makes a command that waits until the given condition is true.
+ *
+ * @param cond The condition to wait for.
+ */
+fun waitUntil(cond: () -> Boolean): WaitUntilCommand = WaitUntilCommand(cond)
+
+/**
+ * Makes a command that waits until the given condition is false.
+ *
+ * @param cond The condition to wait for.
+ */
+fun waitWhile(cond: () -> Boolean): WaitUntilCommand = WaitUntilCommand { !cond() }
+
+/**
+ * Makes a command the waits for a given amount of time.
+ *
+ * @param seconds How long to wait, in seconds.
+ */
+fun waitFor(seconds: Double): WaitCommand = WaitCommand(seconds)
 
