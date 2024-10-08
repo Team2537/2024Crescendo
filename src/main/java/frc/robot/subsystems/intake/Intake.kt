@@ -1,13 +1,20 @@
 package frc.robot.subsystems.intake
 
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Transform3d
+import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
 import frc.robot.Robot
 import lib.math.EdgeDetector
+import lib.math.units.feet
+import lib.toTransform2d
 import org.littletonrobotics.junction.Logger
 
 /**
@@ -27,8 +34,7 @@ class Intake : SubsystemBase() {
             1.0,
             rollerMOI,
             rollerDiameter,
-            { Robot.keyboard.getRawButton(1) },
-            { Robot.keyboard.getRawButton(2) }
+            { state }
         )
 
         Constants.RobotConstants.Mode.REPLAY -> object : IntakeIO {}
@@ -79,7 +85,8 @@ class Intake : SubsystemBase() {
         io.updateInputs(inputs)
         Logger.processInputs("intake", inputs)
 
-        Logger.recordOutput("intake/State", state)
+        Logger.recordOutput("intake/state", state)
+        Logger.recordOutput("intake/intakePoint", Pose2d.struct, Robot.robotPose.transformBy(Intake.poseToIntakePoint.toTransform2d()))
     }
 
     enum class IntakeState {
@@ -100,5 +107,7 @@ class Intake : SubsystemBase() {
     companion object {
         val rollerDiameter = Units.Inches.of(0.84)
         val rollerMOI = 0.0000719
+
+        val poseToIntakePoint = Transform3d(Translation3d((14.0 / 12).feet, 0.0.feet, 0.0.feet), Rotation3d())
     }
 }
