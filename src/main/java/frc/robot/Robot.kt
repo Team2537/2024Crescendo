@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.DriverStation
 import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
+import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -32,7 +34,7 @@ object Robot : LoggedRobot() {
     val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
 
 //    val climb = Climb()
-//    val pivot = Pivot()
+    val pivot = Pivot()
     val drivebase = Drivebase()
     val intake = Intake()
 //    val launcher = Launcher()
@@ -76,6 +78,14 @@ object Robot : LoggedRobot() {
             { -driverController.leftX },
             { -driverController.rightX },
             driverController.leftBumper()
+        )
+
+        driverController.a().onTrue(
+            Commands.either(
+                intake.getEjectCommand(),
+                intake.getIntakeCommand(),
+                intake.isFull
+            )
         )
     }
 
