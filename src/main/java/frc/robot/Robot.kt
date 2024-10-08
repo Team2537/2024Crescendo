@@ -1,15 +1,13 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.DriverStation
 import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.wpilibj.PowerDistribution
-import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.Autos
-import frc.robot.subsystems.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
-import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -29,17 +27,21 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  */
 object Robot : LoggedRobot() {
 
+    // This is so awful, but it's the best way to test DIO in simulation that I can think of
+    val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
+
 //    val climb = Climb()
 //    val pivot = Pivot()
     val drivebase = Drivebase()
-//    val intake = Intake()
+    val intake = Intake()
 //    val launcher = Launcher()
 
 
     val driverController: CommandXboxController = CommandXboxController(0)
 
-
     init {
+        DriverStation.silenceJoystickConnectionWarning(true)
+
         Logger.recordMetadata("Project Name", "2024Crescendo")
 
         when(Constants.RobotConstants.mode){
