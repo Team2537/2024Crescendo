@@ -117,8 +117,8 @@ class Pivot : SubsystemBase() {
         const val INVERT = false
 
         val originToPivot = Translation3d(
-            0.0,
-            0.0,
+            -0.242022,
+            0.05,
             0.516847 + 0.042919
         )
 
