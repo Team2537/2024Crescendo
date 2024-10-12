@@ -1,6 +1,5 @@
 package lib
 
-import com.pathplanner.lib.util.GeometryUtil
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
@@ -96,10 +95,6 @@ fun InterpolatingDoubleTreeMap.putMap(map: HashMap<Double, Double>){
  */
 fun CANSparkBase.setPosition(pos: Double) {
     this.pidController.setReference(pos, CANSparkBase.ControlType.kPosition)
-}
-
-fun Translation2d.flip(): Translation2d {
-    return GeometryUtil.flipFieldPosition(this)
 }
 
 fun SwerveDrive.evilGetHeading(): Double {
