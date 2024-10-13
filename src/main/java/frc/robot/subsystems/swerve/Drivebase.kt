@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve
 
 import choreo.Choreo
-import choreo.Choreo.ControlFunction
 import choreo.Choreo.TrajectoryLogger
 import choreo.auto.AutoFactory
 import choreo.trajectory.SwerveSample
@@ -42,6 +41,7 @@ import frc.robot.subsystems.swerve.module.SwerveModule
 import lib.LoggedTunableNumber
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
+import java.util.function.BiConsumer
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
 import kotlin.jvm.optionals.getOrDefault
@@ -191,14 +191,16 @@ class Drivebase : SubsystemBase("Drivebase") {
     private val yControl = PIDController(yControlP.get(), yControlI.get(), yControlD.get())
     private val rotControl = PIDController(rotControlP.get(), rotControlI.get(), rotControlD.get())
 
-    private val controller: ControlFunction<SwerveSample> =
-        ControlFunction { currPose: Pose2d, sample: SwerveSample ->
-            ChassisSpeeds.fromFieldRelativeSpeeds(
+    private val controller: BiConsumer<Pose2d, SwerveSample> =
+        BiConsumer { currPose: Pose2d, sample: SwerveSample ->
+            val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 xControl.calculate(currPose.translation.x, sample.x) + sample.vx,
                 yControl.calculate(currPose.translation.y, sample.y) + sample.vy,
                 rotControl.calculate(currPose.rotation.radians, sample.heading) + sample.omega,
                 pose.rotation
             )
+
+            applyChassisSpeeds(speeds)
         }
 
     private val trajLogger: TrajectoryLogger<SwerveSample> =
@@ -220,9 +222,8 @@ class Drivebase : SubsystemBase("Drivebase") {
         this,
         ::pose,
         controller,
-        ::applyChassisSpeeds,
         { DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red },
-        AutoFactory.ChoreoAutoBindings(),
+        AutoFactory.AutoBindings(),
         trajLogger
     )
 
