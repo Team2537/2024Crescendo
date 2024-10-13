@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.climb.Climb
@@ -114,6 +115,9 @@ object Robot : LoggedRobot() {
         )
 
         driverController.y().onTrue(pivot.getHomeCommand())
+
+        driverController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+        driverController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
     }
 
     /**
