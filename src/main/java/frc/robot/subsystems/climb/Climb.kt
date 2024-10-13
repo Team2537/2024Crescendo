@@ -15,6 +15,7 @@ import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import kotlin.math.sin
 import edu.wpi.first.wpilibj2.command.Commands.*
+import edu.wpi.first.wpilibj2.command.button.Trigger
 import java.util.function.BooleanSupplier
 
 class Climb : SubsystemBase() {
@@ -49,6 +50,13 @@ class Climb : SubsystemBase() {
     val leftInputs: ClimberArmIO.ClimberArmInputs = ClimberArmIO.ClimberArmInputs()
     val rightInputs: ClimberArmIO.ClimberArmInputs = ClimberArmIO.ClimberArmInputs()
 
+    var state = ClimbState.PRECLIMB
+        private set
+
+    val isPreclimb: Trigger = Trigger { state == ClimbState.PRECLIMB }
+    val isExtended: Trigger = Trigger { state == ClimbState.EXTENDED }
+    val isLatched: Trigger = Trigger { state == ClimbState.LATCHED }
+
     override fun periodic() {
         leftArmIO.updateInputs(leftInputs)
         rightArmIO.updateInputs(rightInputs)
@@ -73,6 +81,8 @@ class Climb : SubsystemBase() {
             ),
             Rotation3d()
         ))
+
+        Logger.recordOutput("climb/state", state)
     }
 
     fun getSineCommand() = run {
@@ -81,28 +91,39 @@ class Climb : SubsystemBase() {
         rightArmIO.setVoltage(Volts.of(voltage), false)
     }
 
-    fun getProgressiveClimb(continueButton: BooleanSupplier) =
-        sequence(
-            runOnce {
-                leftArmIO.setVoltage(extensionVoltage, false)
-                rightArmIO.setVoltage(extensionVoltage, false)
-            },
-            waitSeconds(2.0),
-            runOnce {
-                leftArmIO.stop()
-                rightArmIO.stop()
-            },
-            waitUntil(continueButton),
-            runOnce {
-                leftArmIO.setVoltage(retractionVoltage, false)
-                rightArmIO.setVoltage(retractionVoltage, false)
-            },
-            waitUntil { leftInputs.appliedCurrent > currentThreshold || rightInputs.appliedCurrent > currentThreshold },
-            runOnce {
-                leftArmIO.stop()
-                rightArmIO.stop()
-            }
-        )
+    fun getExtendCommand() = sequence(
+        runOnce {
+            leftArmIO.setVoltage(extensionVoltage, false)
+            rightArmIO.setVoltage(extensionVoltage, false)
+        },
+        waitSeconds(2.5),
+        runOnce {
+            leftArmIO.stop()
+            rightArmIO.stop()
+            state = ClimbState.EXTENDED
+        }
+    )
+
+    fun getRetractCommand() = sequence(
+        runOnce {
+            leftArmIO.setVoltage(retractionVoltage, false)
+            rightArmIO.setVoltage(retractionVoltage, false)
+        },
+        waitUntil {
+            leftInputs.appliedCurrent > currentThreshold || rightInputs.appliedCurrent > currentThreshold
+        },
+        runOnce {
+            leftArmIO.stop()
+            rightArmIO.stop()
+            state = ClimbState.LATCHED
+        }
+    )
+
+    enum class ClimbState {
+        PRECLIMB,
+        EXTENDED,
+        LATCHED
+    }
 
     companion object {
         val leftID = 18
