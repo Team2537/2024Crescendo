@@ -61,5 +61,5 @@ interface ClimberArmIO {
      *
      * @param voltage The voltage to supply
      */
-    fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false)
+    fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false) {}
 }
