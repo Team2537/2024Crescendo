@@ -5,14 +5,17 @@ import edu.wpi.first.math.geometry.Rotation3d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Current
+import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import kotlin.math.sin
+import edu.wpi.first.wpilibj2.command.Commands.*
+import java.util.function.BooleanSupplier
 
 class Climb : SubsystemBase() {
     private val leftArmIO: ClimberArmIO = when(Constants.RobotConstants.mode){
@@ -20,6 +23,7 @@ class Climb : SubsystemBase() {
             leftID,
             false,
             gearing,
+            drumRadius
         )
         Constants.RobotConstants.Mode.SIM -> ClimberArmIOSim(
             DCMotor.getNEO(1),
@@ -33,6 +37,7 @@ class Climb : SubsystemBase() {
             rightID,
             true,
             gearing,
+            drumRadius
         )
         Constants.RobotConstants.Mode.SIM -> ClimberArmIOSim(
             DCMotor.getNEO(1),
@@ -55,7 +60,7 @@ class Climb : SubsystemBase() {
             Translation3d(
                 0.0,
                 Units.inchesToMeters(10.0),
-                (leftInputs.relativePosition into Radians) * (drumRadius into Meters) + Units.inchesToMeters(8.0)
+                (leftInputs.relativePosition into Meters) + Units.inchesToMeters(8.0)
             ),
             Rotation3d()
         ))
@@ -64,7 +69,7 @@ class Climb : SubsystemBase() {
             Translation3d(
                 0.0,
                 Units.inchesToMeters(-10.0),
-                (rightInputs.relativePosition into Radians) * (drumRadius into Meters) + Units.inchesToMeters(8.0)
+                (rightInputs.relativePosition into Meters) + Units.inchesToMeters(8.0)
             ),
             Rotation3d()
         ))
@@ -76,14 +81,41 @@ class Climb : SubsystemBase() {
         rightArmIO.setVoltage(Volts.of(voltage), false)
     }
 
+    fun getProgressiveClimb(continueButton: BooleanSupplier) =
+        sequence(
+            runOnce {
+                leftArmIO.setVoltage(extensionVoltage, false)
+                rightArmIO.setVoltage(extensionVoltage, false)
+            },
+            waitSeconds(2.0),
+            runOnce {
+                leftArmIO.stop()
+                rightArmIO.stop()
+            },
+            waitUntil(continueButton),
+            runOnce {
+                leftArmIO.setVoltage(retractionVoltage, false)
+                rightArmIO.setVoltage(retractionVoltage, false)
+            },
+            waitUntil { leftInputs.appliedCurrent > currentThreshold || rightInputs.appliedCurrent > currentThreshold },
+            runOnce {
+                leftArmIO.stop()
+                rightArmIO.stop()
+            }
+        )
+
     companion object {
         val leftID = 18
         val rightID = 15
 
-        val maxExtension = Inches.of(60.0)
-        val drumRadius = Inches.of(0.750)
+        val maxExtension = Inches.of(48.0)
+        val drumRadius = Inches.of(0.325)
 
         val load = Constants.RobotConstants.robotWeight.divide(2.0)
         val gearing = 16/1.0
+
+        val extensionVoltage = Volts.of(12.0)
+        val retractionVoltage = Volts.of(-12.0)
+        val currentThreshold: Measure<Current> = Amps.of(25.0)
     }
 }
