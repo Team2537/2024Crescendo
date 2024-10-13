@@ -1,6 +1,5 @@
 package lib
 
-import com.pathplanner.lib.util.GeometryUtil
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
