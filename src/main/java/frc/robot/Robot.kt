@@ -32,7 +32,7 @@ object Robot : LoggedRobot() {
     // This is so awful, but it's the best way to test DIO in simulation that I can think of
     val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
 
-    val climb = Climb().apply { defaultCommand = getSineCommand() }
+    val climb = Climb()
     val pivot = Pivot()
     val drivebase = Drivebase()
     val intake = Intake()
