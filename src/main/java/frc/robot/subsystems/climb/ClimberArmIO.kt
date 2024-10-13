@@ -62,20 +62,4 @@ interface ClimberArmIO {
      * @param voltage The voltage to supply
      */
     fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false)
-
-    /**
-     * Attempts to run the motors at the given angular velocity.
-     *
-     * @param velocity The velocity at which the motors should spin
-     */
-    fun setMotorVelocity(velocity: Measure<Velocity<Angle>>)
-
-    /**
-     * Attempts to run the motors so that the robot would ascend/descend
-     * with the given linear velocity. The method will assume that only
-     * gearing ratios affect the conversion from angular to linear velocity.
-     *
-     * @param velocity The velocity to climb at.
-     */
-    fun setLinearVelocity(velocity: Measure<Velocity<Distance>>)
 }
