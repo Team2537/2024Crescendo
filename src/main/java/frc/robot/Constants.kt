@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Units.Pounds
 import edu.wpi.first.wpilibj.Filesystem
 import edu.wpi.first.wpilibj.RobotBase
 import lib.math.units.RotationVelocity
@@ -35,6 +36,8 @@ object Constants {
         val simMode: Mode = Mode.SIM
 
         val mode = if(RobotBase.isReal()) Mode.REAL else simMode
+
+        val robotWeight = Pounds.of(125.0)
     }
 
     object OperatorConstants {
