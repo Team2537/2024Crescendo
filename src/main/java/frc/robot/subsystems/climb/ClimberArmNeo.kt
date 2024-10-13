@@ -14,7 +14,6 @@ class ClimberArmNeo(
     private val id: Int,
     private val isInverted: Boolean,
     private val gearing: Double,
-    private val gains: ControllerGains
 ): ClimberArmIO {
     private val motor: CANSparkMax = CANSparkMax(id, CANSparkLowLevel.MotorType.kBrushless).apply {
         inverted = true

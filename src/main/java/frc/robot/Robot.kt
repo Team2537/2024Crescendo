@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
@@ -31,7 +32,7 @@ object Robot : LoggedRobot() {
     // This is so awful, but it's the best way to test DIO in simulation that I can think of
     val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
 
-//    val climb = Climb()
+    val climb = Climb().apply { defaultCommand = getSineCommand() }
     val pivot = Pivot()
     val drivebase = Drivebase()
     val intake = Intake()
