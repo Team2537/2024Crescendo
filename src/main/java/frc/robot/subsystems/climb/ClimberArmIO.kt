@@ -61,7 +61,7 @@ interface ClimberArmIO {
      *
      * @param voltage The voltage to supply
      */
-    fun setVoltage(voltage: Measure<Voltage>)
+    fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false)
 
     /**
      * Attempts to run the motors at the given angular velocity.
