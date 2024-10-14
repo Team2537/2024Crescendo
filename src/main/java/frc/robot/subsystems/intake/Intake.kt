@@ -86,7 +86,7 @@ class Intake : SubsystemBase() {
         Logger.processInputs("intake", inputs)
 
         Logger.recordOutput("intake/state", state)
-        Logger.recordOutput("intake/intakePoint", Pose2d.struct, Robot.robotPose.transformBy(Intake.poseToIntakePoint.toTransform2d()))
+        Logger.recordOutput("intake/intakePoint", Pose2d.struct, Robot.robotPose.transformBy(poseToIntakePoint.toTransform2d()))
     }
 
     enum class IntakeState {
