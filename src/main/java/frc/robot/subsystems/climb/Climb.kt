@@ -1,85 +1,142 @@
 package frc.robot.subsystems.climb
 
-import com.revrobotics.CANSparkBase
-import com.revrobotics.CANSparkLowLevel
-import com.revrobotics.CANSparkMax
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
+import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.system.plant.DCMotor
+import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Current
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Units.*
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
-import java.util.function.Supplier
+import lib.math.units.into
+import org.littletonrobotics.junction.Logger
+import kotlin.math.sin
+import edu.wpi.first.wpilibj2.command.Commands.*
+import edu.wpi.first.wpilibj2.command.button.Trigger
+import java.util.function.BooleanSupplier
 
 class Climb : SubsystemBase() {
-
-    /** The spark max for the left motor */
-    val leftMotor = CANSparkMax(Constants.ClimbConstants.LEFT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
-
-    /** The spark max for the right motor */
-    val rightMotor = CANSparkMax(Constants.ClimbConstants.RIGHT_CLIMB_PORT, CANSparkLowLevel.MotorType.kBrushless)
-
-    init {
-        // Conversion ratio for encoders, so that the position is in rotations outside of the gearbox
-        leftMotor.encoder.setPositionConversionFactor(1.0 / 16.0)
-        rightMotor.encoder.setPositionConversionFactor(1.0 / 16.0)
-
-        // Logging for Shuffleboard, position and velocity of the motors
-        val driveTab: ShuffleboardTab = Shuffleboard.getTab("Climb Subsystem")
-        driveTab.addNumber("Left Climb Motor Velocity") { leftMotor.encoder.velocity }
-        driveTab.addNumber("Right Climb Motor Velocity") { rightMotor.encoder.velocity }
-        driveTab.addNumber("Left Climb Motor Position") { leftMotor.encoder.position }
-        driveTab.addNumber("Right Climb Motor Position") { rightMotor.encoder.position }
-
-        // Reset encoders to 0, since that only gets rest on power cycle not code deploy
-        rightMotor.encoder.setPosition(0.0)
-        leftMotor.encoder.setPosition(0.0)
-
-        // Set the motors to brake mode so that they don't move (as easily) when disabled
-        leftMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
-        rightMotor.setIdleMode(CANSparkBase.IdleMode.kBrake)
-
-        // "Burn" motor settings to the Spark Maxes, so that they persist across power cycles
-        rightMotor.burnFlash()
-        leftMotor.burnFlash()
+    private val leftArmIO: ClimberArmIO = when(Constants.RobotConstants.mode){
+        Constants.RobotConstants.Mode.REAL -> ClimberArmNeo(
+            leftID,
+            false,
+            gearing,
+            drumRadius
+        )
+        Constants.RobotConstants.Mode.SIM -> ClimberArmIOSim(
+            DCMotor.getNEO(1),
+            gearing, load, drumRadius, maxExtension
+        )
+        Constants.RobotConstants.Mode.REPLAY -> object : ClimberArmIO {}
     }
+
+    private val rightArmIO: ClimberArmIO = when(Constants.RobotConstants.mode){
+        Constants.RobotConstants.Mode.REAL -> ClimberArmNeo(
+            rightID,
+            true,
+            gearing,
+            drumRadius
+        )
+        Constants.RobotConstants.Mode.SIM -> ClimberArmIOSim(
+            DCMotor.getNEO(1),
+            gearing, load, drumRadius, maxExtension
+        )
+        Constants.RobotConstants.Mode.REPLAY -> object : ClimberArmIO {}
+    }
+
+    val leftInputs: ClimberArmIO.ClimberArmInputs = ClimberArmIO.ClimberArmInputs()
+    val rightInputs: ClimberArmIO.ClimberArmInputs = ClimberArmIO.ClimberArmInputs()
+
+    var state = ClimbState.PRECLIMB
+        private set
+
+    val isPreclimb: Trigger = Trigger { state == ClimbState.PRECLIMB }
+    val isExtended: Trigger = Trigger { state == ClimbState.EXTENDED }
+    val isLatched: Trigger = Trigger { state == ClimbState.LATCHED }
 
     override fun periodic() {
+        leftArmIO.updateInputs(leftInputs)
+        rightArmIO.updateInputs(rightInputs)
+
+        Logger.processInputs("climb/leftArm", leftInputs)
+        Logger.processInputs("climb/rightArm", rightInputs)
+
+        Logger.recordOutput("climb/leftArmPose", Pose3d.struct, Pose3d(
+            Translation3d(
+                0.0,
+                Units.inchesToMeters(10.0),
+                (leftInputs.relativePosition into Meters) + Units.inchesToMeters(8.0)
+            ),
+            Rotation3d()
+        ))
+
+        Logger.recordOutput("climb/rightArmPose", Pose3d.struct, Pose3d(
+            Translation3d(
+                0.0,
+                Units.inchesToMeters(-10.0),
+                (rightInputs.relativePosition into Meters) + Units.inchesToMeters(8.0)
+            ),
+            Rotation3d()
+        ))
+
+        Logger.recordOutput("climb/state", state)
     }
 
-    override fun simulationPeriodic() {
+    fun getSineCommand() = run {
+        val voltage = sin(Timer.getFPGATimestamp()) * 12.0
+        leftArmIO.setVoltage(Volts.of(voltage), false)
+        rightArmIO.setVoltage(Volts.of(voltage), false)
     }
 
-    /**
-     * Raise the arms at a constant speed
-     */
-    fun armsUp() {
-        leftMotor.set(Constants.ClimbConstants.MOTOR_SPEED_UP)
-        rightMotor.set(Constants.ClimbConstants.MOTOR_SPEED_UP)
+    fun getExtendCommand() = sequence(
+        runOnce {
+            leftArmIO.setVoltage(extensionVoltage, false)
+            rightArmIO.setVoltage(extensionVoltage, false)
+        },
+        waitSeconds(2.5),
+        runOnce {
+            leftArmIO.stop()
+            rightArmIO.stop()
+            state = ClimbState.EXTENDED
+        }
+    )
+
+    fun getRetractCommand() = sequence(
+        runOnce {
+            leftArmIO.setVoltage(retractionVoltage, false)
+            rightArmIO.setVoltage(retractionVoltage, false)
+        },
+        waitUntil {
+            leftInputs.appliedCurrent > currentThreshold || rightInputs.appliedCurrent > currentThreshold
+        },
+        runOnce {
+            leftArmIO.stop()
+            rightArmIO.stop()
+            state = ClimbState.LATCHED
+        }
+    )
+
+    enum class ClimbState {
+        PRECLIMB,
+        EXTENDED,
+        LATCHED
     }
 
-    /**
-     * Lower the arms at a constant speed
-     */
-    fun armsDown() {
-        leftMotor.set(Constants.ClimbConstants.MOTOR_SPEED_DOWN)
-        rightMotor.set(Constants.ClimbConstants.MOTOR_SPEED_DOWN)
-    }
+    companion object {
+        val leftID = 18
+        val rightID = 15
 
-    /**
-     * Stop the motors
-     */
-    fun stop() {
-        leftMotor.set(0.0)
-        rightMotor.set(0.0)
-    }
+        val maxExtension = Inches.of(48.0)
+        val drumRadius = Inches.of(0.325)
 
-    /**
-     * Set the raw speeds of the motors
-     * @param speed The speed to set the motors to
-     */
-    fun setRawSpeeds(speed: Double) {
-        leftMotor.set(speed)
-        rightMotor.set(speed)
-    }
+        val load = Constants.RobotConstants.robotWeight.divide(2.0)
+        val gearing = 16/1.0
 
-    fun climbCommand(speed: Supplier<Double>) = run { setRawSpeeds(speed.get()) }
+        val extensionVoltage = Volts.of(12.0)
+        val retractionVoltage = Volts.of(-12.0)
+        val currentThreshold: Measure<Current> = Amps.of(25.0)
+    }
 }

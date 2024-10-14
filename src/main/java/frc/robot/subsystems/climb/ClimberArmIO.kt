@@ -15,12 +15,12 @@ interface ClimberArmIO {
         /**
          * The relative position as measured by the motor's encoder.
          */
-        val relativePosition: MutableMeasure<Angle> = MutableMeasure.zero(Radians)
+        val relativePosition: MutableMeasure<Distance> = MutableMeasure.zero(Inches)
 
         /**
          * The angular velocity as measured by the motor's encoder.
          */
-        val velocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RadiansPerSecond)
+        val velocity: MutableMeasure<Velocity<Distance>> = MutableMeasure.zero(InchesPerSecond)
 
         /**
          * The voltage applied to the motor.
@@ -62,4 +62,9 @@ interface ClimberArmIO {
      * @param voltage The voltage to supply
      */
     fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false) {}
+
+    /**
+     * Stops the motor.
+     */
+    fun stop() {}
 }

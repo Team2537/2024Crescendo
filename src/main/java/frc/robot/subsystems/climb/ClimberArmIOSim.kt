@@ -20,21 +20,17 @@ class ClimberArmIOSim(
         drumRadius into Meters,
         0.0, // Minimum extension
         maxExtension into Meters,
-        true, // Simulate gravity,
+        false, // Simulate gravity,
         0.0 // Initial position
     )
 
     private val cachedVoltage = MutableMeasure.zero(Volts)
 
     override fun updateInputs(inputs: ClimberArmIO.ClimberArmInputs) {
-        inputs.velocity.mut_replace(
-            (elevatorSim.velocityMetersPerSecond) / (drumRadius.divide(2.0) into Meters),
-            RadiansPerSecond
-        )
-        inputs.relativePosition.mut_replace(
-            (elevatorSim.positionMeters) / (drumRadius.divide(2.0) into Meters),
-            Radians
-        )
+        elevatorSim.update(0.02)
+
+        inputs.velocity.mut_replace(elevatorSim.velocityMetersPerSecond, MetersPerSecond)
+        inputs.relativePosition.mut_replace(elevatorSim.positionMeters, Meters)
         inputs.appliedCurrent.mut_replace(Amps.of(elevatorSim.currentDrawAmps))
         inputs.appliedVoltage.mut_replace(cachedVoltage)
     }
@@ -42,5 +38,9 @@ class ClimberArmIOSim(
     override fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean) {
         cachedVoltage.mut_replace(voltage)
         elevatorSim.setInputVoltage(voltage into Volts)
+    }
+
+    override fun stop() {
+        elevatorSim.setInputVoltage(0.0)
     }
 }
