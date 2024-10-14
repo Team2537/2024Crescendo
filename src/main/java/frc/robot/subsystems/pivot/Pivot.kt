@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.Constants
 import lib.ControllerGains
 import lib.math.units.degrees
+import lib.math.units.degreesPerSecond
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import java.util.function.DoubleSupplier
@@ -69,20 +70,25 @@ class Pivot : SubsystemBase() {
     }.withName("Manual Control")
 
     fun getHomeCommand() =
-        runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) }
-            .andThen(WaitUntilCommand { inputs.isAtHardstop })
-            .andThen(runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() }).withName("Home Pivot")
+        Commands.sequence(
+            runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) },
+            Commands.waitUntil { inputs.isAtHardstop },
+            runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() }
+        ).withName("Home Pivot")
 
     fun getSensorlessHomeCommand(threshold: Double = 5.5) =
-        runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) }
-            .andThen(WaitUntilCommand { currentSpikeTracker.lastValue() > threshold })
-            .andThen(runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() })
-            .withName("Sensorless Home Pivot")
+        Commands.sequence(
+            runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) },
+            Commands.waitUntil { currentSpikeTracker.lastValue() > threshold && inputs.velocity <= 1.0.degreesPerSecond},
+            runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() }
+        ).withName("Sensorless Home Pivot")
+
 
     fun getSendToPositionCommand(position: Measure<Angle>) =
-        runOnce { io.setTargetPosition(position) }
-            .until { inputs.relativePosition.isNear(position, 1.0)}
-            .withName("Send To Position: ${position.baseUnitMagnitude()}")
+        Commands.sequence(
+            runOnce { io.setTargetPosition(position)},
+            Commands.waitUntil { inputs.relativePosition.isNear(position, 1.0) }
+        ).withName("Send To Position: ${position.baseUnitMagnitude()}")
 
     override fun periodic() {
         io.updateInputs(inputs)
