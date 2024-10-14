@@ -17,7 +17,7 @@ class ClimberArmNeo(
     private val drumRadius: Measure<Distance>,
 ): ClimberArmIO {
     private val motor: CANSparkMax = CANSparkMax(id, CANSparkLowLevel.MotorType.kBrushless).apply {
-        inverted = true
+        inverted =  isInverted
         encoder.positionConversionFactor = 1/gearing
         encoder.velocityConversionFactor = 1/gearing
         idleMode = CANSparkBase.IdleMode.kBrake
