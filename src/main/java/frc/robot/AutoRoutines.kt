@@ -47,11 +47,11 @@ class AutoRoutines(
 
     fun dumbFourNoteA1_A3(): Command {
         val CS_A1 = factory.trajectory("CS_A1", factory.voidLoop())
-        val A1_CS = factory.trajectoryCommand("A1_CS")
-        val CS_A2 = factory.trajectoryCommand("CS_A2")
-        val A2_CS = factory.trajectoryCommand("A2_CS")
-        val CS_A3 = factory.trajectoryCommand("CS_A3")
-        val A3_CS = factory.trajectoryCommand("A3_CS")
+        val A1_CS = factory.trajectoryCommand("A1_CS").finallyDo(drivebase::stop)
+        val CS_A2 = factory.trajectoryCommand("CS_A2").finallyDo(drivebase::stop)
+        val A2_CS = factory.trajectoryCommand("A2_CS").finallyDo(drivebase::stop)
+        val CS_A3 = factory.trajectoryCommand("CS_A3").finallyDo(drivebase::stop)
+        val A3_CS = factory.trajectoryCommand("A3_CS").finallyDo(drivebase::stop)
 
         var startPose: Pose2d = Pose2d()
         CS_A1.initialPose.ifPresent { startPose = it }
@@ -60,7 +60,7 @@ class AutoRoutines(
             InstantCommand({ drivebase.resetOdometry(startPose) }),
             waitPrintCommand(2.0, "Launching first note"),
             parallel(
-                CS_A1.cmd(),
+                CS_A1.cmd().finallyDo(drivebase::stop),
                 PrintCommand("Intaking second note")
             ),
             A1_CS,
@@ -101,7 +101,7 @@ class AutoRoutines(
                     .andThen(
                         parallel(
                             waitPrintCommand(2.0, "Intaking second note"),
-                            CS_A1.cmd()
+                            CS_A1.cmd().finallyDo(drivebase::stop)
                         )
                     ).withName("fourNoteA1_A3 Entry")
             )
@@ -110,15 +110,15 @@ class AutoRoutines(
         CS_A1.done()
             .onTrue(
                 either(
-                    A1_CS.cmd()
+                    A1_CS.cmd().finallyDo(drivebase::stop)
                         .andThen(waitPrintCommand(2.0, "Launching second note"))
                         .andThen(
                             Commands.parallel(
                                 waitPrintCommand(2.0, "Intaking third note"),
-                                CS_A2.cmd()
+                                CS_A2.cmd().finallyDo(drivebase::stop)
                             )
                         ),
-                    A1_A2.cmd()
+                    A1_A2.cmd().finallyDo(drivebase::stop)
                 ) { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A1", false) else false }
             )
 
@@ -126,36 +126,36 @@ class AutoRoutines(
         CS_A2.done()
             .onTrue(
                 either(
-                    A2_CS.cmd()
+                    A2_CS.cmd().finallyDo(drivebase::stop)
                         .andThen(waitPrintCommand(2.0, "Launching third note"))
                         .andThen(
                             Commands.parallel(
                                 waitPrintCommand(2.0, "Intaking fourth note"),
-                                CS_A3.cmd()
+                                CS_A3.cmd().finallyDo(drivebase::stop)
                             )
                         ),
-                    A2_A3.cmd()
+                    A2_A3.cmd().finallyDo(drivebase::stop)
                 ) { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A2", false) else false }
             )
 
         CS_A3.done().and { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A3", false) else false }
             .onTrue(
-                A3_CS.cmd()
+                A3_CS.cmd().finallyDo(drivebase::stop)
                     .andThen(waitPrintCommand(2.0, "Launching fourth note"))
             )
 
         A1_A2.done()
             .onTrue(
                 either(
-                    A2_CS.cmd()
+                    A2_CS.cmd().finallyDo(drivebase::stop)
                         .andThen(waitPrintCommand(2.0, "Launching second note"))
                         .andThen(
                             parallel(
                                 waitPrintCommand(2.0, "Intaking third note"),
-                                CS_A3.cmd()
+                                CS_A3.cmd().finallyDo(drivebase::stop)
                             )
                         ),
-                    A2_A3.cmd()
+                    A2_A3.cmd().finallyDo(drivebase::stop)
                 ) { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A2", false) else false }
             )
 
@@ -163,11 +163,11 @@ class AutoRoutines(
 
         A2_A3.done().and { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A3", false) else false }
             .onTrue(
-                A3_CS.cmd()
+                A3_CS.cmd().finallyDo(drivebase::stop)
                     .andThen(waitPrintCommand(2.0, "Launching third note"))
             )
 
-        return loop.cmd()
+        return loop.cmd().finallyDo(drivebase::stop)
     }
 }
 
