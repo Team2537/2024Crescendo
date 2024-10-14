@@ -408,6 +408,10 @@ class Drivebase : SubsystemBase("Drivebase") {
         return routineToUse.dynamic(direction)
     }
 
+    fun stop() {
+        applyChassisSpeeds(ChassisSpeeds())
+    }
+
     companion object {
         private val robotToCam: Transform3d = Transform3d(
             Translation3d(
