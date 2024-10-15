@@ -91,7 +91,7 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
      *
      * @return A command that launches a note.
      */
-    fun getLaunchCommand(desiredVelocity: Measure<Velocity<Angle>>, percentTolerance: Double = 0.05): Command {
+    fun getLaunchCommandAngular(desiredVelocity: Measure<Velocity<Angle>>, percentTolerance: Double = 0.05): Command {
         return Commands.sequence(
             runOnce {
                 io.setBrakes(
@@ -127,8 +127,8 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
      *
      * @return A command that launches a note.
      */
-    fun getLaunchCommand(desiredVelocity: Measure<Velocity<Distance>>, percentTolerance: Double = 0.05): Command {
-        return getLaunchCommand(linVelToAngVel(desiredVelocity, flywheelRadius), percentTolerance)
+    fun getLaunchCommandLinear(desiredVelocity: Measure<Velocity<Distance>>, percentTolerance: Double = 0.05): Command {
+        return getLaunchCommandAngular(linVelToAngVel(desiredVelocity, flywheelRadius), percentTolerance)
     }
 
     /**
