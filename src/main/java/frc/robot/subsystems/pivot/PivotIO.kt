@@ -92,4 +92,7 @@ interface PivotIO {
      * @param d The derivative gain.
      */
     fun setPID(p: Double, i: Double, d: Double) {}
+
+    /** Stop the pivot */
+    fun stop() {}
 }

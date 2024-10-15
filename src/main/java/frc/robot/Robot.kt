@@ -1,12 +1,15 @@
 package frc.robot
 
-import frc.robot.subsystems.launcher.Launcher
+import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
-import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.*
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.Autos
-import frc.robot.subsystems.Climb
+import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
@@ -29,25 +32,24 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter
  */
 object Robot : LoggedRobot() {
 
-//    val climb = Climb()
-//    val pivot = Pivot()
+    // This is so awful, but it's the best way to test DIO in simulation that I can think of
+    val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
+
+    val climb = Climb()
+    val pivot = Pivot()
     val drivebase = Drivebase()
-//    val intake = Intake()
+    val intake = Intake()
 //    val launcher = Launcher()
 
+    val robotPose
+        get() = drivebase.pose
 
-    val driverController: CommandXboxController = CommandXboxController(0).apply {
-        // BINDINGS GO HERE
-        drivebase.defaultCommand = drivebase.driveCommand(
-            { -leftY },
-            { -leftX },
-            { -rightX },
-            leftBumper()
-        )
-    }
-
+    val driverController: CommandXboxController = CommandXboxController(0)
+    val operatorController: CommandXboxController = CommandXboxController(1)
 
     init {
+        DriverStation.silenceJoystickConnectionWarning(true)
+
         Logger.recordMetadata("Project Name", "2024Crescendo")
 
         when(Constants.RobotConstants.mode){
@@ -71,9 +73,57 @@ object Robot : LoggedRobot() {
             }
         }
 
+        CommandScheduler.getInstance().onCommandInitialize { command ->
+            Logger.recordOutput("commands/${command.name}", true)
+        }
+
+        CommandScheduler.getInstance().onCommandFinish { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
+        CommandScheduler.getInstance().onCommandInterrupt { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
         Logger.start()
+        configureBindings()
     }
 
+    private fun configureBindings() {
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -driverController.leftY },
+            { -driverController.leftX },
+            { -driverController.rightX },
+            driverController.leftBumper()
+        )
+
+        driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
+
+        operatorController.a().onTrue(
+            either(
+                sequence(
+                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+                    parallel(
+                        intake.getEjectCommand(),
+                        print("Ejecting Launcher") // Replace with actual launcher eject command
+                    )
+                ),
+                sequence(
+                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+                    parallel(
+                        intake.getIntakeCommand(),
+                        print("Intaking Launcher") // Replace with actual launcher intake command
+                    )
+                ),
+                intake.isFull
+            ).withName("Intake Auto Command")
+        )
+
+        operatorController.y().onTrue(pivot.getHomeCommand())
+
+        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
+    }
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like
