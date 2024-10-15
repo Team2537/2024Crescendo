@@ -1,14 +1,16 @@
 package lib
 
-import com.pathplanner.lib.util.GeometryUtil
 import com.revrobotics.CANSparkBase
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Transform2d
+import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj2.command.Subsystem
-import edu.wpi.first.wpilibj2.command.WaitCommand
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
@@ -101,10 +103,6 @@ fun CANSparkBase.setPosition(pos: Double) {
     this.pidController.setReference(pos, CANSparkBase.ControlType.kPosition)
 }
 
-fun Translation2d.flip(): Translation2d {
-    return GeometryUtil.flipFieldPosition(this)
-}
-
 fun SwerveDrive.evilGetHeading(): Double {
     return javaClass.getDeclaredField("lastHeadingRadians").let {
         it.isAccessible = true
@@ -117,24 +115,30 @@ fun calculateAngle(distance: Span): Double {
     return (-0.33 * gx) + 78.5
 }
 
-/**
- * Makes a command that waits until the given condition is true.
- *
- * @param cond The condition to wait for.
- */
-fun waitUntil(cond: () -> Boolean): WaitUntilCommand = WaitUntilCommand(cond)
+fun Pose2d.near(other: Pose2d, epsilon: Double = 1E-9): Boolean {
+    return this.translation.near(other.translation, epsilon) && this.rotation.near(other.rotation, epsilon)
+}
 
-/**
- * Makes a command that waits until the given condition is false.
- *
- * @param cond The condition to wait for.
- */
-fun waitWhile(cond: () -> Boolean): WaitUntilCommand = WaitUntilCommand { !cond() }
+fun Rotation2d.near(other: Rotation2d, epsilon: Double = 1E-9): Boolean {
+    return this.cos.near(other.cos, epsilon) && this.sin.near(other.sin, epsilon)
+}
 
-/**
- * Makes a command the waits for a given amount of time.
- *
- * @param seconds How long to wait, in seconds.
- */
-fun waitFor(seconds: Double): WaitCommand = WaitCommand(seconds)
+fun Translation2d.near(other: Translation2d, epsilon: Double = 1E-9): Boolean {
+    return this.x.near(other.x, epsilon) && this.y.near(other.y, epsilon)
+}
 
+fun Pose2d.flip() = Pose2d(this.translation.flip(), this.rotation.flip())
+
+fun Translation2d.flip() = Translation2d(16.54 - this.x, this.y)
+
+fun Rotation2d.flip(): Rotation2d = this.rotateBy(Rotation2d.fromDegrees(180.0))
+
+fun Pose3d.flip() = Pose3d(this.translation.flip(), this.rotation.flip())
+
+fun Translation3d.flip() = Translation3d(16.54 - this.x, this.y, this.z)
+
+fun Rotation3d.flip(): Rotation3d = this.rotateBy(Rotation3d(0.0, 0.0, Math.PI))
+
+fun Gamepiece.flip() = Gamepiece(this.first.flip(), this.second)
+
+fun Transform3d.toTransform2d() = Transform2d(this.translation.toTranslation2d(), this.rotation.toRotation2d())
