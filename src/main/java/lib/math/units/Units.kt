@@ -28,12 +28,20 @@ import edu.wpi.first.units.*
 import edu.wpi.first.units.Unit
 import edu.wpi.first.units.Units.*
 
-fun angularToLinear(velocity: Measure<Velocity<Angle>>, radius: Measure<Distance>): Measure<Velocity<Distance>> {
+fun angVelToLinVel(velocity: Measure<Velocity<Angle>>, radius: Measure<Distance>): Measure<Velocity<Distance>> {
     return (radius * (velocity into RadiansPerSecond)).per(Second)
 }
 
-fun linearToAngular(velocity: Measure<Velocity<Distance>>, radius: Measure<Distance>): Measure<Velocity<Angle>> {
+fun linVelToAngVel(velocity: Measure<Velocity<Distance>>, radius: Measure<Distance>): Measure<Velocity<Angle>> {
     return ((velocity into MetersPerSecond) / (radius into Meters)) measuredIn RadiansPerSecond
+}
+
+fun angPosToLinPos(position: Measure<Angle>, radius: Measure<Distance>): Measure<Distance> {
+    return radius * (position into Radians)
+}
+
+fun linPosToAngPos(position: Measure<Distance>, radius: Measure<Distance>): Measure<Angle> {
+    return (position into Meters) / (radius into Meters) measuredIn Radians
 }
 
 /**
