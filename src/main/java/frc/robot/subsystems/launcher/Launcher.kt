@@ -2,17 +2,15 @@ package frc.robot.subsystems.launcher
 
 import edu.wpi.first.units.*
 import edu.wpi.first.units.Units.Inches
+import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Robot
 import frc.robot.subsystems.pivot.Pivot
 import lib.math.units.*
-import lib.waitFor
 import lib.waitUntil
-import lib.waitWhile
 import org.littletonrobotics.junction.Logger
 
 // IO is passed in to avoid hard dependency/to decouple.
@@ -34,7 +32,7 @@ import org.littletonrobotics.junction.Logger
  *
  * @see LauncherIO
  */
-class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance> = 2.0 measuredIn Inches) : SubsystemBase() {
+class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance> = 3.0 measuredIn Inches) : SubsystemBase() {
 
     /**
      * [Launcher inputs][LauncherIO.LauncherInputs]
@@ -52,7 +50,7 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
      * flywheel angular velocity and flywheel radius.
      */
     val flywheelLinearVelocity: Measure<Velocity<Distance>>
-        get() = angularToLinear(flywheelVelocity, flywheelRadius)
+        get() = angVelToLinVel(flywheelVelocity, flywheelRadius)
 
     /**
      * Gets the average velocity of the flywheels.
@@ -83,162 +81,54 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
     }
 
     /**
-     * Sets the flywheel speeds to a velocity
-     * @param velocity The velocity to set the flywheels to
-     */
-    fun setFlywheelVelocity(velocity: RotationVelocity){
-        io.setFlywheelVelocity(velocity)
-    }
-
-    /**
-     * Sets the flywheel speeds to a voltage
-     * @param voltage The voltage to set the flywheels to
-     */
-    fun setFlywheelVoltage(voltage: Measure<Voltage>){
-        io.setFlywheelVoltage(voltage)
-    }
-
-    /**
-     * Stops the flywheels.
-     */
-    fun stopFlywheels() {
-        io.stopFlywheels()
-    }
-
-    /**
-     * Stops the roller.
-     */
-    fun stopRoller() {
-        io.stopRoller()
-    }
-
-    /**
-     * Sets the roller target position to a setpoint
-     * @param position The position to set the target to
-     */
-    fun setRollerPosition(position: Measure<Angle>) {
-        io.setRollerPosition(position)
-    }
-
-    /**
-     * Gets the current position of the roller
-     * @return The current position of the roller
-     */
-    fun getRollerPosition(): Measure<Angle> {
-        return inputs.rollerRelativePosition.view
-    }
-
-    /**
-     * The position of the roller. Semantically, the individual
-     * get and set methods are more "correct."
+     * Gets a command that, when run, will power the flywheels and feed the note
+     * into them. If no note is present when the command is run, nothing happens.
      *
-     * @see getRollerPosition
-     * @see setRollerPosition
-     */
-    var rollerPosition: Measure<Angle>
-        get() = getRollerPosition()
-        set(value) = setRollerPosition(value)
-
-    /**
-     * Powers the roller's motor to rotate at the given velocity.
+     * @param desiredVelocity The desired angular velocity of the flywheels as
+     * they launch the note.
      *
-     * @param velocity The desired velocity.
+     * @param percentTolerance The percent tolerance for the flywheel velocity to be considered at the desired velocity.
+     *
+     * @return A command that launches a note.
      */
-    fun setRollerVelocity(velocity: Measure<Velocity<Angle>>) {
-        io.setRollerVelocity(velocity)
+    fun getLaunchCommand(desiredVelocity: Measure<Velocity<Angle>>, percentTolerance: Double = 0.05): Command {
+        return Commands.sequence(
+            runOnce {
+                io.setBrakes(
+                    topBrake = false,
+                    bottomBrake = false,
+                    rollerBrake = true
+                )
+                io.setFlywheelVelocity(desiredVelocity)
+            },
+            waitUntil { inputs.topFlywheel.velocity.isNear(desiredVelocity, percentTolerance) && inputs.bottomFlywheel.velocity.isNear(desiredVelocity, percentTolerance) },
+            runOnce { io.setRollerVoltage(12 measuredIn Volts)},
+            Commands.waitUntil { !inputs.hasNote },
+            Commands.waitSeconds(0.5),
+            runOnce {
+                io.setRollerVoltage(0 measuredIn Volts)
+                io.setFlywheelVelocity(0.rpm)
+                io.setBrakes(
+                    topBrake = true,
+                    bottomBrake = true,
+                    rollerBrake = true
+                )
+            }
+        ).onlyIf { inputs.hasNote }
     }
-
-    /**
-     * Gets the roller's current velocity.
-     *
-     * @return The roller's velocity
-     */
-    fun getRollerVelocity(): Measure<Velocity<Angle>> {
-        return inputs.rollerVelocity
-    }
-
-    /**
-     * The velocity of the roller. Semantically, the individual
-     * get and set methods are more "correct."
-     *
-     * @see getRollerVelocity
-     * @see setRollerVelocity
-     */
-    var rollerVelocity: Measure<Velocity<Angle>>
-        get() = getRollerVelocity()
-        set(value) = setRollerVelocity(value)
 
     /**
      * Gets a command that, when run, will power the flywheels and feed the note
      * into them. If no note is present when the command is run, nothing happens.
      *
-     * @param desiredVelocity The desired linear velocity of the note as it
-     * exits the launcher.
+     * @param desiredVelocity The desired linear velocity of the note as it is launched.
+     *
+     * @param percentTolerance The percent tolerance for the flywheel velocity to be considered at the desired velocity.
      *
      * @return A command that launches a note.
      */
-    fun getLaunchCommand(desiredVelocity: Measure<Velocity<Distance>>): Command {
-        val desiredFlywheelVelocity = linearToAngular(desiredVelocity, flywheelRadius)
-        val errorTolerance = 0.05 // percent
-
-        return Commands.either(
-            // Only run if we have a note.
-            Commands.sequence(
-                runOnce { io.setFlywheelLinearVelocity(desiredVelocity) },
-
-                waitUntil {
-                    inputs.topFlywheel.velocity.isNear(desiredFlywheelVelocity, errorTolerance) &&
-                            inputs.bottomFlywheel.velocity.isNear(desiredFlywheelVelocity, errorTolerance)
-                },
-
-                runOnce { io.setRollerVelocity(desiredFlywheelVelocity) }, // speed is key
-
-                waitWhile(inputs::hasNote),
-
-                runOnce {
-                    stopFlywheels()
-                    stopRoller()
-                },
-            ),
-            Commands.none(),
-            inputs::hasNote,
-        )
-    }
-
-    /**
-     * Gets a command that, when run, will power the flywheels and feed the note
-     * to them. If no note is present when the command is run, nothing happens.
-     *
-     * @param desiredFlywheelVelocity The velocity to get the flywheels at before
-     * feeding them the note. Defaults to 6000 rpm.
-     *
-     * @return A command that launches a note.
-     */
-    fun getLaunchCommand(desiredFlywheelVelocity: Measure<Velocity<Angle>> = 6000.rpm): Command {
-        val errorTolerance = 0.05 // percent
-
-        return Commands.either(
-            // Only run if we have a note.
-            Commands.sequence(
-                runOnce { io.setFlywheelVelocity(desiredFlywheelVelocity) },
-
-                waitUntil {
-                    inputs.topFlywheel.velocity.isNear(desiredFlywheelVelocity, errorTolerance) &&
-                    inputs.bottomFlywheel.velocity.isNear(desiredFlywheelVelocity, errorTolerance)
-                },
-
-                runOnce { io.setRollerVelocity(desiredFlywheelVelocity) }, // speed is key
-
-                waitWhile(inputs::hasNote),
-
-                runOnce {
-                    stopFlywheels()
-                    stopRoller()
-                },
-            ),
-            Commands.none(),
-            inputs::hasNote,
-        )
+    fun getLaunchCommand(desiredVelocity: Measure<Velocity<Distance>>, percentTolerance: Double = 0.05): Command {
+        return getLaunchCommand(linVelToAngVel(desiredVelocity, flywheelRadius), percentTolerance)
     }
 
     /**
@@ -249,18 +139,8 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
      */
     fun getLoadCommand(): Command {
         return Commands.sequence(
-            runOnce {
-                // Avoid launching the note prematurely
-                stopFlywheels()
-
-                // FIXME: use a real roller velocity
-                rollerVelocity = 20.rpm
-            },
-
-            waitUntil(inputs::hasNote),
-            // The old command waited for 0.15 seconds after detecting
-            // the note, so I'm doing that here as well.
-            waitFor(0.15),
+            runOnce { io.setRollerPosition(inputs.rollerRelativePosition + (linPosToAngPos(5.0 measuredIn Inches, flywheelRadius))) },
+            Commands.waitUntil(noteTrigger)
         )
     }
 
@@ -269,10 +149,5 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
      *
      * @return A command that stops the launcher motors.
      */
-    fun getStopCommand(): Command {
-        return runOnce {
-            stopFlywheels()
-            stopRoller()
-        }
-    }
+    fun getStopCommand(): Command = runOnce { io.stop() }
 }
