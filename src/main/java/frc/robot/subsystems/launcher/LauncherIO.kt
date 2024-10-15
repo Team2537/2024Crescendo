@@ -309,4 +309,6 @@ interface LauncherIO {
      * @param a The acceleration gain.
      */
     fun setRollerFeedForward(s: Double, v: Double, a: Double) {}
+
+    fun setBrakes(topBrake: Boolean, bottomBrake: Boolean, rollerBrake: Boolean) {}
 }

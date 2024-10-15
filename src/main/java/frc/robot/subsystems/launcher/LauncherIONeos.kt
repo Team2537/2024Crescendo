@@ -230,4 +230,10 @@ class LauncherIONeos(
     override fun setRollerFeedForward(s: Double, v: Double, a: Double) {
         rollerFeedForward = SimpleMotorFeedforward(s, v, a)
     }
+
+    override fun setBrakes(topBrake: Boolean, bottomBrake: Boolean, rollerBrake: Boolean) {
+        topFlywheels.idleMode = if (topBrake) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast
+        bottomFlywheels.idleMode = if (bottomBrake) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast
+        roller.idleMode = if (rollerBrake) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast
+    }
 }
