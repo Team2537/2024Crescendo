@@ -19,6 +19,7 @@ import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
 import org.littletonrobotics.junction.wpilog.WPILOGReader
 import org.littletonrobotics.junction.wpilog.WPILOGWriter
+import kotlin.math.pow
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -91,10 +92,11 @@ object Robot : LoggedRobot() {
 
     private fun configureBindings() {
         drivebase.defaultCommand = drivebase.driveCommand(
-            { -driverController.leftY },
-            { -driverController.leftX },
+            { -driverController.leftY.pow(3) },
+            { -driverController.leftX.pow(3) },
             { -driverController.rightX },
-            driverController.leftBumper()
+            driverController.leftTrigger().negate(),
+            driverController.rightTrigger()
         )
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))

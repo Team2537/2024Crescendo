@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.util.Units.inchesToMeters
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
@@ -79,10 +80,10 @@ class Drivebase : SubsystemBase("Drivebase") {
      * Array of [Translation2d] used for storing the physical positions of modules, used for kinematics
      */
     private val moduleTranslations: Array<Translation2d> = arrayOf(
-        Translation2d(9.7859, 9.7859),
-        Translation2d(9.7859, -9.7859),
-        Translation2d(-9.7859, 9.7859),
-        Translation2d(-9.7859, -9.7859),
+        Translation2d(moduleOffset, moduleOffset),
+        Translation2d(moduleOffset, -moduleOffset),
+        Translation2d(-moduleOffset, moduleOffset),
+        Translation2d(-moduleOffset, -moduleOffset),
     )
 
     /**
@@ -136,6 +137,8 @@ class Drivebase : SubsystemBase("Drivebase") {
     )
 
     private val routineToUse = driveSysID
+
+    private val slowModeScalar = 0.3
 
     /**
      * Method for getting the module positions from the module constants
@@ -194,20 +197,31 @@ class Drivebase : SubsystemBase("Drivebase") {
         strafe: DoubleSupplier,
         rotation: DoubleSupplier,
         isFieldOriented: BooleanSupplier,
+        isSlowMode: BooleanSupplier
     ): Command? {
         return this.run {
+            var vForwards = forwards.asDouble
+            var vStrafe = strafe.asDouble
+            var vRotation = rotation.asDouble
+
+            if (isSlowMode.asBoolean) {
+                vForwards *= slowModeScalar
+                vStrafe *= slowModeScalar
+                vRotation *= slowModeScalar
+            }
+
             val speeds = if (isFieldOriented.asBoolean) {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    rotation.asDouble * 1.5 * (Math.PI),
+                    (vForwards * (maxSpeed into Units.MetersPerSecond)),
+                    (vStrafe * (maxSpeed into Units.MetersPerSecond)),
+                    (vRotation * 1.5 * (Math.PI)),
                     gyroInputs.yaw.plus(driverOrientation),
                 )
             } else {
                 ChassisSpeeds(
-                    forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    rotation.asDouble * 1.5 * (Math.PI),
+                    (vForwards * (maxSpeed into Units.MetersPerSecond)),
+                    (vStrafe * (maxSpeed into Units.MetersPerSecond)),
+                    (vRotation * 1.5 * (Math.PI)),
                 )
             }
 
@@ -329,5 +343,7 @@ class Drivebase : SubsystemBase("Drivebase") {
             turnRatio, driveRatio,
             wheelRadius
         )
+
+        val moduleOffset = inchesToMeters(9.7859)
     }
 }
