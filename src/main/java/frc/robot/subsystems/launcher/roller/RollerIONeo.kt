@@ -9,17 +9,18 @@ import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.units.Voltage
+import edu.wpi.first.wpilibj.DigitalInput
 import lib.ControllerGains
-import lib.math.units.Rotation
 import lib.math.units.into
 
 class RollerIONeo(
-    private val id: Int,
+    private val motorID: Int,
+    private val noteDetectorID: Int,
     private val isInverted: Boolean,
     private val gains: ControllerGains,
     private val rollerRadius: Measure<Distance>
 ) : RollerIO {
-    private val motor: CANSparkMax = CANSparkMax(id, CANSparkLowLevel.MotorType.kBrushless).apply {
+    private val motor: CANSparkMax = CANSparkMax(motorID, CANSparkLowLevel.MotorType.kBrushless).apply {
         restoreFactoryDefaults()
         inverted = isInverted
 
@@ -35,12 +36,15 @@ class RollerIONeo(
         gains.kA
     )
 
+    private val noteDetector: DigitalInput = DigitalInput(noteDetectorID)
+
     override fun updateInputs(inputs: RollerIO.RollerInputs) {
         inputs.velocity.mut_replace(motor.encoder.velocity, RPM)
         inputs.position.mut_replace(motor.encoder.position, Rotations)
         inputs.statorCurrent.mut_replace(motor.outputCurrent, Amps)
         inputs.motorVoltage.mut_replace(motor.appliedOutput * motor.busVoltage, Volts)
         inputs.supplyVoltage.mut_replace(motor.busVoltage, Volts)
+        inputs.noteDetected = noteDetector.get()
     }
 
     override fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean) {

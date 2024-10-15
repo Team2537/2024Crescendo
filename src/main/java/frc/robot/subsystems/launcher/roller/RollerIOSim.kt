@@ -10,7 +10,9 @@ import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.RobotController
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.simulation.DCMotorSim
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import lib.ControllerGains
 import lib.math.units.Rotation
 import lib.math.units.into
@@ -35,6 +37,10 @@ class RollerIOSim(
         gains.kD
     )
 
+    init {
+        SmartDashboard.putBoolean("sim/roller/noteDetected", false)
+    }
+
     private val cachedVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
     private var isClosedLoop: Boolean = false
 
@@ -46,6 +52,7 @@ class RollerIOSim(
         inputs.statorCurrent.mut_replace(sim.currentDrawAmps, Amps)
         inputs.motorVoltage.mut_replace(cachedVoltage)
         inputs.supplyVoltage.mut_replace(RobotController.getBatteryVoltage(), Volts)
+        inputs.noteDetected = SmartDashboard.getBoolean("sim/roller/noteDetected", false)
 
         if(isClosedLoop) {
             setVoltage(

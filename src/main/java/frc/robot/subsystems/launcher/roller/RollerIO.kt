@@ -19,6 +19,7 @@ interface RollerIO {
         val statorCurrent: MutableMeasure<Current> = MutableMeasure.zero(Amps)
         val motorVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
         val supplyVoltage: MutableMeasure<Voltage> = MutableMeasure.zero(Volts)
+        var noteDetected: Boolean = false
 
         override fun toLog(table: LogTable) {
             table.put("velocity", velocity)
@@ -26,6 +27,7 @@ interface RollerIO {
             table.put("statorCurrent", statorCurrent)
             table.put("motorVoltage", motorVoltage)
             table.put("supplyCurrent", supplyVoltage)
+            table.put("noteDetected", noteDetected)
         }
 
         override fun fromLog(table: LogTable) {
@@ -34,6 +36,7 @@ interface RollerIO {
             statorCurrent.mut_replace(table.get("statorCurrent", statorCurrent))
             motorVoltage.mut_replace(table.get("motorVoltage", motorVoltage))
             supplyVoltage.mut_replace(table.get("supplyCurrent", supplyVoltage))
+            noteDetected = table.get("noteDetected", noteDetected)
         }
     }
 

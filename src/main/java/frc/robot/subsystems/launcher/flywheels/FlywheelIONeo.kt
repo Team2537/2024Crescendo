@@ -1,4 +1,4 @@
-package frc.robot.subsystems.launcher.flywheel
+package frc.robot.subsystems.launcher.flywheels
 
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkFlex

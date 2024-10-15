@@ -142,3 +142,7 @@ fun Rotation3d.flip(): Rotation3d = this.rotateBy(Rotation3d(0.0, 0.0, Math.PI))
 fun Gamepiece.flip() = Gamepiece(this.first.flip(), this.second)
 
 fun Transform3d.toTransform2d() = Transform2d(this.translation.toTranslation2d(), this.rotation.toRotation2d())
+
+operator fun Trigger.not(): Trigger {
+    return this.negate()
+}

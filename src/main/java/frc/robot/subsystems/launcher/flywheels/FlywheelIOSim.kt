@@ -1,4 +1,4 @@
-package frc.robot.subsystems.launcher.flywheel
+package frc.robot.subsystems.launcher.flywheels
 
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
