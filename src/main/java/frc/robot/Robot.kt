@@ -3,9 +3,11 @@ package frc.robot
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.*
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
@@ -43,6 +45,7 @@ object Robot : LoggedRobot() {
         get() = drivebase.pose
 
     val driverController: CommandXboxController = CommandXboxController(0)
+    val operatorController: CommandXboxController = CommandXboxController(1)
 
     init {
         DriverStation.silenceJoystickConnectionWarning(true)
@@ -94,7 +97,9 @@ object Robot : LoggedRobot() {
             driverController.leftBumper()
         )
 
-        driverController.a().onTrue(
+        driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
+
+        operatorController.a().onTrue(
             either(
                 sequence(
                     pivot.getSendToPositionCommand(Pivot.intakePosition),
@@ -114,10 +119,10 @@ object Robot : LoggedRobot() {
             ).withName("Intake Auto Command")
         )
 
-        driverController.y().onTrue(pivot.getHomeCommand())
+        operatorController.y().onTrue(pivot.getHomeCommand())
 
-        driverController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
-        driverController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
+        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
     }
 
     /**
