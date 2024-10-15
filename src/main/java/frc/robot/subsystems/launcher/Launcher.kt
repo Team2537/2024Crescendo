@@ -1,16 +1,20 @@
 package frc.robot.subsystems.launcher
 
+import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.*
 import edu.wpi.first.units.Units.Inches
 import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.waitSeconds
+import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
+import frc.robot.Constants
 import frc.robot.Robot
 import frc.robot.subsystems.pivot.Pivot
+import lib.ControllerGains
 import lib.math.units.*
-import lib.waitUntil
 import org.littletonrobotics.junction.Logger
 
 // IO is passed in to avoid hard dependency/to decouple.
@@ -32,7 +36,36 @@ import org.littletonrobotics.junction.Logger
  *
  * @see LauncherIO
  */
-class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance> = 3.0 measuredIn Inches) : SubsystemBase() {
+class Launcher() : SubsystemBase() {
+
+    /**
+     * The IO layer for the launcher.
+     */
+    private val io: LauncherIO = when(Constants.RobotConstants.mode){
+        Constants.RobotConstants.Mode.REAL -> LauncherIONeos(
+            23,
+            22,
+            14,
+            99, // TODO: Find the real port
+            flywheelRadius = flywheelRadius
+        )
+        Constants.RobotConstants.Mode.SIM -> LauncherIOSim(
+            DCMotor.getNeoVortex(1),
+            1.0,
+            0.0002133242 measuredIn KilogramMetersSquared,
+            ControllerGains(kV = 12 / 6700.0),
+            DCMotor.getNeoVortex(1),
+            1.0,
+            0.0002133242 measuredIn KilogramMetersSquared,
+            ControllerGains(kV = 12 / 6700.0),
+            DCMotor.getNEO(1),
+            1.0,
+            0.0000434119 measuredIn KilogramMetersSquared,
+            ControllerGains(),
+            flywheelRadius = flywheelRadius
+        )
+        Constants.RobotConstants.Mode.REPLAY -> object : LauncherIO {}
+    }
 
     /**
      * [Launcher inputs][LauncherIO.LauncherInputs]
@@ -44,6 +77,8 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
         Logger.processInputs("Launcher", inputs)
 
     }
+
+    val AAAA = run { io.setFlywheelVoltage(12 measuredIn Volts) }
 
     /**
      * The tangent velocity of the flywheels, as calculated by the
@@ -103,8 +138,8 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
             },
             waitUntil { inputs.topFlywheel.velocity.isNear(desiredVelocity, percentTolerance) && inputs.bottomFlywheel.velocity.isNear(desiredVelocity, percentTolerance) },
             runOnce { io.setRollerVoltage(12 measuredIn Volts)},
-            Commands.waitUntil { !inputs.hasNote },
-            Commands.waitSeconds(0.5),
+            waitUntil { !inputs.hasNote },
+            waitSeconds(0.5),
             runOnce {
                 io.setRollerVoltage(0 measuredIn Volts)
                 io.setFlywheelVelocity(0.rpm)
@@ -140,7 +175,7 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
     fun getLoadCommand(): Command {
         return Commands.sequence(
             runOnce { io.setRollerPosition(inputs.rollerRelativePosition + (linPosToAngPos(5.0 measuredIn Inches, flywheelRadius))) },
-            Commands.waitUntil(noteTrigger)
+            waitUntil(noteTrigger)
         )
     }
 
@@ -150,4 +185,8 @@ class Launcher(private val io: LauncherIO, val flywheelRadius: Measure<Distance>
      * @return A command that stops the launcher motors.
      */
     fun getStopCommand(): Command = runOnce { io.stop() }
+
+    companion object {
+        val flywheelRadius: Measure<Distance> = 3.0 measuredIn Inches
+    }
 }

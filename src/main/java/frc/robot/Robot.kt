@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.units.Units.RPM
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
@@ -8,11 +9,15 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.*
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
+import frc.robot.subsystems.launcher.Launcher
 import frc.robot.subsystems.pivot.Pivot
+import lib.math.units.measuredIn
+import lib.math.units.rpm
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -39,7 +44,7 @@ object Robot : LoggedRobot() {
     val pivot = Pivot()
     val drivebase = Drivebase()
     val intake = Intake()
-//    val launcher = Launcher()
+    val launcher = Launcher()
 
     val robotPose
         get() = drivebase.pose
@@ -99,30 +104,32 @@ object Robot : LoggedRobot() {
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
 
-        operatorController.a().onTrue(
-            either(
-                sequence(
-                    pivot.getSendToPositionCommand(Pivot.intakePosition),
-                    parallel(
-                        intake.getEjectCommand(),
-                        print("Ejecting Launcher") // Replace with actual launcher eject command
-                    )
-                ),
-                sequence(
-                    pivot.getSendToPositionCommand(Pivot.intakePosition),
-                    parallel(
-                        intake.getIntakeCommand(),
-                        print("Intaking Launcher") // Replace with actual launcher intake command
-                    )
-                ),
-                intake.isFull
-            ).withName("Intake Auto Command")
-        )
-
-        operatorController.y().onTrue(pivot.getHomeCommand())
-
-        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
-        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
+//        operatorController.a().onTrue(
+//            either(
+//                sequence(
+//                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+//                    parallel(
+//                        intake.getEjectCommand(),
+//                        print("Ejecting Launcher") // Replace with actual launcher eject command
+//                    )
+//                ),
+//                sequence(
+//                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+//                    parallel(
+//                        intake.getIntakeCommand(),
+//                        print("Intaking Launcher") // Replace with actual launcher intake command
+//                    )
+//                ),
+//                intake.isFull
+//            ).withName("Intake Auto Command")
+//        )
+//
+//        operatorController.y().onTrue(pivot.getHomeCommand())
+//
+//        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+//        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand()
+//        operatorController.button(1).onTrue(launcher.getLaunchCommandAngular(6700.0 measuredIn RPM).alongWith(PrintCommand("Launching")))
+        launcher.defaultCommand = launcher.AAAA
     }
 
     /**
