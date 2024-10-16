@@ -51,6 +51,14 @@ class Superstructure {
             )
         )
 
+    fun getEjectCommand() =
+        Commands.sequence(
+            pivot.getSendToPositionCommand(intakePosition),
+            roller.getEjectCommand()
+        )
+
+    fun getHomeCommand() = pivot.getHomeCommand()
+
 
     companion object {
         val subwooferShotSetpoint = 31.5.degrees

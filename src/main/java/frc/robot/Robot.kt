@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
+import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.subsystems.superstructure.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
@@ -36,10 +37,9 @@ object Robot : LoggedRobot() {
     val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
 
     val climb = Climb()
-    val pivot = Pivot()
     val drivebase = Drivebase()
     val intake = Intake()
-//    val launcher = Launcher()
+    val superstructure = Superstructure()
 
     val robotPose
         get() = drivebase.pose
@@ -102,24 +102,18 @@ object Robot : LoggedRobot() {
         operatorController.a().onTrue(
             either(
                 sequence(
-                    pivot.getSendToPositionCommand(Pivot.intakePosition),
-                    parallel(
-                        intake.getEjectCommand(),
-                        print("Ejecting Launcher") // Replace with actual launcher eject command
-                    )
+                    superstructure.getEjectCommand(),
+                    intake.getEjectCommand()
                 ),
                 sequence(
-                    pivot.getSendToPositionCommand(Pivot.intakePosition),
-                    parallel(
-                        intake.getIntakeCommand(),
-                        print("Intaking Launcher") // Replace with actual launcher intake command
-                    )
+                    superstructure.getIntakeCommand(),
+                    intake.getIntakeCommand()
                 ),
                 intake.isFull
             ).withName("Intake Auto Command")
         )
 
-        operatorController.y().onTrue(pivot.getHomeCommand())
+        operatorController.y().onTrue(superstructure.getHomeCommand())
 
         operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
         operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())

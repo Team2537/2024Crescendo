@@ -7,6 +7,7 @@ import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.waitSeconds
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
@@ -79,6 +80,17 @@ class Roller : SubsystemBase("roller") {
             rollerIO.setBrakeMode(true)
             rollerIO.setVoltage(Volts.zero())
         }
+
+    fun getEjectCommand() =
+        Commands.sequence(
+            runOnce {
+                rollerIO.setBrakeMode(false)
+                rollerIO.setVoltage(Volts.of(-4.0))
+            },
+            waitUntil(!isHoldingNote),
+            waitSeconds(0.5),
+            getStopCommand()
+        )
 
 
     companion object {
