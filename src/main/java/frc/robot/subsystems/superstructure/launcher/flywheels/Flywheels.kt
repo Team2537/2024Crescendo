@@ -1,10 +1,11 @@
-package frc.robot.subsystems.launcher.flywheels
+package frc.robot.subsystems.superstructure.launcher.flywheels
 
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units.RPM
+import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.units.Velocity
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -51,6 +52,9 @@ class Flywheels : SubsystemBase("flywheels") {
     private val goalVelocity: MutableMeasure<Velocity<Angle>> = MutableMeasure.zero(RPM)
 
     fun getPrimeCommand(targetVelocity: Measure<Velocity<Angle>>) = runOnce {
+        bottomFlywheelIO.setBrakeMode(false)
+        topFlywheelIO.setBrakeMode(false)
+
         goalVelocity.mut_replace(targetVelocity)
         topFlywheelIO.setVelocity(targetVelocity)
         bottomFlywheelIO.setVelocity(targetVelocity)
@@ -59,6 +63,14 @@ class Flywheels : SubsystemBase("flywheels") {
     fun getWaitUntilReadyCommand() = Commands.waitUntil {
         topInputs.velocity.isNear(goalVelocity, 0.05) &&
         bottomInputs.velocity.isNear(goalVelocity, 0.05)
+    }
+
+    fun getStopCommand() = runOnce {
+        topFlywheelIO.setBrakeMode(true)
+        bottomFlywheelIO.setBrakeMode(true)
+
+        topFlywheelIO.setVoltage(Volts.zero())
+        bottomFlywheelIO.setVoltage(Volts.zero())
     }
 
     override fun periodic() {

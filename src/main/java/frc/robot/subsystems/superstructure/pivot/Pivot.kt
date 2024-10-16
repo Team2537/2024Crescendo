@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.pivot
 
 import edu.wpi.first.math.filter.LinearFilter
 import edu.wpi.first.math.geometry.Pose3d
@@ -40,9 +40,9 @@ class Pivot : SubsystemBase() {
             GEARBOX_RATIO * PULLEY_RATIO,
             0.26,
             Units.Inches.of(19.6),
-            Units.Degrees.of(90.0),
-            Units.Degrees.of(0.0),
-            Units.Degrees.of(90.0),
+            Degrees.of(90.0),
+            Degrees.of(0.0),
+            Degrees.of(90.0),
             ControllerGains(
                 kP = 10.0, kI = 0.5, kD = 0.0,
                 kS = 0.0, kG = 0.43, kV = 1.34, kA = 0.02
@@ -127,7 +127,5 @@ class Pivot : SubsystemBase() {
             0.05,
             0.516847 + 0.042919
         )
-
-        val intakePosition = 16.5.degrees
     }
 }

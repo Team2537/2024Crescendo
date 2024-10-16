@@ -2,8 +2,8 @@ package frc.robot.io.launcher
 
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Units.*
-import frc.robot.subsystems.launcher.roller.RollerIO
-import frc.robot.subsystems.launcher.roller.RollerIOSim
+import frc.robot.subsystems.superstructure.launcher.roller.RollerIO
+import frc.robot.subsystems.superstructure.launcher.roller.RollerIOSim
 import lib.ControllerGains
 import lib.math.units.into
 import org.junit.jupiter.api.Test

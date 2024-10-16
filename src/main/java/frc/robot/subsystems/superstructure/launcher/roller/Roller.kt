@@ -1,10 +1,11 @@
-package frc.robot.subsystems.launcher.roller
+package frc.robot.subsystems.superstructure.launcher.roller
 
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.MutableMeasure
 import edu.wpi.first.units.Units.*
+import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -63,15 +64,22 @@ class Roller : SubsystemBase("roller") {
             waitUntil(isAtSetpoint),
         )
 
-    fun getPushNoteCommand() =
+    fun getPushNoteCommand(voltage: Measure<Voltage> = Volts.of(12.0)) =
         Commands.sequence(
             runOnce {
                 rollerIO.setBrakeMode(false)
-                rollerIO.setVoltage(Volts.of(12.0))
+                rollerIO.setVoltage(voltage)
             },
             waitUntil(!isHoldingNote),
-            runOnce { rollerIO.setVoltage(Volts.zero()) }
+            getStopCommand()
         )
+
+    fun getStopCommand() =
+        runOnce {
+            rollerIO.setBrakeMode(true)
+            rollerIO.setVoltage(Volts.zero())
+        }
+
 
     companion object {
         val motorID: Int = 100 // TODO: Set the id

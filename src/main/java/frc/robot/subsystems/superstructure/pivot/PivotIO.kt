@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.pivot
 
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Current

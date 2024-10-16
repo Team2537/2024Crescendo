@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.pivot
 
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.PIDController

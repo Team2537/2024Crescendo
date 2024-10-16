@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.pivot
 
 import com.revrobotics.CANSparkBase
 import com.revrobotics.CANSparkLowLevel

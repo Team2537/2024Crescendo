@@ -3,8 +3,8 @@ package frc.robot.io.launcher
 import edu.wpi.first.math.system.plant.DCMotor
 import edu.wpi.first.units.Units
 import edu.wpi.first.units.Units.RPM
-import frc.robot.subsystems.launcher.flywheels.FlywheelIO
-import frc.robot.subsystems.launcher.flywheels.FlywheelIOSim
+import frc.robot.subsystems.superstructure.launcher.flywheels.FlywheelIO
+import frc.robot.subsystems.superstructure.launcher.flywheels.FlywheelIOSim
 import lib.ControllerGains
 import lib.math.units.into
 import org.junit.jupiter.api.Test
