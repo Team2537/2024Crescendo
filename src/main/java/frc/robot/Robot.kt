@@ -3,10 +3,17 @@ package frc.robot
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.DriverStation.Alliance
 import frc.robot.subsystems.launcher.Launcher
+import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
-import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.*
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.Climb
 import frc.robot.subsystems.intake.Intake
@@ -18,6 +25,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher
 import org.littletonrobotics.junction.wpilog.WPILOGReader
 import org.littletonrobotics.junction.wpilog.WPILOGWriter
 import kotlin.jvm.optionals.getOrDefault
+import kotlin.math.pow
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -31,17 +39,23 @@ import kotlin.jvm.optionals.getOrDefault
  */
 object Robot : LoggedRobot() {
 
-//    val climb = Climb()
-//    val pivot = Pivot()
+    // This is so awful, but it's the best way to test DIO in simulation that I can think of
+    val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
+
+    val climb = Climb()
+    val pivot = Pivot()
     val drivebase = Drivebase()
-//    val intake = Intake()
+    val intake = Intake()
 //    val launcher = Launcher()
 
+    val robotPose
+        get() = drivebase.pose
 
 
     val driverController: CommandXboxController = CommandXboxController(0)
 
     private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase)
+    val operatorController: CommandXboxController = CommandXboxController(1)
 
     init {
         Logger.recordMetadata("Project Name", "2024Crescendo")
@@ -69,6 +83,18 @@ object Robot : LoggedRobot() {
             }
         }
 
+        CommandScheduler.getInstance().onCommandInitialize { command ->
+            Logger.recordOutput("commands/${command.name}", true)
+        }
+
+        CommandScheduler.getInstance().onCommandFinish { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
+        CommandScheduler.getInstance().onCommandInterrupt { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
         configureBindings()
@@ -76,11 +102,39 @@ object Robot : LoggedRobot() {
 
     private fun configureBindings() {
         drivebase.defaultCommand = drivebase.driveCommand(
-            { -driverController.leftY },
-            { -driverController.leftX },
-            { -driverController.rightX },
-            driverController.leftBumper()
+            { -MathUtil.applyDeadband(driverController.leftY, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.leftX, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.rightX, 0.05) },
+            driverController.leftTrigger().negate(),
+            driverController.rightTrigger()
         )
+
+        driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
+
+        operatorController.a().onTrue(
+            either(
+                sequence(
+                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+                    parallel(
+                        intake.getEjectCommand(),
+                        print("Ejecting Launcher") // Replace with actual launcher eject command
+                    )
+                ),
+                sequence(
+                    pivot.getSendToPositionCommand(Pivot.intakePosition),
+                    parallel(
+                        intake.getIntakeCommand(),
+                        print("Intaking Launcher") // Replace with actual launcher intake command
+                    )
+                ),
+                intake.isFull
+            ).withName("Intake Auto Command")
+        )
+
+        operatorController.y().onTrue(pivot.getHomeCommand())
+
+        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
     }
 
     /**
