@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.util.Units.inchesToMeters
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
@@ -79,10 +80,10 @@ class Drivebase : SubsystemBase("Drivebase") {
      * Array of [Translation2d] used for storing the physical positions of modules, used for kinematics
      */
     private val moduleTranslations: Array<Translation2d> = arrayOf(
-        Translation2d(9.7859, 9.7859),
-        Translation2d(9.7859, -9.7859),
-        Translation2d(-9.7859, 9.7859),
-        Translation2d(-9.7859, -9.7859),
+        Translation2d(moduleOffset, moduleOffset),
+        Translation2d(moduleOffset, -moduleOffset),
+        Translation2d(-moduleOffset, moduleOffset),
+        Translation2d(-moduleOffset, -moduleOffset),
     )
 
     /**
@@ -296,6 +297,8 @@ class Drivebase : SubsystemBase("Drivebase") {
         const val turnRatio: Double = 150.0 / 7.0
 
         val wheelRadius = Units.Inches.of(2.0)
+
+        val moduleOffset = inchesToMeters(9.7859)
 
         val flConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             1, 2, 3,
