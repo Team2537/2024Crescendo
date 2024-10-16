@@ -109,7 +109,7 @@ object Robot : LoggedRobot() {
                 ),
                 sequence(
                     superstructure.getIntakeCommand(),
-                    intake.getIntakeCommand().debug("Intake Command")
+                    intake.getIntakeCommand()
                 ),
                 intake.isFull
             ).withName("Intake Auto Command")
