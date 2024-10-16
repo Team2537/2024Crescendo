@@ -32,7 +32,7 @@ class Roller : SubsystemBase("roller") {
             motor = DCMotor.getNEO(1),
             moiKgM2 = moiKgM2,
             rollerRadius = rollerRadius,
-            gains = ControllerGains(kP = 0.005)
+            gains = ControllerGains(kP = 0.5)
         )
         Constants.RobotConstants.Mode.REPLAY -> TODO()
     }
@@ -44,7 +44,7 @@ class Roller : SubsystemBase("roller") {
 
     val setpoint: MutableMeasure<Distance> = MutableMeasure.zero(Inches)
 
-    val isAtSetpoint: Trigger = Trigger { inputs.position.isNear(setpoint, 0.01) }.debounce(0.2)
+    val isAtSetpoint: Trigger = Trigger { positionLinear.isNear(setpoint, 0.1) }.debounce(0.2)
     val isHoldingNote: Trigger = Trigger { inputs.noteDetected }.debounce(0.2)
 
     override fun periodic() {
@@ -53,6 +53,8 @@ class Roller : SubsystemBase("roller") {
 
         Logger.recordOutput("launcher/roller/linearPosition", positionLinear)
         Logger.recordOutput("launcher/roller/setpoint", setpoint)
+
+        Logger.recordOutput("launcher/roller/isAtSetpoint", isAtSetpoint.asBoolean)
     }
 
     fun getPullNoteCommand(distance: Measure<Distance> = Inches.of(6.0)) =
