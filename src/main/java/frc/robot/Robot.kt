@@ -1,6 +1,5 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.DriverStation.Alliance
 import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.math.MathUtil
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
-import frc.robot.subsystems.Climb
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.pivot.Pivot
 import org.littletonrobotics.junction.LogFileUtil
