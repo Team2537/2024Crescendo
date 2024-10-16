@@ -11,7 +11,25 @@ class SwerveModule(
     private val
     configs: ModuleIO.ModuleConstants,
 ) {
-    private val io: ModuleIO
+
+    private val io: ModuleIO = when (Constants.RobotConstants.mode) {
+        Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
+            configs,
+            ControllerGains(kV = 0.0113684210526),
+            ControllerGains(kP = 5.0, kD = 0.1)
+        )
+
+        Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
+            configs,
+            DCMotor.getNEO(1),
+            ControllerGains(),
+            ControllerGains(kP = 10.0)
+        )
+
+        Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
+    }.apply { reset() }
+
+
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
 
     val positionMeters: Double
@@ -29,27 +47,6 @@ class SwerveModule(
     val modulePosition: SwerveModulePosition
         get() = SwerveModulePosition(positionMeters, angle)
 
-    init {
-        io = when (Constants.RobotConstants.mode) {
-            Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
-                configs,
-                ControllerGains(kV = 0.0113684210526),
-                ControllerGains(kP = 5.0, kD = 0.1)
-            )
-
-            Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
-                configs,
-                DCMotor.getNEO(1),
-                ControllerGains(),
-                ControllerGains(kP = 100.0)
-            )
-
-            Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
-        }
-
-        io.reset()
-    }
-
     fun apply(state: SwerveModuleState) {
         val optimized = SwerveModuleState.optimize(state, inputs.absoluteTurnPosition)
 
@@ -64,6 +61,14 @@ class SwerveModule(
 
         io.runDriveVelocitySetpoint(speed)
         io.runTurnPositionSetpoint(optimized.angle)
+    }
+
+    fun setDrivePID(p: Double, i: Double, d: Double) {
+        io.setPID(p, i, d, ModuleIO.ModuleMotor.DRIVE)
+    }
+
+    fun setTurnPID(p: Double, i: Double, d: Double) {
+        io.setPID(p, i, d, ModuleIO.ModuleMotor.TURN)
     }
 
     fun pointAt(angle: Rotation2d) {

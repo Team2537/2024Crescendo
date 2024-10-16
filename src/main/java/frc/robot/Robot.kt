@@ -1,5 +1,7 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance
+import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
@@ -22,6 +24,8 @@ import org.littletonrobotics.junction.Logger
 import org.littletonrobotics.junction.networktables.NT4Publisher
 import org.littletonrobotics.junction.wpilog.WPILOGReader
 import org.littletonrobotics.junction.wpilog.WPILOGWriter
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.math.pow
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -46,26 +50,29 @@ object Robot : LoggedRobot() {
     val robotPose
         get() = drivebase.pose
 
+
     val driverController: CommandXboxController = CommandXboxController(0)
+
+    private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase)
     val operatorController: CommandXboxController = CommandXboxController(1)
 
     init {
-        DriverStation.silenceJoystickConnectionWarning(true)
-
         Logger.recordMetadata("Project Name", "2024Crescendo")
 
-        when(Constants.RobotConstants.mode){
+        when (Constants.RobotConstants.mode) {
             Constants.RobotConstants.Mode.REAL -> {
                 Logger.recordMetadata("Mode", "Real")
 //                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
+
             Constants.RobotConstants.Mode.SIM -> {
                 Logger.recordMetadata("Mode", "Sim")
                 Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
             }
+
             Constants.RobotConstants.Mode.REPLAY -> {
                 setUseTiming(false)
                 Logger.recordMetadata("Mode", "Replay")
@@ -88,15 +95,17 @@ object Robot : LoggedRobot() {
         }
 
         Logger.start()
+        DriverStation.silenceJoystickConnectionWarning(true)
         configureBindings()
     }
 
     private fun configureBindings() {
         drivebase.defaultCommand = drivebase.driveCommand(
-            { -MathUtil.applyDeadband(driverController.leftY, 0.05) },
-            { -MathUtil.applyDeadband(driverController.leftX, 0.05) },
+            { -MathUtil.applyDeadband(driverController.leftY, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.leftX, 0.05).pow(3) },
             { -MathUtil.applyDeadband(driverController.rightX, 0.05) },
-            driverController.leftBumper()
+            driverController.leftTrigger().negate(),
+            driverController.rightTrigger()
         )
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
@@ -144,14 +153,16 @@ object Robot : LoggedRobot() {
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
-    override fun autonomousInit() {}
+    override fun autonomousInit() {
+        routines.selectedRoutine.schedule()
+    }
 
     /** This method is called periodically during autonomous.  */
     override fun autonomousPeriodic() {
     }
 
     override fun teleopInit() {
-
+        routines.selectedRoutine.cancel()
     }
 
     /** This method is called periodically during operator control.  */

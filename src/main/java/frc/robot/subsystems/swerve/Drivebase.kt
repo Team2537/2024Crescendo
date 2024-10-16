@@ -1,6 +1,11 @@
 package frc.robot.subsystems.swerve
 
+import choreo.Choreo
+import choreo.Choreo.TrajectoryLogger
+import choreo.auto.AutoFactory
+import choreo.trajectory.SwerveSample
 import edu.wpi.first.math.VecBuilder
+import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
@@ -34,10 +39,13 @@ import frc.robot.subsystems.swerve.gyro.GyroIOPigeon2
 import frc.robot.subsystems.swerve.gyro.GyroIOSim
 import frc.robot.subsystems.swerve.module.ModuleIO
 import frc.robot.subsystems.swerve.module.SwerveModule
+import lib.LoggedTunableNumber
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
+import java.util.function.BiConsumer
 import java.util.function.BooleanSupplier
 import java.util.function.DoubleSupplier
+import kotlin.jvm.optionals.getOrDefault
 import edu.wpi.first.math.util.Units as Conversions
 
 class Drivebase : SubsystemBase("Drivebase") {
@@ -84,6 +92,36 @@ class Drivebase : SubsystemBase("Drivebase") {
         Translation2d(moduleOffset, -moduleOffset),
         Translation2d(-moduleOffset, moduleOffset),
         Translation2d(-moduleOffset, -moduleOffset),
+    )
+
+    private val driveKp = LoggedTunableNumber(
+        "swerve/modules/driveKp",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 5.0 else 0.0
+    )
+
+    private val driveKi = LoggedTunableNumber(
+        "swerve/modules/driveKi",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
+    )
+
+    private val driveKd = LoggedTunableNumber(
+        "swerve/modules/driveKd",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.1 else 0.0
+    )
+
+    private val turnKp = LoggedTunableNumber(
+        "swerve/modules/turnKp",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 5.0 else 10.0
+    )
+
+    private val turnKi = LoggedTunableNumber(
+        "swerve/modules/turnKi",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
+    )
+
+    private val turnKd = LoggedTunableNumber(
+        "swerve/modules/turnKd",
+        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
     )
 
     /**
@@ -137,6 +175,67 @@ class Drivebase : SubsystemBase("Drivebase") {
     )
 
     private val routineToUse = driveSysID
+
+    private val slowModeScalar = 0.3
+
+    private val xControlP = LoggedTunableNumber("swerve/choreo/xControlP", 4.0)
+    private val xControlI = LoggedTunableNumber("swerve/choreo/xControlI", 0.1)
+    private val xControlD = LoggedTunableNumber("swerve/choreo/xControlD", 1.5)
+
+    private val yControlP = LoggedTunableNumber("swerve/choreo/yControlP", 4.0)
+    private val yControlI = LoggedTunableNumber("swerve/choreo/yControlI", 0.1)
+    private val yControlD = LoggedTunableNumber("swerve/choreo/yControlD", 1.5)
+
+    private val rotControlP = LoggedTunableNumber("swerve/choreo/rotControlP", 0.0)
+    private val rotControlI = LoggedTunableNumber("swerve/choreo/rotControlI", 0.0)
+    private val rotControlD = LoggedTunableNumber("swerve/choreo/rotControlD", 0.0)
+
+    private val xControl = PIDController(xControlP.get(), xControlI.get(), xControlD.get())
+    private val yControl = PIDController(yControlP.get(), yControlI.get(), yControlD.get())
+    private val rotControl = PIDController(rotControlP.get(), rotControlI.get(), rotControlD.get())
+
+    private val controller: BiConsumer<Pose2d, SwerveSample> =
+        BiConsumer { currPose: Pose2d, sample: SwerveSample ->
+            val speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                xControl.calculate(currPose.translation.x, sample.x) + sample.vx,
+                yControl.calculate(currPose.translation.y, sample.y) + sample.vy,
+                rotControl.calculate(currPose.rotation.radians, sample.heading) + sample.omega,
+                pose.rotation
+            )
+
+            applyChassisSpeeds(speeds)
+        }
+
+    private val trajLogger: TrajectoryLogger<SwerveSample> =
+        TrajectoryLogger { sample, isStart ->
+            if (!isStart) {
+                Logger.recordOutput("swerve/AutoTraj", *emptyArray<Pose2d>())
+                return@TrajectoryLogger
+            }
+
+
+            if (DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
+                Logger.recordOutput("swerve/AutoTraj", *sample.flipped().poses)
+            } else {
+                Logger.recordOutput("swerve/AutoTraj", *sample.poses)
+            }
+        }
+
+    val factory: AutoFactory = Choreo.createAutoFactory(
+        this,
+        ::pose,
+        controller,
+        { DriverStation.getAlliance().getOrDefault(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red },
+        AutoFactory.AutoBindings(),
+        trajLogger
+    )
+
+    init {
+        modules.forEach {
+            it.setDrivePID(driveKp.get(), driveKi.get(), driveKd.get())
+            it.setTurnPID(turnKp.get(), turnKi.get(), turnKd.get())
+        }
+    }
 
     /**
      * Method for getting the module positions from the module constants
@@ -195,20 +294,31 @@ class Drivebase : SubsystemBase("Drivebase") {
         strafe: DoubleSupplier,
         rotation: DoubleSupplier,
         isFieldOriented: BooleanSupplier,
+        isSlowMode: BooleanSupplier
     ): Command? {
         return this.run {
+            var vForwards = forwards.asDouble
+            var vStrafe = strafe.asDouble
+            var vRotation = rotation.asDouble
+
+            if (isSlowMode.asBoolean) {
+                vForwards *= slowModeScalar
+                vStrafe *= slowModeScalar
+                vRotation *= slowModeScalar
+            }
+
             val speeds = if (isFieldOriented.asBoolean) {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    rotation.asDouble * 1.5 * (Math.PI),
+                    (vForwards * (maxSpeed into Units.MetersPerSecond)),
+                    (vStrafe * (maxSpeed into Units.MetersPerSecond)),
+                    (vRotation * 1.5 * (Math.PI)),
                     gyroInputs.yaw.plus(driverOrientation),
                 )
             } else {
                 ChassisSpeeds(
-                    forwards.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    strafe.asDouble * (maxSpeed into Units.MetersPerSecond),
-                    rotation.asDouble * 1.5 * (Math.PI),
+                    (vForwards * (maxSpeed into Units.MetersPerSecond)),
+                    (vStrafe * (maxSpeed into Units.MetersPerSecond)),
+                    (vRotation * 1.5 * (Math.PI)),
                 )
             }
 
@@ -236,6 +346,37 @@ class Drivebase : SubsystemBase("Drivebase") {
      * This method updates the gyro inputs, module inputs, and pose estimator
      */
     override fun periodic() {
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> xControl.setPID(pid[0], pid[1], pid[2]) },
+            xControlP, xControlI, xControlD
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> yControl.setPID(pid[0], pid[1], pid[2]) },
+            yControlP, yControlI, yControlD
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> rotControl.setPID(pid[0], pid[1], pid[2]) },
+            rotControlP, rotControlI, rotControlD
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> modules.forEach { it.setDrivePID(pid[0], pid[1], pid[2]) }; println("Drive PID: $pid") },
+            driveKp, driveKi, driveKd
+        )
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> modules.forEach { it.setTurnPID(pid[0], pid[1], pid[2]) }; println("Turn PID: $pid") },
+            turnKp, turnKi, turnKd
+        )
+
         gyro.updateInputs(gyroInputs)
         Logger.processInputs("swerve/gyro", gyroInputs)
         modules.forEachIndexed { index, it ->
@@ -279,6 +420,10 @@ class Drivebase : SubsystemBase("Drivebase") {
 
     fun dynamicSysID(direction: Direction): Command {
         return routineToUse.dynamic(direction)
+    }
+
+    fun stop() {
+        applyChassisSpeeds(ChassisSpeeds())
     }
 
     companion object {

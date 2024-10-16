@@ -6,7 +6,8 @@
       "/Shuffleboard/Driver Profiles/SendableChooser[1]": "String Chooser",
       "/Shuffleboard/Scheduler/Scheduler": "Scheduler",
       "/SmartDashboard/Field": "Field2d",
-      "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro"
+      "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
+      "/SmartDashboard/auto": "String Chooser"
     }
   },
   "NetworkTables Info": {
