@@ -32,7 +32,7 @@ class Roller : SubsystemBase("roller") {
             motor = DCMotor.getNEO(1),
             moiKgM2 = moiKgM2,
             rollerRadius = rollerRadius,
-            gains = ControllerGains()
+            gains = ControllerGains(kP = 0.005)
         )
         Constants.RobotConstants.Mode.REPLAY -> TODO()
     }

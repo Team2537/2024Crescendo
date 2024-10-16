@@ -13,6 +13,7 @@ import edu.wpi.first.units.Units.Degrees
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand
 import frc.robot.Constants
@@ -83,11 +84,25 @@ class Pivot : SubsystemBase() {
             runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() }
         ).withName("Sensorless Home Pivot")
 
+    fun getQuickAngleCommand(position: Measure<Angle>) =
+        Commands.sequence(
+            Commands.either(
+                runOnce { io.setRawVoltage(Units.Volts.of(3.0)) },
+                runOnce { io.setRawVoltage(Units.Volts.of(-3.0)) },
+                { position > inputs.relativePosition }
+            ),
+            Commands.either(
+                Commands.waitUntil { inputs.relativePosition >= position },
+                Commands.waitUntil { inputs.relativePosition <= position },
+                { position > inputs.relativePosition }
+            ),
+            runOnce {io.setTargetPosition(position)}
+        )
 
     fun getSendToPositionCommand(position: Measure<Angle>) =
         Commands.sequence(
             runOnce { io.setTargetPosition(position)},
-            Commands.waitUntil { inputs.relativePosition.isNear(position, 1.0) }
+            Commands.waitUntil { inputs.relativePosition.isNear(position, 0.1) }.alongWith(PrintCommand("pivoting...").repeatedly())
         ).withName("Send To Position: ${position.baseUnitMagnitude()}")
 
     override fun periodic() {

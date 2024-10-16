@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.subsystems.superstructure.launcher.flywheels.Flywheels
 import frc.robot.subsystems.superstructure.launcher.roller.Roller
 import frc.robot.subsystems.superstructure.pivot.Pivot
+import lib.debug
 import lib.math.units.degrees
 import lib.math.units.rpm
 import lib.not
@@ -16,7 +17,7 @@ class Superstructure {
 
     fun getSubwooferShotCommand() =
         Commands.sequence(
-            pivot.getSendToPositionCommand(subwooferShotSetpoint),
+            pivot.getQuickAngleCommand(subwooferShotSetpoint),
             flywheels.getPrimeCommand(6500.0.rpm),
             flywheels.getWaitUntilReadyCommand(),
             roller.getPushNoteCommand(),
@@ -30,7 +31,7 @@ class Superstructure {
 
     fun getAmpShotCommand() =
         Commands.sequence(
-            pivot.getSendToPositionCommand(ampShotSetpoint),
+            pivot.getQuickAngleCommand(ampShotSetpoint),
             flywheels.getPrimeCommand(1500.0.rpm),
             flywheels.getWaitUntilReadyCommand(),
             roller.getPushNoteCommand(Volts.of(6.0)),
@@ -44,16 +45,16 @@ class Superstructure {
 
     fun getIntakeCommand() =
         Commands.sequence(
-            pivot.getSendToPositionCommand(intakePosition),
+            pivot.getQuickAngleCommand(intakePosition).debug("pivot"),
             Commands.parallel(
-                flywheels.getStopCommand(),
-                roller.getPullNoteCommand()
+                flywheels.getStopCommand().debug("flywheels"),
+                roller.getPullNoteCommand().debug("roller")
             )
         )
 
     fun getEjectCommand() =
         Commands.sequence(
-            pivot.getSendToPositionCommand(intakePosition),
+            pivot.getQuickAngleCommand(intakePosition),
             roller.getEjectCommand()
         )
 

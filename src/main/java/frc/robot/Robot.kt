@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.subsystems.superstructure.pivot.Pivot
+import lib.debug
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -108,7 +109,7 @@ object Robot : LoggedRobot() {
                 ),
                 sequence(
                     superstructure.getIntakeCommand(),
-                    intake.getIntakeCommand()
+                    intake.getIntakeCommand().debug("Intake Command")
                 ),
                 intake.isFull
             ).withName("Intake Auto Command")
