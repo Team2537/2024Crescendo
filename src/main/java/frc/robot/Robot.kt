@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
@@ -92,9 +93,9 @@ object Robot : LoggedRobot() {
 
     private fun configureBindings() {
         drivebase.defaultCommand = drivebase.driveCommand(
-            { -driverController.leftY.pow(3) },
-            { -driverController.leftX.pow(3) },
-            { -driverController.rightX },
+            { -MathUtil.applyDeadband(driverController.leftY, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.leftX, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.rightX, 0.05) },
             driverController.leftTrigger().negate(),
             driverController.rightTrigger()
         )

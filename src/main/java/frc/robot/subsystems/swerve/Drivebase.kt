@@ -311,6 +311,8 @@ class Drivebase : SubsystemBase("Drivebase") {
 
         val wheelRadius = Units.Inches.of(2.0)
 
+        val moduleOffset = inchesToMeters(9.7859)
+
         val flConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
             1, 2, 3,
             false, true, false,
