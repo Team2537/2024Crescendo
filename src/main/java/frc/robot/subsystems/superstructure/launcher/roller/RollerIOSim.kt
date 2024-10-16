@@ -58,7 +58,8 @@ class RollerIOSim(
             setVoltage(
                 Volts.of(
                     pid.calculate(sim.angularPositionRotations)
-                )
+                ),
+                true
             )
         }
     }
