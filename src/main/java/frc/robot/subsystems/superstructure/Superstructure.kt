@@ -9,6 +9,7 @@ import lib.debug
 import lib.math.units.degrees
 import lib.math.units.rpm
 import lib.not
+import java.util.function.DoubleSupplier
 
 class Superstructure {
     private val roller = Roller()
@@ -47,8 +48,8 @@ class Superstructure {
         Commands.sequence(
             pivot.getQuickAngleCommand(intakePosition).debug("pivot"),
             Commands.parallel(
-                flywheels.getStopCommand().debug("flywheels"),
-                roller.getPullNoteCommand().debug("roller")
+                flywheels.getStopCommand(),
+                roller.getPullNoteCommand()
             )
         )
 
@@ -60,6 +61,7 @@ class Superstructure {
 
     fun getHomeCommand() = pivot.getHomeCommand()
 
+    fun getManualControlCommand(voltage: DoubleSupplier) = pivot.manualControl(voltage)
 
     companion object {
         val subwooferShotSetpoint = 31.5.degrees
