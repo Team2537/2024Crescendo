@@ -35,4 +35,6 @@ interface FlywheelIO {
     fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false) {}
     fun setVelocity(velocity: Measure<Velocity<Angle>>) {}
     fun setBrakeMode(isBrakeMode: Boolean) {}
+
+    fun setPID(kP: Double, kI: Double, kD: Double) {}
 }

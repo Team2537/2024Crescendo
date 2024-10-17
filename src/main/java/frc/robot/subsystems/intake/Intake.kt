@@ -21,24 +21,26 @@ import org.littletonrobotics.junction.Logger
  * The Intake subsystem contains command factories for the intake.
  */
 class Intake : SubsystemBase() {
-    private val io: IntakeIO = when (Constants.RobotConstants.mode) {
-        Constants.RobotConstants.Mode.REAL -> IntakeIONeo(
-            100,
-            101,
-            102,
-            rollerDiameter,
-            1.0
-        )
+//    private val io: IntakeIO = when (Constants.RobotConstants.mode) {
+//        Constants.RobotConstants.Mode.REAL -> IntakeIONeo(
+//            19,
+//            101,
+//            102,
+//            rollerDiameter,
+//            1.0
+//        )
+//
+//        Constants.RobotConstants.Mode.SIM -> IntakeIOSim(
+//            1.0,
+//            rollerMOI,
+//            rollerDiameter,
+//            { state }
+//        )
+//
+//        Constants.RobotConstants.Mode.REPLAY -> object : IntakeIO {}
+//    }
 
-        Constants.RobotConstants.Mode.SIM -> IntakeIOSim(
-            1.0,
-            rollerMOI,
-            rollerDiameter,
-            { state }
-        )
-
-        Constants.RobotConstants.Mode.REPLAY -> object : IntakeIO {}
-    }
+    private val io = object : IntakeIO {}
 
     private val inputs: IntakeIO.IntakeInputs = IntakeIO.IntakeInputs()
 

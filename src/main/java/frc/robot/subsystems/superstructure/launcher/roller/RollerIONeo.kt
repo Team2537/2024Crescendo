@@ -44,7 +44,7 @@ class RollerIONeo(
         inputs.statorCurrent.mut_replace(motor.outputCurrent, Amps)
         inputs.motorVoltage.mut_replace(motor.appliedOutput * motor.busVoltage, Volts)
         inputs.supplyVoltage.mut_replace(motor.busVoltage, Volts)
-        inputs.noteDetected = noteDetector.get()
+        inputs.noteDetected = !noteDetector.get()
     }
 
     override fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean) {
@@ -58,5 +58,11 @@ class RollerIONeo(
 
     override fun setBrakeMode(isBrakeMode: Boolean) {
         motor.idleMode = if (isBrakeMode) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast
+    }
+
+    override fun setPID(kP: Double, kI: Double, kD: Double) {
+        motor.pidController.setP(kP)
+        motor.pidController.setI(kI)
+        motor.pidController.setD(kD)
     }
 }

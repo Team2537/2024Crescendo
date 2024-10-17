@@ -2,6 +2,8 @@ package frc.robot.subsystems.superstructure
 
 import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.Commands.waitSeconds
+import edu.wpi.first.wpilibj2.command.PrintCommand
 import frc.robot.subsystems.superstructure.launcher.flywheels.Flywheels
 import frc.robot.subsystems.superstructure.launcher.roller.Roller
 import frc.robot.subsystems.superstructure.pivot.Pivot
@@ -12,9 +14,26 @@ import lib.not
 import java.util.function.DoubleSupplier
 
 class Superstructure {
-    private val roller = Roller()
-    private val flywheels = Flywheels()
-    private val pivot = Pivot()
+    val roller = Roller()
+    val flywheels = Flywheels()
+    val pivot = Pivot()
+
+    fun getPivotIntake() =
+        pivot.getQuickAngleCommand(intakePosition)
+
+    fun getTestShotCommand() =
+        Commands.sequence(
+            flywheels.getPrimeCommand(6000.0.rpm),
+            flywheels.getWaitUntilReadyCommand(),
+            PrintCommand("flywheel primed"),
+            roller.getPushNoteCommand(),
+            Commands.waitUntil(!roller.isHoldingNote),
+            Commands.waitSeconds(0.5),
+            Commands.parallel(
+                flywheels.getStopCommand(),
+                roller.getStopCommand()
+            )
+        ).onlyIf(roller.isHoldingNote)
 
     fun getSubwooferShotCommand() =
         Commands.sequence(
@@ -53,13 +72,15 @@ class Superstructure {
             )
         )
 
+    fun resetPivotPosition() = pivot.getResetPositionCommand()
+
     fun getEjectCommand() =
         Commands.sequence(
             pivot.getQuickAngleCommand(intakePosition),
             roller.getEjectCommand()
         )
 
-    fun getHomeCommand() = pivot.getHomeCommand()
+    fun getHomeCommand() = pivot.getSensorlessHomeCommand()
 
     fun getManualControlCommand(voltage: DoubleSupplier) = pivot.manualControl(voltage)
 

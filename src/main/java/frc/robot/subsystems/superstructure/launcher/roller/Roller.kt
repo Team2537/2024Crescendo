@@ -14,18 +14,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
 import frc.robot.Constants.RobotConstants.mode
 import lib.ControllerGains
+import lib.LoggedTunableNumber
 import lib.math.units.into
 import lib.math.units.measuredIn
 import lib.not
 import org.littletonrobotics.junction.Logger
 
 class Roller : SubsystemBase("roller") {
+
+    private val kP = LoggedTunableNumber("roller/kP", 0.5)
+    private val kI = LoggedTunableNumber("roller/kI", 0.0)
+    private val kD = LoggedTunableNumber("roller/kD", 0.0)
+
     val rollerIO: RollerIO = when(mode){
         Constants.RobotConstants.Mode.REAL -> RollerIONeo(
             motorID,
             noteDetectorID,
             isInverted,
-            ControllerGains(),
+            ControllerGains(kP = kP.get(), kI = kI.get(), kD = kD.get()),
             rollerRadius = rollerRadius
         )
         Constants.RobotConstants.Mode.SIM -> RollerIOSim(
@@ -55,6 +61,13 @@ class Roller : SubsystemBase("roller") {
         Logger.recordOutput("launcher/roller/setpoint", setpoint)
 
         Logger.recordOutput("launcher/roller/isAtSetpoint", isAtSetpoint.asBoolean)
+        Logger.recordOutput("launcher/roller/isHoldingNote", isHoldingNote.asBoolean)
+
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            { pid -> rollerIO.setPID(pid[0], pid[1], pid[2]) },
+            kP, kI, kD
+        )
     }
 
     fun getPullNoteCommand(distance: Measure<Distance> = Inches.of(6.0)) =
@@ -96,9 +109,9 @@ class Roller : SubsystemBase("roller") {
 
 
     companion object {
-        val motorID: Int = 100 // TODO: Set the id
-        val noteDetectorID: Int = 200 // TODO: Set the id
-        val isInverted: Boolean = false // TODO: Set the isInverted
+        val motorID: Int = 14
+        val noteDetectorID: Int = 0
+        val isInverted: Boolean = true
         val rollerRadius = Inches.of(1.460)
         val moiKgM2 = 0.0000434119
     }

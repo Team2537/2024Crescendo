@@ -1,17 +1,15 @@
 package frc.robot
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance
-import frc.robot.subsystems.launcher.Launcher
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.CommandScheduler
-import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.*
 import edu.wpi.first.wpilibj2.command.Commands.*
-import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
 import frc.robot.subsystems.climb.Climb
 import frc.robot.subsystems.swerve.Drivebase
 import frc.robot.subsystems.intake.Intake
@@ -47,6 +45,7 @@ object Robot : LoggedRobot() {
     val intake = Intake()
     val superstructure = Superstructure()
 
+
     val robotPose
         get() = drivebase.pose
 
@@ -62,7 +61,7 @@ object Robot : LoggedRobot() {
         when (Constants.RobotConstants.mode) {
             Constants.RobotConstants.Mode.REAL -> {
                 Logger.recordMetadata("Mode", "Real")
-//                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(WPILOGWriter())
                 Logger.addDataReceiver(NT4Publisher())
                 PowerDistribution(1, PowerDistribution.ModuleType.kRev)
             }
@@ -96,7 +95,33 @@ object Robot : LoggedRobot() {
 
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
-        configureBindings()
+//        configureBindings()
+
+//        operatorController.b().toggleOnTrue(pivot.manualControl { -operatorController.leftY })
+//        operatorController.y().onTrue(pivot.getResetPositionCommand())
+
+//        operatorController.leftBumper().whileTrue(
+//            Commands.sequence(
+//                superstructure.flywheels.getDynamicSysID(SysIdRoutine.Direction.kForward),
+//                waitSeconds(1.0),
+//                superstructure.flywheels.getDynamicSysID(SysIdRoutine.Direction.kReverse),
+//                waitSeconds(1.0),
+//                superstructure.flywheels.getQuasistatic(SysIdRoutine.Direction.kForward),
+//                waitSeconds(1.0),
+//                superstructure.flywheels.getQuasistatic(SysIdRoutine.Direction.kReverse)
+//            )
+//        )
+
+//        operatorController.a().onTrue(pivot.getQuickAngleCommand(Superstructure.intakePosition))
+//        operatorController.a().whileTrue(pivot.getSysIDRoutine())
+
+//        operatorController.b().onTrue(superstructure.roller.getPullNoteCommand())
+//        operatorController.a().onTrue(superstructure.getTestShotCommand())
+
+        operatorController.povUp().onTrue(superstructure.getPivotIntake())
+
+        operatorController.y().onTrue(superstructure.getHomeCommand())
+        operatorController.x().toggleOnTrue(superstructure.getManualControlCommand { -operatorController.leftY })
     }
 
     private fun configureBindings() {
@@ -110,24 +135,24 @@ object Robot : LoggedRobot() {
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
 
-        operatorController.a().onTrue(
-            either(
-                sequence(
-                    superstructure.getEjectCommand(),
-                    intake.getEjectCommand()
-                ),
-                sequence(
-                    superstructure.getIntakeCommand(),
-                    intake.getIntakeCommand()
-                ),
-                intake.isFull
-            ).withName("Intake Auto Command")
-        )
-
-        operatorController.y().onTrue(superstructure.getHomeCommand())
-
-        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
-        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
+//        operatorController.a().onTrue(
+//            either(
+//                sequence(
+//                    superstructure.getEjectCommand(),
+//                    intake.getEjectCommand()
+//                ),
+//                sequence(
+//                    superstructure.getIntakeCommand(),
+//                    intake.getIntakeCommand()
+//                ),
+//                intake.isFull
+//            ).withName("Intake Auto Command")
+//        )
+//
+//        operatorController.y().onTrue(superstructure.getHomeCommand())
+//
+//        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+//        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
     }
 
     /**
@@ -147,6 +172,7 @@ object Robot : LoggedRobot() {
 
     /** This method is called once each time the robot enters Disabled mode.  */
     override fun disabledInit() {
+        CommandScheduler.getInstance().cancelAll()
     }
 
     override fun disabledPeriodic() {

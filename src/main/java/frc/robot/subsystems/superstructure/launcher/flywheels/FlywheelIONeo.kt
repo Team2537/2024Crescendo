@@ -68,4 +68,10 @@ class FlywheelIONeo(
     override fun setBrakeMode(isBrakeMode: Boolean) {
         motor.idleMode = if (isBrakeMode) CANSparkBase.IdleMode.kBrake else CANSparkBase.IdleMode.kCoast
     }
+
+    override fun setPID(kP: Double, kI: Double, kD: Double) {
+        motor.pidController.setP(kP)
+        motor.pidController.setI(kI)
+        motor.pidController.setD(kD)
+    }
 }

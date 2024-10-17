@@ -12,22 +12,23 @@ class SwerveModule(
     configs: ModuleIO.ModuleConstants,
 ) {
 
-    private val io: ModuleIO = when (Constants.RobotConstants.mode) {
-        Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
-            configs,
-            ControllerGains(kV = 0.0113684210526),
-            ControllerGains(kP = 5.0, kD = 0.1)
-        )
-
-        Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
-            configs,
-            DCMotor.getNEO(1),
-            ControllerGains(),
-            ControllerGains(kP = 10.0)
-        )
-
-        Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
-    }.apply { reset() }
+//    private val io: ModuleIO = when (Constants.RobotConstants.mode) {
+//        Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
+//            configs,
+//            ControllerGains(kV = 0.0113684210526),
+//            ControllerGains(kP = 5.0, kD = 0.1)
+//        )
+//
+//        Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
+//            configs,
+//            DCMotor.getNEO(1),
+//            ControllerGains(),
+//            ControllerGains(kP = 10.0)
+//        )
+//
+//        Constants.RobotConstants.Mode.REPLAY -> object : ModuleIO {}
+//    }.apply { reset() }
+    val io = object : ModuleIO {}
 
 
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()

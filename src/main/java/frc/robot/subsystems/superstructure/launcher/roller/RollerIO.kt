@@ -45,4 +45,6 @@ interface RollerIO {
     fun setVoltage(voltage: Measure<Voltage>, isClosedLoop: Boolean = false) {}
     fun setTargetPosition(position: Measure<Distance>) {}
     fun setBrakeMode(isBrakeMode: Boolean) {}
+
+    fun setPID(kP: Double, kI: Double, kD: Double) {}
 }
