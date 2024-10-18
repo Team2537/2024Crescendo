@@ -115,11 +115,10 @@ object Robot : LoggedRobot() {
 //        operatorController.a().onTrue(pivot.getQuickAngleCommand(Superstructure.intakePosition))
 //        operatorController.a().whileTrue(pivot.getSysIDRoutine())
 
-//        operatorController.b().onTrue(superstructure.roller.getPullNoteCommand())
+        operatorController.b().onTrue(superstructure.roller.getPullNoteCommand())
 //        operatorController.a().onTrue(superstructure.getTestShotCommand())
 
-        operatorController.povUp().onTrue(superstructure.getPivotIntake())
-
+        operatorController.povUp().onTrue(superstructure.getSubwooferShotCommand(operatorController.leftTrigger()))
         operatorController.y().onTrue(superstructure.getHomeCommand())
         operatorController.x().toggleOnTrue(superstructure.getManualControlCommand { -operatorController.leftY })
     }
@@ -172,7 +171,7 @@ object Robot : LoggedRobot() {
 
     /** This method is called once each time the robot enters Disabled mode.  */
     override fun disabledInit() {
-        CommandScheduler.getInstance().cancelAll()
+//        CommandScheduler.getInstance().cancelAll()
     }
 
     override fun disabledPeriodic() {

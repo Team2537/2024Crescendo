@@ -9,6 +9,7 @@ import edu.wpi.first.units.Current
 import edu.wpi.first.units.Measure
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.Constants
 import lib.math.units.into
@@ -22,7 +23,7 @@ class Climb : SubsystemBase() {
     private val leftArmIO: ClimberArmIO = when(Constants.RobotConstants.mode){
         Constants.RobotConstants.Mode.REAL -> ClimberArmNeo(
             leftID,
-            false,
+            true,
             gearing,
             drumRadius
         )
@@ -36,7 +37,7 @@ class Climb : SubsystemBase() {
     private val rightArmIO: ClimberArmIO = when(Constants.RobotConstants.mode){
         Constants.RobotConstants.Mode.REAL -> ClimberArmNeo(
             rightID,
-            true,
+            false,
             gearing,
             drumRadius
         )
@@ -91,12 +92,25 @@ class Climb : SubsystemBase() {
         rightArmIO.setVoltage(Volts.of(voltage), false)
     }
 
+    fun getRespoolCommand(): Command {
+        return runEnd(
+            {
+                leftArmIO.setVoltage(Volts.of(-3.0))
+                rightArmIO.setVoltage(Volts.of(-3.0))
+            },
+            {
+                leftArmIO.stop()
+                rightArmIO.stop()
+            }
+        )
+    }
+
     fun getExtendCommand() = sequence(
         runOnce {
             leftArmIO.setVoltage(extensionVoltage, false)
             rightArmIO.setVoltage(extensionVoltage, false)
         },
-        waitSeconds(2.5),
+        waitSeconds(1.5),
         runOnce {
             leftArmIO.stop()
             rightArmIO.stop()
@@ -126,8 +140,8 @@ class Climb : SubsystemBase() {
     }
 
     companion object {
-        val leftID = 18
-        val rightID = 15
+        val leftID = 15
+        val rightID = 18
 
         val maxExtension = Inches.of(48.0)
         val drumRadius = Inches.of(0.325)
@@ -135,8 +149,8 @@ class Climb : SubsystemBase() {
         val load = Constants.RobotConstants.robotWeight.divide(2.0)
         val gearing = 16/1.0
 
-        val extensionVoltage = Volts.of(12.0)
-        val retractionVoltage = Volts.of(-12.0)
+        val extensionVoltage = Volts.of(6.0)
+        val retractionVoltage = Volts.of(-6.0)
         val currentThreshold: Measure<Current> = Amps.of(25.0)
     }
 }
