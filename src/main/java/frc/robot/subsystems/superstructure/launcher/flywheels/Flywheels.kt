@@ -35,14 +35,14 @@ class Flywheels : SubsystemBase("flywheels") {
             false,
             ControllerGains(
                 kP = topKp.get(), kI = topKi.get(), kD = topKd.get(),
-                kV = 12.0/7000.0
+                kV = 12.0/6300.0
             )
         )
         Constants.RobotConstants.Mode.SIM -> FlywheelIOSim(
             DCMotor.getNeoVortex(1),
             moiKgM2 = MOI,
             ControllerGains(
-                kV = 12.0/6200.0,
+                kV = 12.0/6300.0,
                 kP = 0.17
             ))
         Constants.RobotConstants.Mode.REPLAY -> object : FlywheelIO {}
@@ -51,13 +51,16 @@ class Flywheels : SubsystemBase("flywheels") {
         Constants.RobotConstants.Mode.REAL -> FlywheelIONeo(
             bottomID,
             true,
-            ControllerGains(kP = bottomKp.get(), kI = bottomKi.get(), kD = bottomKd.get())
+            ControllerGains(
+                kP = bottomKp.get(), kI = bottomKi.get(), kD = bottomKd.get(),
+                kV = 12.0/6300.0
+            )
         )
         Constants.RobotConstants.Mode.SIM -> FlywheelIOSim(
             DCMotor.getNeoVortex(1),
             moiKgM2 = MOI,
             ControllerGains(
-                kV = 12.0/6900.0,
+                kV = 12.0/6300.0,
                 kP = 0.17
             ))
         Constants.RobotConstants.Mode.REPLAY -> object : FlywheelIO {}
