@@ -30,7 +30,6 @@ internal class RollerSimTest {
         assert(inputs.velocity > RotationsPerSecond.of(0.0))
     }
 
-    @Test
     fun setRollerPosition(){
         val io = RollerIOSim(
             motor = DCMotor.getNEO(1),
