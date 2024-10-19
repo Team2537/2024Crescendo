@@ -81,6 +81,11 @@ object Robot : LoggedRobot() {
             }
         }
 
+        Logger.recordMetadata("GIT_SHA", GIT_SHA)
+        Logger.recordMetadata("GIT_BRANCH", GIT_BRANCH)
+        Logger.recordMetadata("BUILD_DATE", BUILD_DATE)
+        Logger.recordMetadata("DIRTY", if(DIRTY == 1) "Dirty" else "Clean")
+
         CommandScheduler.getInstance().onCommandInitialize { command ->
             Logger.recordOutput("commands/${command.name}", true)
         }
