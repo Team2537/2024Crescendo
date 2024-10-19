@@ -142,12 +142,12 @@ class Pivot : SubsystemBase() {
 
     fun getSensorlessHomeCommand() =
         Commands.sequence(
-            runOnce { io.setRawVoltage(Volts.of(-3.0)) },
+            runOnce { io.setRawVoltage(Volts.of(-4.0)) },
             Commands.waitSeconds(0.25),
             Commands.waitUntil(isStalled),
             runOnce { io.stop() },
             Commands.waitSeconds(0.25),
-            getResetPositionCommand()
+            getResetPositionCommand(),
         ).withName("Sensorless Home Pivot")
 
     fun getQuickAngleCommand(position: Measure<Angle>): Command {
