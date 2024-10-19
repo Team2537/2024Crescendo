@@ -70,7 +70,7 @@ class Roller : SubsystemBase("roller") {
         )
     }
 
-    fun getPullNoteCommand(distance: Measure<Distance> = Inches.of(6.0)) =
+    fun getPullNoteCommand(distance: Measure<Distance> = Inches.of(8.0)) =
         Commands.sequence(
             runOnce {
                 rollerIO.setBrakeMode(true)

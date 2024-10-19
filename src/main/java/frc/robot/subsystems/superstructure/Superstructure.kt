@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands.waitSeconds
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
+import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.superstructure.launcher.flywheels.Flywheels
 import frc.robot.subsystems.superstructure.launcher.roller.Roller
 import frc.robot.subsystems.superstructure.pivot.Pivot
@@ -69,14 +70,11 @@ class Superstructure {
             )
         ).onlyIf(roller.isHoldingNote)
 
-    fun getIntakeCommand() =
-        Commands.sequence(
-            pivot.getQuickAngleCommand(intakePosition).debug("pivot"),
-            Commands.parallel(
-                flywheels.getStopCommand(),
-                roller.getPullNoteCommand()
-            )
-        )
+    fun getIntakePivotCommand(endTrigger: BooleanSupplier) =
+        pivot.getSendToPositionCommand(intakePosition)
+
+    fun getPullNoteCommand() =
+        roller.getPullNoteCommand()
 
     fun resetPivotPosition() = pivot.getResetPositionCommand()
 

@@ -53,7 +53,7 @@ object Robot : LoggedRobot() {
     val driverController: CommandXboxController = CommandXboxController(0)
     val operatorController: CommandXboxController = CommandXboxController(1)
 
-    private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase)
+    private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase, intake, superstructure)
 
     init {
         Logger.recordMetadata("Project Name", "2024Crescendo")

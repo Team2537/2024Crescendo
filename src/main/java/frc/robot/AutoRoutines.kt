@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.Commands.sequence
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.WaitCommand
+import frc.robot.subsystems.intake.Intake
+import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.subsystems.swerve.Drivebase
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
@@ -22,6 +24,8 @@ import kotlin.jvm.optionals.getOrElse
 class AutoRoutines(
     val factory: AutoFactory,
     val drivebase: Drivebase,
+    val intake: Intake,
+    val superstructure: Superstructure
 ) {
     private fun waitPrintCommand(time: Double, message: String) = parallel(
         WaitCommand(time),
@@ -100,7 +104,11 @@ class AutoRoutines(
                     .andThen(waitPrintCommand(2.0, "Launching first note"))
                     .andThen(
                         parallel(
-                            waitPrintCommand(2.0, "Intaking second note"),
+                            Commands.sequence(
+                                superstructure.getPivotIntake(),
+                                intake.getIntakeCommand(),
+                                superstructure.getPullNoteCommand()
+                            ),
                             CS_A1.cmd().finallyDo(drivebase::stop)
                         )
                     ).withName("fourNoteA1_A3 Entry")
@@ -114,7 +122,11 @@ class AutoRoutines(
                         .andThen(waitPrintCommand(2.0, "Launching second note"))
                         .andThen(
                             Commands.parallel(
-                                waitPrintCommand(2.0, "Intaking third note"),
+                                Commands.sequence(
+                                    superstructure.getPivotIntake(),
+                                    intake.getIntakeCommand(),
+                                    superstructure.getPullNoteCommand()
+                                ),
                                 CS_A2.cmd().finallyDo(drivebase::stop)
                             )
                         ),
@@ -127,10 +139,14 @@ class AutoRoutines(
             .onTrue(
                 either(
                     A2_CS.cmd().finallyDo(drivebase::stop)
-                        .andThen(waitPrintCommand(2.0, "Launching third note"))
+                        .andThen(superstructure.getSubwooferShotCommand { true })
                         .andThen(
                             Commands.parallel(
-                                waitPrintCommand(2.0, "Intaking fourth note"),
+                                Commands.sequence(
+                                    superstructure.getPivotIntake(),
+                                    intake.getIntakeCommand(),
+                                    superstructure.getPullNoteCommand()
+                                ),
                                 CS_A3.cmd().finallyDo(drivebase::stop)
                             )
                         ),
@@ -141,17 +157,21 @@ class AutoRoutines(
         CS_A3.done().and { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A3", false) else false }
             .onTrue(
                 A3_CS.cmd().finallyDo(drivebase::stop)
-                    .andThen(waitPrintCommand(2.0, "Launching fourth note"))
+                    .andThen(superstructure.getSubwooferShotCommand { true })
             )
 
         A1_A2.done()
             .onTrue(
                 either(
                     A2_CS.cmd().finallyDo(drivebase::stop)
-                        .andThen(waitPrintCommand(2.0, "Launching second note"))
+                        .andThen(superstructure.getSubwooferShotCommand { true })
                         .andThen(
                             parallel(
-                                waitPrintCommand(2.0, "Intaking third note"),
+                                Commands.sequence(
+                                    superstructure.getPivotIntake(),
+                                    intake.getIntakeCommand(),
+                                    superstructure.getPullNoteCommand()
+                                ),
                                 CS_A3.cmd().finallyDo(drivebase::stop)
                             )
                         ),
@@ -164,7 +184,7 @@ class AutoRoutines(
         A2_A3.done().and { if (RobotBase.isSimulation()) SmartDashboard.getBoolean("notes/A3", false) else false }
             .onTrue(
                 A3_CS.cmd().finallyDo(drivebase::stop)
-                    .andThen(waitPrintCommand(2.0, "Launching third note"))
+                    .andThen(superstructure.getSubwooferShotCommand { true })
             )
 
         return loop.cmd().finallyDo(drivebase::stop)
