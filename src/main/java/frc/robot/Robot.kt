@@ -95,32 +95,7 @@ object Robot : LoggedRobot() {
 
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
-//        configureBindings()
-
-//        operatorController.b().toggleOnTrue(pivot.manualControl { -operatorController.leftY })
-//        operatorController.y().onTrue(pivot.getResetPositionCommand())
-
-//        operatorController.leftBumper().whileTrue(
-//            Commands.sequence(
-//                superstructure.flywheels.getDynamicSysID(SysIdRoutine.Direction.kForward),
-//                waitSeconds(1.0),
-//                superstructure.flywheels.getDynamicSysID(SysIdRoutine.Direction.kReverse),
-//                waitSeconds(1.0),
-//                superstructure.flywheels.getQuasistatic(SysIdRoutine.Direction.kForward),
-//                waitSeconds(1.0),
-//                superstructure.flywheels.getQuasistatic(SysIdRoutine.Direction.kReverse)
-//            )
-//        )
-
-//        operatorController.a().onTrue(pivot.getQuickAngleCommand(Superstructure.intakePosition))
-//        operatorController.a().whileTrue(pivot.getSysIDRoutine())
-
-        operatorController.b().onTrue(superstructure.roller.getPullNoteCommand())
-//        operatorController.a().onTrue(superstructure.getTestShotCommand())
-
-        operatorController.povUp().onTrue(superstructure.getSubwooferShotCommand(operatorController.leftTrigger()))
-        operatorController.y().onTrue(superstructure.getHomeCommand())
-        operatorController.x().toggleOnTrue(superstructure.getManualControlCommand { -operatorController.leftY })
+        configureBindings()
     }
 
     private fun configureBindings() {
