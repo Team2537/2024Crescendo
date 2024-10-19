@@ -9,8 +9,25 @@ plugins {
 
     // json serialization
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.21'
+
+    id "com.peterabeles.gversion" version "1.10.3"
 }
 
+project.compileKotlin.dependsOn(createVersionFile)
+gversion {
+    srcDir       = "src/main/java/"           // path is relative to the sub-project by default
+    // Gradle variables can also be used
+    // E.g. "${project.rootDir}/module/src/main/java"
+    classPackage = "frc.robot"
+    className    = "BuildConstants"                // optional. If not specified GVersion is used
+    dateFormat   = "yyyy-MM-dd'T'HH:mm:ss'Z'" // optional. This is the default
+    timeZone     = "UTC"                      // optional. UTC is default
+    debug        = false                      // optional. print out extra debug information
+    language     = "kotlin"                     // optional. Can be Java, Kotlin, YAML, or Properties. Case insensitive.
+    explicitType = true                      // optional. Force types to be explicitly printed
+    indent       = "    "                       // optional. Change how code is indented. 1 tab is default.
+    annotate     = false                      // optional. Java only. Adds @Generated annotation
+}
 
 
 java {
