@@ -81,7 +81,7 @@ class Intake : SubsystemBase() {
         Commands.sequence(
             runOnce {io.setVoltage(Volts.of(6.0))},
             Commands.waitSeconds(2.0),
-            runOnce { io.stop() }
+            runOnce { io.stop(); state = IntakeState.STORED }
         )
 
     fun getManualIntakeCommand(volts: DoubleSupplier): Command {
