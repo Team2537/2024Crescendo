@@ -5,10 +5,8 @@ import edu.wpi.first.math.geometry.Rotation3d
 import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.units.Units
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.PrintCommand
-import edu.wpi.first.wpilibj2.command.SubsystemBase
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand
+import edu.wpi.first.units.Units.Volts
+import edu.wpi.first.wpilibj2.command.*
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants
 import frc.robot.Robot
@@ -16,31 +14,30 @@ import lib.math.EdgeDetector
 import lib.math.units.feet
 import lib.toTransform2d
 import org.littletonrobotics.junction.Logger
+import java.util.function.DoubleSupplier
 
 /**
  * The Intake subsystem contains command factories for the intake.
  */
 class Intake : SubsystemBase() {
-//    private val io: IntakeIO = when (Constants.RobotConstants.mode) {
-//        Constants.RobotConstants.Mode.REAL -> IntakeIONeo(
-//            19,
-//            101,
-//            102,
-//            rollerDiameter,
-//            1.0
-//        )
-//
-//        Constants.RobotConstants.Mode.SIM -> IntakeIOSim(
-//            1.0,
-//            rollerMOI,
-//            rollerDiameter,
-//            { state }
-//        )
-//
-//        Constants.RobotConstants.Mode.REPLAY -> object : IntakeIO {}
-//    }
+    private val io: IntakeIO = when (Constants.RobotConstants.mode) {
+        Constants.RobotConstants.Mode.REAL -> IntakeIONeo(
+            19,
+            101,
+            102,
+            rollerDiameter,
+            1.0
+        )
 
-    private val io = object : IntakeIO {}
+        Constants.RobotConstants.Mode.SIM -> IntakeIOSim(
+            1.0,
+            rollerMOI,
+            rollerDiameter,
+            { state }
+        )
+
+        Constants.RobotConstants.Mode.REPLAY -> object : IntakeIO {}
+    }
 
     private val inputs: IntakeIO.IntakeInputs = IntakeIO.IntakeInputs()
 
@@ -79,6 +76,17 @@ class Intake : SubsystemBase() {
     fun getEjectCommand() = getMoveNoteCommand(Direction.OUT, Sensor.INTAKE, IntakeState.EMPTY).withName("Eject")
 
     fun getTransferCommand() = getMoveNoteCommand(Direction.IN, Sensor.EXIT, IntakeState.EMPTY).withName("Transfer")
+
+    fun getSimpleIntakeCommand() =
+        Commands.sequence(
+            runOnce {io.setVoltage(Volts.of(6.0))},
+            Commands.waitSeconds(2.0),
+            runOnce { io.stop() }
+        )
+
+    fun getManualIntakeCommand(volts: DoubleSupplier): Command {
+        return run {io.setVoltage(Volts.of(volts.asDouble))}
+    }
 
     override fun periodic() {
         exitEdgeDetector.update(inputs.exitSensorTriggered)

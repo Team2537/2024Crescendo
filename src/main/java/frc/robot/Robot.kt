@@ -114,6 +114,8 @@ object Robot : LoggedRobot() {
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
 
+        operatorController.a().toggleOnTrue(intake.getManualIntakeCommand { -operatorController.leftY * 3})
+
 //        operatorController.a().onTrue(
 //            either(
 //                sequence(
