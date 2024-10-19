@@ -31,12 +31,12 @@ class IntakeIONeo(
         setSmartCurrentLimit(20) // Maximum safe limit on a neo 550
     }
 
-    private val exitSensor: DigitalInput = DigitalInput(exitSensorID)
-    private val intakeSensor: DigitalInput = DigitalInput(intakeSensorID)
+//    private val exitSensor: DigitalInput = DigitalInput(exitSensorID)
+//    private val intakeSensor: DigitalInput = DigitalInput(intakeSensorID)
 
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
-        inputs.intakeSensorTriggered = intakeSensor.get()
-        inputs.exitSensorTriggered = exitSensor.get()
+        inputs.intakeSensorTriggered = true
+        inputs.exitSensorTriggered = true
         inputs.linearVelocity.mut_replace(
             motor.encoder.velocity * (((rollerDiameter into Meters) * PI) / 60.0), // Convert from RPM to m/s
             MetersPerSecond
