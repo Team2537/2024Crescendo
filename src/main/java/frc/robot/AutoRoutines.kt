@@ -35,6 +35,9 @@ class AutoRoutines(
     private val chooser = LoggedDashboardChooser<Supplier<Command>>("auto").apply {
         addOption("Four Note (Dumb)", Supplier { dumbFourNoteA1_A3() })
         addDefaultOption("Four Note (Smart)", Supplier { smartMaxNotesA1_A3() })
+        addOption("One Note Top", Supplier { basicOneNoteTop() })
+        addOption("One Note Bottom", Supplier { basicOneNoteBottom() })
+        addOption("One Note Center", Supplier { basicOneNoteCenter() })
     }
 
     val selectedRoutine: Command
@@ -196,7 +199,6 @@ class AutoRoutines(
             InstantCommand({ drivebase.resetOdometry(CS_A2.initialPose.getOrDefault(Pose2d())) }),
             superstructure.getSubwooferShotCommand { true },
             superstructure.getHomeCommand(),
-            CS_A2.cmd()
         )
     }
 
@@ -207,7 +209,6 @@ class AutoRoutines(
             InstantCommand({ drivebase.resetOdometry(TS_A1.initialPose.getOrDefault(Pose2d())) }),
             superstructure.getSubwooferShotCommand { true },
             superstructure.getHomeCommand(),
-            TS_A1.cmd()
         )
     }
 
@@ -218,7 +219,6 @@ class AutoRoutines(
             InstantCommand({ drivebase.resetOdometry(BS_A3.initialPose.getOrDefault(Pose2d())) }),
             superstructure.getSubwooferShotCommand { true },
             superstructure.getHomeCommand(),
-            BS_A3.cmd()
         )
     }
 }
