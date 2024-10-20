@@ -16,7 +16,7 @@ class SwerveModule(
         Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
             configs,
             ControllerGains(kV = 0.0113684210526),
-            ControllerGains(kP = 3.0, kD = 0.1)
+            ControllerGains(kP = 1.0, kD = 0.1)
         )
 
         Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
