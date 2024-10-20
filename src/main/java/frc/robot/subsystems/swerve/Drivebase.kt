@@ -230,12 +230,12 @@ class Drivebase : SubsystemBase("Drivebase") {
         trajLogger
     )
 
-    init {
-        modules.forEach {
-            it.setDrivePID(driveKp.get(), driveKi.get(), driveKd.get())
-            it.setTurnPID(turnKp.get(), turnKi.get(), turnKd.get())
-        }
-    }
+//    init {
+//        modules.forEach {
+//            it.setDrivePID(driveKp.get(), driveKi.get(), driveKd.get())
+//            it.setTurnPID(turnKp.get(), turnKi.get(), turnKd.get())
+//        }
+//    }
 
     /**
      * Method for getting the module positions from the module constants

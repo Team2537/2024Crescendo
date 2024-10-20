@@ -1,5 +1,6 @@
 package frc.robot
 
+import com.ctre.phoenix6.SignalLogger
 import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.DriverStation.Alliance
 import edu.wpi.first.math.MathUtil
@@ -100,6 +101,7 @@ object Robot : LoggedRobot() {
             Logger.recordOutput("commands/${command.name}", false)
         }
 
+        SignalLogger.enableAutoLogging(false)
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
 
