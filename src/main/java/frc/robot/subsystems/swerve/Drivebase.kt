@@ -282,7 +282,7 @@ class Drivebase : SubsystemBase("Drivebase") {
                     (vForwards * (maxSpeed into Units.MetersPerSecond)),
                     (vStrafe * (maxSpeed into Units.MetersPerSecond)),
                     (vRotation * 1.5 * (Math.PI)),
-                    gyroInputs.yaw.plus(driverOrientation),
+                    gyroInputs.yaw,
                 )
             } else {
                 ChassisSpeeds(
