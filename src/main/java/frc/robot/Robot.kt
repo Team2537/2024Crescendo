@@ -122,7 +122,7 @@ object Robot : LoggedRobot() {
         operatorController.x().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
         operatorController.x().and(!climb.isPreclimb).whileTrue(climb.getRespoolCommand())
 
-        operatorController.leftBumper().onTrue(
+        operatorController.leftBumper().whileTrue(
             Commands.sequence(
                 Commands.deadline(
                     Commands.sequence(
