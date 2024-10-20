@@ -100,7 +100,10 @@ object Robot : LoggedRobot() {
 
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
-        configureBindings()
+
+        operatorController.b().toggleOnTrue(intake.getManualIntakeCommand { -operatorController.leftY * 6})
+
+//        configureBindings()
     }
 
     private fun configureBindings() {
