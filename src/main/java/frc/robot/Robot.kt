@@ -117,7 +117,7 @@ object Robot : LoggedRobot() {
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
 
-        operatorController.b().onTrue(intake.getSimpleIntakeCommand())
+        operatorController.b().whileTrue(intake.getSimpleIntakeCommand())
 
 //        operatorController.a().onTrue(
 //            either(
