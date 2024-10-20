@@ -79,8 +79,8 @@ class Intake : SubsystemBase() {
 
     fun getSimpleIntakeCommand() =
         Commands.sequence(
-            runOnce {io.setVoltage(Volts.of(6.0))},
-            Commands.waitSeconds(2.0),
+            runOnce {io.setVoltage(Volts.of(9.0))},
+            Commands.waitSeconds(4.5),
             runOnce { io.stop(); state = IntakeState.STORED }
         )
 
