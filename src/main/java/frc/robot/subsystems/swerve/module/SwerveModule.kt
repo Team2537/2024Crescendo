@@ -6,17 +6,17 @@ import edu.wpi.first.math.kinematics.SwerveModuleState
 import edu.wpi.first.math.system.plant.DCMotor
 import frc.robot.Constants
 import lib.ControllerGains
+import lib.LoggedTunableNumber
 
 class SwerveModule(
     private val
     configs: ModuleIO.ModuleConstants,
 ) {
-
     private val io: ModuleIO = when (Constants.RobotConstants.mode) {
         Constants.RobotConstants.Mode.REAL -> ModuleIONeo(
             configs,
-            ControllerGains(kV = 0.0113684210526),
-            ControllerGains(kP = 5.0, kD = 0.1)
+            ControllerGains(),
+            ControllerGains()
         )
 
         Constants.RobotConstants.Mode.SIM -> ModuleIOSim(
