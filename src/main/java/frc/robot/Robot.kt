@@ -101,7 +101,7 @@ object Robot : LoggedRobot() {
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
 
-        operatorController.b().toggleOnTrue(intake.getManualIntakeCommand { -operatorController.leftY * 6})
+        operatorController.b().toggleOnTrue(intake.getManualIntakeCommand { -operatorController.leftY * 12})
 
 //        configureBindings()
     }
