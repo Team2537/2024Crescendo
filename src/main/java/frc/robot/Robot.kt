@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.DriverStation.Alliance
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.units.Units.Volts
@@ -103,6 +104,8 @@ object Robot : LoggedRobot() {
         DriverStation.silenceJoystickConnectionWarning(true)
 
         configureBindings()
+
+        CameraServer.startAutomaticCapture()
     }
 
     private fun configureBindings() {
