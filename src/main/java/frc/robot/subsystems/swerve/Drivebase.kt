@@ -94,36 +94,6 @@ class Drivebase : SubsystemBase("Drivebase") {
         Translation2d(-moduleOffset, -moduleOffset),
     )
 
-    private val driveKp = LoggedTunableNumber(
-        "swerve/modules/driveKp",
-        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 5.0 else 0.0
-    )
-
-    private val driveKi = LoggedTunableNumber(
-        "swerve/modules/driveKi",
-        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
-    )
-
-    private val driveKd = LoggedTunableNumber(
-        "swerve/modules/driveKd",
-        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.1 else 0.0
-    )
-
-    private val turnKp = LoggedTunableNumber(
-        "swerve/modules/turnKp",
-        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 5.0 else 10.0
-    )
-
-    private val turnKi = LoggedTunableNumber(
-        "swerve/modules/turnKi",
-        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
-    )
-
-    private val turnKd = LoggedTunableNumber(
-        "swerve/modules/turnKd",
-        if (Constants.RobotConstants.mode == Constants.RobotConstants.Mode.REAL) 0.0 else 0.0
-    )
-
     /**
      * Array of [SwerveModulePosition] used for storing the distance traveled of each module, this is for odometry
      */
@@ -363,18 +333,6 @@ class Drivebase : SubsystemBase("Drivebase") {
             hashCode(),
             { pid -> rotControl.setPID(pid[0], pid[1], pid[2]) },
             rotControlP, rotControlI, rotControlD
-        )
-
-        LoggedTunableNumber.ifChanged(
-            hashCode(),
-            { pid -> modules.forEach { it.setDrivePID(pid[0], pid[1], pid[2]) }; println("Drive PID: $pid") },
-            driveKp, driveKi, driveKd
-        )
-
-        LoggedTunableNumber.ifChanged(
-            hashCode(),
-            { pid -> modules.forEach { it.setTurnPID(pid[0], pid[1], pid[2]) }; println("Turn PID: $pid") },
-            turnKp, turnKi, turnKd
         )
 
         gyro.updateInputs(gyroInputs)
