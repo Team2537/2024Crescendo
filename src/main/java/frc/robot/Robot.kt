@@ -102,22 +102,7 @@ object Robot : LoggedRobot() {
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
 
-        operatorController.b().onTrue(
-            Commands.sequence(
-                Commands.deadline(
-                    Commands.sequence(
-                        waitSeconds(2.0),
-                        superstructure.getConstantPullNote(),
-                    ),
-                    intake.getConstantIntakeCommand()
-                ),
-                intake.getStopCommand(),
-                runEnd(
-                    { superstructure.roller.rollerIO.setVoltage(Volts.of(-3.0)) },
-                    { superstructure.roller.rollerIO.setVoltage(Volts.zero()) }).withTimeout(0.5)
-            )
-        )
-//        configureBindings()
+        configureBindings()
     }
 
     private fun configureBindings() {
