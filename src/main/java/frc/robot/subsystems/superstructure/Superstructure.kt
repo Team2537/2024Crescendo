@@ -1,17 +1,18 @@
 package frc.robot.subsystems.superstructure
 
+import edu.wpi.first.units.Distance
+import edu.wpi.first.units.Measure
+import edu.wpi.first.units.Units
+import edu.wpi.first.units.Units.Inches
 import edu.wpi.first.units.Units.Volts
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.Commands.waitSeconds
 import edu.wpi.first.wpilibj2.command.Commands.waitUntil
 import edu.wpi.first.wpilibj2.command.PrintCommand
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
-import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.subsystems.superstructure.launcher.flywheels.Flywheels
 import frc.robot.subsystems.superstructure.launcher.roller.Roller
 import frc.robot.subsystems.superstructure.pivot.Pivot
-import lib.debug
 import lib.math.units.degrees
 import lib.math.units.rpm
 import lib.not
@@ -73,10 +74,20 @@ class Superstructure {
     fun getIntakePivotCommand(endTrigger: BooleanSupplier) =
         pivot.getSendToPositionCommand(intakePosition)
 
-    fun getPullNoteCommand() =
-        roller.getPullNoteCommand()
+    fun getPullNoteCommand(distance: Measure<Distance> = Inches.of(7.0)) =
+        roller.getPullNoteCommand(distance)
 
     fun resetPivotPosition() = pivot.getResetPositionCommand()
+
+    fun getConstantPullNote() =
+        Commands.sequence(
+            roller.runOnce { roller.rollerIO.setVoltage(Units.Volts.of(9.0)) },
+            waitUntil(roller.isHoldingNote),
+            waitSeconds(0.25),
+            roller.getStopCommand()
+        )
+
+    fun getRetractNote() = getPullNoteCommand(Units.Inches.of(-1.0))
 
     fun getEjectCommand() =
         Commands.sequence(
