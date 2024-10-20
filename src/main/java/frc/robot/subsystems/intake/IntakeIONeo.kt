@@ -25,7 +25,7 @@ class IntakeIONeo(
     private val motor = CANSparkMax(motorID, CANSparkLowLevel.MotorType.kBrushless).apply {
         restoreFactoryDefaults()
         idleMode = CANSparkBase.IdleMode.kBrake
-        inverted = false
+        inverted = true
         encoder.positionConversionFactor = 1 / gearing
         encoder.velocityConversionFactor = 1 / gearing
         setSmartCurrentLimit(20) // Maximum safe limit on a neo 550
