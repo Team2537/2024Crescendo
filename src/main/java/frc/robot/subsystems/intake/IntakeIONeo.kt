@@ -35,8 +35,8 @@ class IntakeIONeo(
     private val intakeSensor: DigitalInput = DigitalInput(intakeSensorID)
 
     override fun updateInputs(inputs: IntakeIO.IntakeInputs) {
-        inputs.intakeSensorTriggered = intakeSensor.get()
-        inputs.exitSensorTriggered = exitSensor.get()
+        inputs.intakeSensorTriggered = !intakeSensor.get()
+        inputs.exitSensorTriggered = !exitSensor.get()
         inputs.linearVelocity.mut_replace(
             motor.encoder.velocity * (((rollerDiameter into Meters) * PI) / 60.0), // Convert from RPM to m/s
             MetersPerSecond
