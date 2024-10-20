@@ -81,7 +81,7 @@ class Superstructure {
 
     fun getConstantPullNote() =
         Commands.sequence(
-            roller.runOnce { roller.rollerIO.setVoltage(Units.Volts.of(1.0)) },
+            roller.runOnce { roller.rollerIO.setVoltage(Units.Volts.of(3.0)) },
             waitUntil(roller.isHoldingNote),
             waitSeconds(0.25),
             roller.getStopCommand()
