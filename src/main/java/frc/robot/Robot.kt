@@ -16,6 +16,7 @@ import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.subsystems.superstructure.pivot.Pivot
 import lib.debug
+import lib.not
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
 import org.littletonrobotics.junction.Logger
@@ -84,7 +85,7 @@ object Robot : LoggedRobot() {
         Logger.recordMetadata("GIT_SHA", GIT_SHA)
         Logger.recordMetadata("GIT_BRANCH", GIT_BRANCH)
         Logger.recordMetadata("BUILD_DATE", BUILD_DATE)
-        Logger.recordMetadata("DIRTY", if(DIRTY == 1) "Dirty" else "Clean")
+        Logger.recordMetadata("DIRTY", if (DIRTY == 1) "Dirty" else "Clean")
 
         CommandScheduler.getInstance().onCommandInitialize { command ->
             Logger.recordOutput("commands/${command.name}", true)
@@ -104,11 +105,16 @@ object Robot : LoggedRobot() {
         operatorController.b().onTrue(
             Commands.sequence(
                 Commands.deadline(
-                    superstructure.getConstantPullNote(),
+                    Commands.sequence(
+                        waitSeconds(2.0),
+                        superstructure.getConstantPullNote(),
+                    ),
                     intake.getConstantIntakeCommand()
                 ),
                 intake.getStopCommand(),
-                superstructure.getRetractNote()
+                runEnd(
+                    { superstructure.roller.rollerIO.setVoltage(Volts.of(-3.0)) },
+                    { superstructure.roller.rollerIO.setVoltage(Volts.zero()) }).withTimeout(0.5)
             )
         )
 //        configureBindings()
@@ -125,26 +131,11 @@ object Robot : LoggedRobot() {
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
 
-        operatorController.b().onTrue(intake.getSimpleIntakeCommand())
+        operatorController.povDown().onTrue(superstructure.getSubwooferShotCommand(operatorController.leftTrigger()))
+        operatorController.povUp().onTrue(superstructure.getAmpShotCommand())
 
-//        operatorController.a().onTrue(
-//            either(
-//                sequence(
-//                    superstructure.getEjectCommand(),
-//                    intake.getEjectCommand()
-//                ),
-//                sequence(
-//                    superstructure.getIntakeCommand(),
-//                    intake.getIntakeCommand()
-//                ),
-//                intake.isFull
-//            ).withName("Intake Auto Command")
-//        )
-//
-//        operatorController.y().onTrue(superstructure.getHomeCommand())
-//
-//        operatorController.b().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
-//        operatorController.b().and(climb.isExtended).onTrue(climb.getRetractCommand())
+        operatorController.x().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+        operatorController.x().and(!climb.isPreclimb).whileTrue(climb.getRespoolCommand())
     }
 
     /**
