@@ -23,8 +23,8 @@ class Intake : SubsystemBase() {
     private val io: IntakeIO = when (Constants.RobotConstants.mode) {
         Constants.RobotConstants.Mode.REAL -> IntakeIONeo(
             19,
-            101,
-            102,
+            8,
+            9,
             rollerDiameter,
             1.0
         )

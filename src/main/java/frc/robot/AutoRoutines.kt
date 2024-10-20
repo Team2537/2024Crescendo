@@ -3,7 +3,6 @@ package frc.robot
 import choreo.auto.AutoFactory
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj.RobotBase
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
@@ -16,9 +15,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.subsystems.swerve.Drivebase
-import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser
 import java.util.function.Supplier
+import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrElse
 
 class AutoRoutines(
@@ -188,6 +187,39 @@ class AutoRoutines(
             )
 
         return loop.cmd().finallyDo(drivebase::stop)
+    }
+
+    fun basicOneNoteCenter(): Command {
+        val CS_A2 = factory.trajectory("CS_A2", factory.voidLoop())
+
+        return Commands.sequence(
+            InstantCommand({ drivebase.resetOdometry(CS_A2.initialPose.getOrDefault(Pose2d())) }),
+            superstructure.getSubwooferShotCommand { true },
+            superstructure.getHomeCommand(),
+            CS_A2.cmd()
+        )
+    }
+
+    fun basicOneNoteTop(): Command {
+        val TS_A1 = factory.trajectory("TS_A1", factory.voidLoop())
+
+        return Commands.sequence(
+            InstantCommand({ drivebase.resetOdometry(TS_A1.initialPose.getOrDefault(Pose2d())) }),
+            superstructure.getSubwooferShotCommand { true },
+            superstructure.getHomeCommand(),
+            TS_A1.cmd()
+        )
+    }
+
+    fun basicOneNoteBottom(): Command {
+        val BS_A3 = factory.trajectory("BS_A3", factory.voidLoop())
+
+        return Commands.sequence(
+            InstantCommand({ drivebase.resetOdometry(BS_A3.initialPose.getOrDefault(Pose2d())) }),
+            superstructure.getSubwooferShotCommand { true },
+            superstructure.getHomeCommand(),
+            BS_A3.cmd()
+        )
     }
 }
 
