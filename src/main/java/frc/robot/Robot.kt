@@ -101,8 +101,7 @@ object Robot : LoggedRobot() {
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
 
-        operatorController.b().toggleOnTrue(intake.getManualIntakeCommand { -operatorController.leftY * 12})
-
+        operatorController.b().onTrue(intake.getSimpleIntakeCommand())
 //        configureBindings()
     }
 
@@ -117,7 +116,7 @@ object Robot : LoggedRobot() {
 
         driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
 
-        operatorController.b().whileTrue(intake.getSimpleIntakeCommand())
+        operatorController.b().onTrue(intake.getSimpleIntakeCommand())
 
 //        operatorController.a().onTrue(
 //            either(
