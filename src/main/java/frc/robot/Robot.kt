@@ -101,7 +101,7 @@ object Robot : LoggedRobot() {
         Logger.start()
         DriverStation.silenceJoystickConnectionWarning(true)
 
-        operatorController.b().onTrue(intake.getSimpleIntakeCommand())
+        operatorController.b().onTrue(intake.getSimpleIntakeCommand().andThen(superstructure.getPullNoteCommand()))
 //        configureBindings()
     }
 
