@@ -139,7 +139,7 @@ object Robot : LoggedRobot() {
                 intake.getStopCommand(),
                 runEnd(
                     { superstructure.roller.rollerIO.setVoltage(Volts.of(-3.0)) },
-                    { superstructure.roller.rollerIO.setVoltage(Volts.zero()) }).withTimeout(0.1)
+                    { superstructure.roller.rollerIO.setVoltage(Volts.zero()) }).withTimeout(0.25)
             )
         )
     }
