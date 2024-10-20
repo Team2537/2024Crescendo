@@ -82,7 +82,7 @@ class Intake : SubsystemBase() {
             runOnce {io.setVoltage(Volts.of(9.0))},
             Commands.waitSeconds(4.5),
             runOnce { io.stop(); state = IntakeState.STORED }
-        )
+        ).withName("Simple Timed Intake")
 
     fun getManualIntakeCommand(volts: DoubleSupplier): Command {
         return run {io.setVoltage(Volts.of(volts.asDouble))}
