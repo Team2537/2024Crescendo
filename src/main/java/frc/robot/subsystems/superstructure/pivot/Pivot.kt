@@ -111,7 +111,10 @@ class Pivot : SubsystemBase() {
         Commands.sequence(
             runOnce { io.setRawVoltage(Volts.of(-3.0)) },
             Commands.waitUntil { inputs.isAtHardstop },
-            runOnce { io.setKnownPosition(Units.Degrees.of(90.0)); io.stop() }
+            runOnce {
+                io.setKnownPosition(Units.Degrees.of(90.0))
+                io.stop()
+            }
         ).withName("Home Pivot")
 
     fun getQuasistaticSysID(direction: SysIdRoutine.Direction): Command {
