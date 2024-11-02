@@ -76,7 +76,7 @@ object Robot : LoggedRobot() {
             }
 
             Constants.RobotConstants.Mode.REPLAY -> {
-                setUseTiming(false)
+//                setUseTiming(false)
                 Logger.recordMetadata("Mode", "Replay")
                 val logPath = LogFileUtil.findReplayLog()
                 Logger.setReplaySource(WPILOGReader(logPath))
