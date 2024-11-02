@@ -7,13 +7,7 @@ import choreo.trajectory.SwerveSample
 import edu.wpi.first.math.VecBuilder
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Pose3d
-import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.geometry.Rotation3d
-import edu.wpi.first.math.geometry.Transform3d
-import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.geometry.*
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.kinematics.SwerveModulePosition
@@ -113,6 +107,20 @@ class Drivebase : SubsystemBase("Drivebase") {
      */
     val fieldRelativeSpeeds: ChassisSpeeds
         get() = kinematics.toChassisSpeeds(*measuredStates)
+
+
+    val linearFieldVelocity: Translation2d
+        get() = Translation2d(
+            robotRelativeSpeeds.vxMetersPerSecond,
+            robotRelativeSpeeds.vyMetersPerSecond
+        ).rotateBy(gyroInputs.yaw)
+
+    val fieldRelativeTwist: Twist2d
+        get() = Twist2d(
+            linearFieldVelocity.x,
+            linearFieldVelocity.y,
+            robotRelativeSpeeds.omegaRadiansPerSecond
+        )
 
     /**
      * Kinematics object used for calculating module states from chassis speeds and vice versa
@@ -354,6 +362,19 @@ class Drivebase : SubsystemBase("Drivebase") {
             "vision/Estimator Camera Pose",
             Pose3d.struct,
             Pose3d(pose).transformBy(robotToCam),
+        )
+
+
+        Logger.recordOutput(
+            "swerve/linearFieldVelocity",
+            Translation2d.struct,
+            linearFieldVelocity
+        )
+
+        Logger.recordOutput(
+            "swerve/fieldRelativeTwist",
+            Twist2d.struct,
+            fieldRelativeTwist
         )
 
         if (!hasAppliedOffset || Robot.isDisabled) {
