@@ -40,7 +40,7 @@ class Roller : SubsystemBase("roller") {
             rollerRadius = rollerRadius,
             gains = ControllerGains(kP = 0.5)
         )
-        Constants.RobotConstants.Mode.REPLAY -> TODO()
+        Constants.RobotConstants.Mode.REPLAY -> object : RollerIO {}
     }
 
     val inputs: RollerIO.RollerInputs = RollerIO.RollerInputs()
