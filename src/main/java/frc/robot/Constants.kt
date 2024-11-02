@@ -4,7 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Units.Pounds
 import edu.wpi.first.wpilibj.Filesystem
+import edu.wpi.first.wpilibj.RobotBase
 import lib.math.units.RotationVelocity
 import lib.math.units.rpm
 import swervelib.math.Matter
@@ -25,6 +27,18 @@ object Constants {
 
     const val GEARBOX_RATIO = 36.0
     const val PULLEY_RATIO = 40.0/18.0
+
+    object RobotConstants {
+        enum class Mode {
+            SIM, REAL, REPLAY
+        }
+
+        val simMode: Mode = Mode.SIM
+
+        val mode = if(RobotBase.isReal()) Mode.REAL else simMode
+
+        val robotWeight = Pounds.of(125.0)
+    }
 
     object OperatorConstants {
         const val LEFT_X_DEADBAND = 0.01

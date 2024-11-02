@@ -1,11 +1,32 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.CommandScheduler
-import frc.robot.commands.Autos
-import frc.robot.subsystems.PivotSubsystem
-import frc.robot.subsystems.SwerveSubsystem
+import com.ctre.phoenix6.SignalLogger
+import edu.wpi.first.cameraserver.CameraServer
+import edu.wpi.first.wpilibj.DriverStation.Alliance
+import edu.wpi.first.math.MathUtil
+import edu.wpi.first.units.Units.Volts
+import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj2.command.*
+import edu.wpi.first.wpilibj2.command.Commands.*
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine
+import frc.robot.subsystems.climb.Climb
+import frc.robot.subsystems.swerve.Drivebase
+import frc.robot.subsystems.intake.Intake
+import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.subsystems.superstructure.pivot.Pivot
+import lib.debug
+import lib.not
+import org.littletonrobotics.junction.LogFileUtil
+import org.littletonrobotics.junction.LoggedRobot
+import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGReader
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.math.pow
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -17,22 +38,110 @@ import frc.robot.subsystems.SwerveSubsystem
  * the `Main.kt` file in the project. (If you use the IDE's Rename or Move refactorings when renaming the
  * object or package, it will get changed everywhere.)
  */
-object Robot : TimedRobot() {
+object Robot : LoggedRobot() {
 
-    /**
-     * The autonomous command to run. While a default value is set here,
-     * the [autonomousInit] method will set it to the value selected in
-     *the  AutoChooser on the dashboard.
-     */
-    /**
-     * This method is run when the robot is first started up and should be used for any
-     * initialization code.
-     */
-    override fun robotInit() {
-        // Access the RobotContainer object so that it is initialized. This will perform all our
-        // button bindings, and put our autonomous chooser on the dashboard.
-        RobotContainer
-        enableLiveWindowInTest(true)
+    // This is so awful, but it's the best way to test DIO in simulation that I can think of
+    val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
+
+    val climb = Climb()
+    val drivebase = Drivebase()
+    val intake = Intake()
+    val superstructure = Superstructure()
+
+
+    val robotPose
+        get() = drivebase.pose
+
+
+    val driverController: CommandXboxController = CommandXboxController(0)
+    val operatorController: CommandXboxController = CommandXboxController(1)
+
+    private val routines: AutoRoutines = AutoRoutines(drivebase.factory, drivebase, intake, superstructure)
+
+    init {
+        Logger.recordMetadata("Project Name", "2024Crescendo")
+
+        when (Constants.RobotConstants.mode) {
+            Constants.RobotConstants.Mode.REAL -> {
+                Logger.recordMetadata("Mode", "Real")
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+                PowerDistribution(1, PowerDistribution.ModuleType.kRev)
+            }
+
+            Constants.RobotConstants.Mode.SIM -> {
+                Logger.recordMetadata("Mode", "Sim")
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+            }
+
+            Constants.RobotConstants.Mode.REPLAY -> {
+                setUseTiming(false)
+                Logger.recordMetadata("Mode", "Replay")
+                val logPath = LogFileUtil.findReplayLog()
+                Logger.setReplaySource(WPILOGReader(logPath))
+                Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_replay")))
+            }
+        }
+
+        Logger.recordMetadata("GIT_SHA", GIT_SHA)
+        Logger.recordMetadata("GIT_BRANCH", GIT_BRANCH)
+        Logger.recordMetadata("BUILD_DATE", BUILD_DATE)
+        Logger.recordMetadata("DIRTY", if (DIRTY == 1) "Dirty" else "Clean")
+
+        CommandScheduler.getInstance().onCommandInitialize { command ->
+            Logger.recordOutput("commands/${command.name}", true)
+        }
+
+        CommandScheduler.getInstance().onCommandFinish { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
+        CommandScheduler.getInstance().onCommandInterrupt { command ->
+            Logger.recordOutput("commands/${command.name}", false)
+        }
+
+        SignalLogger.enableAutoLogging(false)
+        Logger.start()
+        DriverStation.silenceJoystickConnectionWarning(true)
+
+        configureBindings()
+
+        CameraServer.startAutomaticCapture()
+    }
+
+    private fun configureBindings() {
+        drivebase.defaultCommand = drivebase.driveCommand(
+            { -MathUtil.applyDeadband(driverController.leftY, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.leftX, 0.05).pow(3) },
+            { -MathUtil.applyDeadband(driverController.rightX, 0.05) },
+            driverController.leftTrigger().negate(),
+            driverController.rightTrigger()
+        )
+
+        driverController.rightBumper().onTrue(InstantCommand({ drivebase.resetHeading() }))
+
+        operatorController.povDown().onTrue(superstructure.getSubwooferShotCommand(operatorController.leftTrigger()))
+        operatorController.povUp().onTrue(superstructure.getAmpShotCommand())
+
+        operatorController.x().and(climb.isPreclimb).onTrue(climb.getExtendCommand())
+        operatorController.x().and(!climb.isPreclimb).whileTrue(climb.getRespoolCommand())
+
+        operatorController.leftBumper().onTrue(
+            Commands.sequence(
+                Commands.deadline(
+                    Commands.sequence(
+                        waitSeconds(2.0),
+                        superstructure.getConstantPullNote(),
+                    ),
+                    intake.getConstantIntakeCommand()
+                ),
+                intake.getStopCommand(),
+                runEnd(
+                    { superstructure.roller.rollerIO.setVoltage(Volts.of(-3.0)) },
+                    { superstructure.roller.rollerIO.setVoltage(Volts.zero()) }).withTimeout(0.25)
+            )
+        )
     }
 
     /**
@@ -52,6 +161,7 @@ object Robot : TimedRobot() {
 
     /** This method is called once each time the robot enters Disabled mode.  */
     override fun disabledInit() {
+//        CommandScheduler.getInstance().cancelAll()
     }
 
     override fun disabledPeriodic() {
@@ -59,11 +169,7 @@ object Robot : TimedRobot() {
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
-        PivotSubsystem.stop()
-        Autos.selectedAutonomousCommand.cancel()
-        // We store the command as a Robot property in the rare event that the selector on the dashboard
-        // is modified while the command is running since we need to access it again in teleopInit()
-        Autos.selectedAutonomousCommand.schedule()
+        routines.selectedRoutine.schedule()
     }
 
     /** This method is called periodically during autonomous.  */
@@ -71,10 +177,7 @@ object Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
-        PivotSubsystem.stop()
-        // This makes sure that the autonomous stops running when teleop starts running. If you want the
-        // autonomous to continue until interrupted by another command, remove this line or comment it out.
-        Autos.selectedAutonomousCommand.cancel()
+        routines.selectedRoutine.cancel()
     }
 
     /** This method is called periodically during operator control.  */

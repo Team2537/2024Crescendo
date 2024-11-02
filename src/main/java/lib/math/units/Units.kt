@@ -28,6 +28,43 @@ import edu.wpi.first.units.*
 import edu.wpi.first.units.Unit
 import edu.wpi.first.units.Units.*
 
+@JvmField
+val SquareMeters: Area = Area(1.0, "Square Meters", "m^2")
+
+@JvmField
+val SquareCentimeters: Area = derive(SquareMeters)
+    .named("Square Centimeters")
+    .symbol("cm^2")
+    .aggregate(100.0 * 100.0)
+    .make()
+
+@JvmField
+val SquareInches: Area = derive(SquareMeters)
+    .named("Square Inches")
+    .symbol("in^2")
+    .aggregate(1550.0031)
+    .make()
+
+@JvmField
+val SquareFeet: Area = derive(SquareMeters)
+    .named("Square Feet")
+    .symbol("ft^2")
+    .aggregate(1550.0031 / 12.0 / 12.0)
+    .make()
+
+@JvmField
+val KilogramMetersSquared: RotationalInertia = RotationalInertia(
+    1.0,
+    "Kilogram Meters Squared",
+    "kgm^2"
+)
+
+fun pendulumInertia(mass: Measure<Mass>, length: Measure<Distance>): Measure<RotationalInertia> {
+    val m = mass into Kilograms
+    val l = length into Meters
+    return KilogramMetersSquared.of(m * l * l)
+}
+
 /**
  * Converts a measure into a given unit, return the value as a double.
  *
