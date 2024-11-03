@@ -377,6 +377,34 @@ class Drivebase : SubsystemBase("Drivebase") {
             fieldRelativeTwist
         )
 
+        val rotationalStates = Array(4) { SwerveModuleState() }
+        val translationalStates = Array(4) { SwerveModuleState() }
+
+        modules.forEachIndexed { index, module ->
+            val rotational = Translation2d(module.positiveRotVec.times(fieldRelativeTwist.dtheta))
+            rotationalStates[index] = SwerveModuleState(rotational.norm, rotational.angle)
+
+            val measured = Translation2d(
+                module.state.speedMetersPerSecond,
+                module.state.angle
+            )
+
+            val translational = measured - rotational
+            translationalStates[index] = SwerveModuleState(translational.norm, translational.angle)
+        }
+
+        Logger.recordOutput(
+            "swerve/rotationalStates",
+            SwerveModuleState.struct,
+            *rotationalStates
+        )
+
+        Logger.recordOutput(
+            "swerve/translationalStates",
+            SwerveModuleState.struct,
+            *translationalStates
+        )
+
         if (!hasAppliedOffset || Robot.isDisabled) {
             DriverStation.getAlliance().ifPresent { alliance ->
                 driverOrientation = when (alliance) {
@@ -429,7 +457,8 @@ class Drivebase : SubsystemBase("Drivebase") {
             false, true, false,
             Rotation2d.fromRotations(0.371),
             turnRatio, driveRatio,
-            wheelRadius
+            wheelRadius,
+            Translation2d(moduleOffset, moduleOffset)
         )
 
         val frConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
@@ -437,7 +466,8 @@ class Drivebase : SubsystemBase("Drivebase") {
             true, true, false,
             Rotation2d.fromRotations(0.39),
             turnRatio, driveRatio,
-            wheelRadius
+            wheelRadius,
+            Translation2d(moduleOffset, -moduleOffset)
         )
 
         val blConfig: ModuleIO.ModuleConstants = ModuleIO.ModuleConstants(
@@ -445,7 +475,8 @@ class Drivebase : SubsystemBase("Drivebase") {
             false, true, false,
             Rotation2d.fromRotations(-0.386),
             turnRatio, driveRatio,
-            wheelRadius
+            wheelRadius,
+            Translation2d(-moduleOffset, moduleOffset)
         )
 
 
@@ -454,7 +485,8 @@ class Drivebase : SubsystemBase("Drivebase") {
             true, true, false,
             Rotation2d.fromRotations(-0.247),
             turnRatio, driveRatio,
-            wheelRadius
+            wheelRadius,
+            Translation2d(-moduleOffset, -moduleOffset)
         )
     }
 }

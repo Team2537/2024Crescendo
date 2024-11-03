@@ -1,11 +1,14 @@
 package frc.robot.subsystems.swerve.module
 
+import edu.wpi.first.math.Vector
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.SwerveModulePosition
 import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.math.system.plant.DCMotor
 import frc.robot.Constants
 import lib.ControllerGains
+import lib.vectorFromRotation
 
 class SwerveModule(
     private val
@@ -31,6 +34,8 @@ class SwerveModule(
 
 
     val inputs: ModuleIO.ModuleInputs = ModuleIO.ModuleInputs()
+
+    val positiveRotVec: Vector<N2> = vectorFromRotation(configs.translation.angle + Rotation2d.fromDegrees(90.0))
 
     val positionMeters: Double
         get() = inputs.drivePositionMeters

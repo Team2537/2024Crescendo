@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.module
 
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.Distance
 import edu.wpi.first.units.Measure
 import org.littletonrobotics.junction.LogTable
@@ -98,6 +99,7 @@ interface ModuleIO {
         val turnRatio: Double,
         val driveRatio: Double,
         val wheelRadius: Measure<Distance>,
+        val translation: Translation2d
     )
 
     /**
