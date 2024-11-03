@@ -1,6 +1,8 @@
 package lib
 
 import com.revrobotics.CANSparkBase
+import edu.wpi.first.math.VecBuilder
+import edu.wpi.first.math.Vector
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.math.geometry.Rotation2d
@@ -10,6 +12,7 @@ import edu.wpi.first.math.geometry.Transform3d
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.numbers.N2
 import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
@@ -152,4 +155,8 @@ operator fun Trigger.not(): Trigger {
 
 fun Command.debug(msg: String = "${this.name} is running"): Command {
     return this.deadlineWith(PrintCommand(msg).repeatedly())
+}
+
+fun vectorFromRotation(rot: Rotation2d): Vector<N2> {
+    return VecBuilder.fill(rot.cos, rot.sin)
 }
