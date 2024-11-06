@@ -33,7 +33,6 @@ import frc.robot.subsystems.swerve.module.ModuleIO
 import frc.robot.subsystems.swerve.module.SwerveModule
 import lib.LoggedTunableNumber
 import lib.math.poseestimation.TwistyPoseEstimator
-import lib.math.poseestimation.WeightedPoseEstimator
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import java.util.function.BiConsumer
