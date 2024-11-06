@@ -8,10 +8,7 @@ import edu.wpi.first.math.VecBuilder
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
 import edu.wpi.first.math.geometry.*
-import edu.wpi.first.math.kinematics.ChassisSpeeds
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics
-import edu.wpi.first.math.kinematics.SwerveModulePosition
-import edu.wpi.first.math.kinematics.SwerveModuleState
+import edu.wpi.first.math.kinematics.*
 import edu.wpi.first.math.util.Units.inchesToMeters
 import edu.wpi.first.units.Angle
 import edu.wpi.first.units.Distance
@@ -21,6 +18,7 @@ import edu.wpi.first.units.Units.Meters
 import edu.wpi.first.units.Units.Radians
 import edu.wpi.first.units.Voltage
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.PrintCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -34,6 +32,8 @@ import frc.robot.subsystems.swerve.gyro.GyroIOSim
 import frc.robot.subsystems.swerve.module.ModuleIO
 import frc.robot.subsystems.swerve.module.SwerveModule
 import lib.LoggedTunableNumber
+import lib.math.poseestimation.TwistyPoseEstimator
+import lib.math.poseestimation.WeightedPoseEstimator
 import lib.math.units.into
 import org.littletonrobotics.junction.Logger
 import java.util.function.BiConsumer
@@ -42,7 +42,7 @@ import java.util.function.DoubleSupplier
 import kotlin.jvm.optionals.getOrDefault
 import edu.wpi.first.math.util.Units as Conversions
 
-class Drivebase : SubsystemBase("Drivebase") {
+class Drivebase() : SubsystemBase("Drivebase") {
 
     private var driverOrientation: Rotation2d = Rotation2d()
     private var hasAppliedOffset: Boolean = false
@@ -127,16 +127,10 @@ class Drivebase : SubsystemBase("Drivebase") {
      */
     private val kinematics: SwerveDriveKinematics = SwerveDriveKinematics(*moduleTranslations)
 
-
-    private val poseEstimator: SwerveDrivePoseEstimator = SwerveDrivePoseEstimator(
-        kinematics,
-        gyroInputs.yaw,
-        getModulePositions(),
-        Pose2d(),
-    )
+    private val poseEstimator: TwistyPoseEstimator = TwistyPoseEstimator()
 
     val pose: Pose2d
-        get() = poseEstimator.estimatedPosition
+        get() = poseEstimator.postHistoryPose
 
     private val driveSysID: SysIdRoutine = SysIdRoutine(
         SysIdRoutine.Config(),
@@ -315,13 +309,13 @@ class Drivebase : SubsystemBase("Drivebase") {
      * @param pose New pose of the robot
      */
     fun resetOdometry(pose: Pose2d) {
-        poseEstimator.resetPosition(gyroInputs.yaw, getModulePositions(), pose)
+        poseEstimator.reset(pose)
     }
 
     /**
      * Periodic method, runs every loop
      *
-     * This method updates the gyro inputs, module inputs, and pose estimator
+     * This method history the gyro inputs, module inputs, and pose estimator
      */
     override fun periodic() {
 
@@ -349,9 +343,17 @@ class Drivebase : SubsystemBase("Drivebase") {
             it.updateInputs()
             Logger.processInputs("swerve/module[${index + 1}]", it.inputs)
         }
-        poseEstimator.update(gyroInputs.yaw, getModulePositions())
+        
+        poseEstimator.addWheelMeasurement(
+            kinematics,
+            SwerveDriveWheelPositions(getModulePositions()),
+            Timer.getFPGATimestamp() * 1000,
+            1.0
+        )
+        
+        
 
-        Logger.recordOutput("swerve/pose", Pose2d.struct, pose)
+
         modules.forEachIndexed { index, swerveModule ->
             measuredStates[index] = swerveModule.state
         }
@@ -415,10 +417,10 @@ class Drivebase : SubsystemBase("Drivebase") {
                 hasAppliedOffset = true
             }
         }
-    }
 
-    fun setVisionSTDDevs(x: Measure<Distance>, y: Measure<Distance>, rot: Measure<Angle>) {
-        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(x into Meters, y into Meters, rot into Radians))
+        poseEstimator.update()
+        Logger.recordOutput("swerve/fusedPose", Pose2d.struct, pose)
+
     }
 
     fun quasistaticSysID(direction: Direction): Command {

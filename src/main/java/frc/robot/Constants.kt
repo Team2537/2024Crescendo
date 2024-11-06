@@ -33,7 +33,7 @@ object Constants {
             SIM, REAL, REPLAY
         }
 
-        val simMode: Mode = Mode.SIM
+        val simMode: Mode = Mode.REPLAY
 
         val mode = if(RobotBase.isReal()) Mode.REAL else simMode
 

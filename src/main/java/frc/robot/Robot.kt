@@ -18,6 +18,7 @@ import frc.robot.subsystems.intake.Intake
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.subsystems.superstructure.pivot.Pivot
 import lib.debug
+import lib.math.poseestimation.WeightedPoseEstimator
 import lib.not
 import org.littletonrobotics.junction.LogFileUtil
 import org.littletonrobotics.junction.LoggedRobot
@@ -43,10 +44,14 @@ object Robot : LoggedRobot() {
     // This is so awful, but it's the best way to test DIO in simulation that I can think of
     val keyboard: Joystick by lazy { println("JOYSTICK INITIALIZED"); Joystick(5) }
 
+
+    val robotPoseEstimator = WeightedPoseEstimator()
+
     val climb = Climb()
     val drivebase = Drivebase()
     val intake = Intake()
     val superstructure = Superstructure()
+
 
 
     val robotPose
@@ -157,6 +162,7 @@ object Robot : LoggedRobot() {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
+        robotPoseEstimator.update()
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
