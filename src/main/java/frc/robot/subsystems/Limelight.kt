@@ -10,7 +10,7 @@ import lib.vision.Limelight
  * And may be removed in the future with the replacement of PhotonVision
  */
 class Limelight : SubsystemBase() {
-    val odometryLimelight: Limelight = Limelight("limelight-odom")
+//    val odometryLimelight: Limelight = Limelight("limelight-odom")
     //val intakeLimelight: Limelight = Limelight("limelight-intake")
 
     init {
